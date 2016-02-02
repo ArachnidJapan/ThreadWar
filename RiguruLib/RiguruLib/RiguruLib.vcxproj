@@ -42,12 +42,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>../\DirectX\Inc;$(IncludePath)</IncludePath>
-    <LibraryPath>../\DirectX\Lib\DebugAndRelease;../\DirectX\Lib\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>../\DirectX\Lib\DebugAndRelease;../\DirectX\Lib\DebugLib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>../\DirectX\Inc;$(IncludePath)</IncludePath>
-    <LibraryPath>../\DirectX\Lib\Release;../\DirectX\Lib\DebugAndRelease;$(LibraryPath)</LibraryPath>
+    <LibraryPath>../\DirectX\Lib\ReleaseLib;../\DirectX\Lib\DebugAndRelease;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
