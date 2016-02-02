@@ -1,2 +1,6 @@
 *.opensdf
 *.obj
+*.cso
+RiguruLib/RiguruLib/Release/
+RiguruLib/Release/
+*.suo
