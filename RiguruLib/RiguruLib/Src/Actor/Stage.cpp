@@ -191,3 +191,15 @@ void Stage::AddPoint(ACTOR_ID id)
 VICTORY_ID Stage::ReturnWinner(){
 	return winner;
 }
+
+float Stage::GetTeamPercentage(ACTOR_ID id){
+	if (totalPoint == 0){
+		return 50.0f;
+	}
+	else if (id == ACTOR_ID::PLAYER_ACTOR){
+		return (float)playerPoint * 100.0f / (float)totalPoint;
+	}
+	else{
+		return (float)enemyPoint * 100.0f / (float)totalPoint;
+	}
+}

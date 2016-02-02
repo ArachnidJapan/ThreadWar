@@ -30,6 +30,10 @@ public:
 	int ReturnTotalPoint(){ return totalPoint; };
 	float ReturnStartTime(){ return startTime; }
 	VICTORY_ID ReturnWinner();
+
+	//トータルのポイントから、チームが現在獲得している割合を取得
+	float GetTeamPercentage(ACTOR_ID id);
+
 private:
 	void CountDown(float count);
 	float angle = 0;
