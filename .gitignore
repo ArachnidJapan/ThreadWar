@@ -1,6 +1,8 @@
-*/..klocwork
-*/.Debug
-*/.DirectX
-*/.Release
-*/.ScreenShot
-*/.cso
+.klocwork/
+Debug/
+DirectX/
+Release/
+RiguruLib/ScreenShot/
+RiguruLib/Debug/
+RiguruLib/Release/
+RiguruLib/Shader/cso/

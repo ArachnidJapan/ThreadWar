@@ -1,82 +1,9 @@
-﻿2016/02/02 16:11:19 にビルドを開始しました。
+﻿2016/02/02 16:25:25 にビルドを開始しました。
      1>ノード 2 上のプロジェクト "C:\Users\riguruchan\Desktop\ThreadWar\RiguruLib\RiguruLib\RiguruLib.vcxproj" (Build ターゲット)。
-     1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Ox /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Src\Actor\EnemyAI\EnemyAI.cpp
-         EnemyAI.cpp
-         C:\Users\riguruchan\Desktop\ThreadWar\RiguruLib\DirectX\Inc\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-       Link:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\riguruchan\Desktop\ThreadWar\RiguruLib\Release\RiguruLib.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\riguruchan\Desktop\ThreadWar\RiguruLib\Release\RiguruLib.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\riguruchan\Desktop\ThreadWar\RiguruLib\Release\RiguruLib.lib" /MACHINE:X86 /SAFESEH Release\Actor.obj
-         Release\ActorManager.obj
-         Release\Camera.obj
-         Release\Collision.obj
-         Release\CrystalCenter.obj
-         Release\EnemyAI.obj
-         Release\FirstAI.obj
-         Release\SecondAI.obj
-         Release\TherdAI.obj
-         Release\AirCurlAction.obj
-         Release\DangleAction.obj
-         Release\GroundCurlAction.obj
-         Release\HoverAction.obj
-         Release\JumpAction.obj
-         Release\NormalAction.obj
-         Release\ThreadWebAction.obj
-         Release\PlayerAction.obj
-         Release\PlayerActionManager.obj
-         Release\RewindAction.obj
-         Release\StepAction.obj
-         Release\ThreadAction.obj
-         Release\Thread.obj
-         Release\Player.obj
-         Release\Stage.obj
-         Release\ThreadBullet.obj
-         Release\ThreadEffect.obj
-         Release\ThreadWeb.obj
-         Release\UI.obj
-         Release\Audio.obj
-         Release\Sound.obj
-         Release\Animation.obj
-         Release\AnimUser.obj
-         Release\RgrALoader.obj
-         Release\Graphic.obj
-         Release\Mesh.obj
-         Release\MeshUser.obj
-         Release\OctreeLoader.obj
-         Release\OctreeUser.obj
-         Release\RgrLoader.obj
-         Release\LoadTexture.obj
-         Release\Shader.obj
-         Release\Line.obj
-         Release\Font.obj
-         Release\Texture.obj
-         Release\GamePad.obj
-         Release\Input.obj
-         Release\KeyBoard.obj
-         Release\Mouse.obj
-         Release\main.obj
-         Release\Converter.obj
-         Release\MathUtility.obj
-         Release\Matrix4.obj
-         Release\MatrixUtility.obj
-         Release\Quaternion.obj
-         Release\V3Calculation.obj
-         Release\Vector2.obj
-         Release\Vector2Utility.obj
-         Release\Vector3.obj
-         Release\Vector3Utility.obj
-         Release\D3D11User.obj
-         Release\DemoScene.obj
-         Release\GamePlayScene.obj
-         Release\ResultScene.obj
-         Release\SceneManager.obj
-         Release\TitleScene.obj
-         Release\World.obj
-         Release\WorldActor.obj
-         コード生成しています。
-         コード生成が終了しました。
+     1>Link:
          RiguruLib.vcxproj -> C:\Users\riguruchan\Desktop\ThreadWar\RiguruLib\Release\RiguruLib.exe
      1>プロジェクト "C:\Users\riguruchan\Desktop\ThreadWar\RiguruLib\RiguruLib\RiguruLib.vcxproj" (Build ターゲット) のビルドが完了しました。
 
 ビルドに成功しました。
 
-経過時間 00:00:13.06
+経過時間 00:00:00.50
