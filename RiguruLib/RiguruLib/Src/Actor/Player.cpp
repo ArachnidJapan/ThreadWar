@@ -221,7 +221,7 @@ void Player::Update(float frameTime){
 			playerParam.vec = Control(frameTime, c);
 		else
 		{
-			ai[currentAI]->UpdateAI(frameTime);
+			ai[currentAI]->Update(frameTime);
 			Control(frameTime, c);
 		}
 	}
