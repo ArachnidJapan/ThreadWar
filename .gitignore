@@ -1,15 +1,4 @@
-RiguruLib/.klocwork/
-RiguruLib/Debug/
-RiguruLib/DirectX/
-RiguruLib/Release/
 RiguruLib/RiguruLib/ScreenShot/
 RiguruLib/RiguruLib/Debug/
 RiguruLib/RiguruLib/Release/
 RiguruLib/RiguruLib/Shader/cso/
-*/*.opensdf
-*/*.sdf
-*/*.sln
-*/*.v12.suo
-*/*.vcxproj
-*/*.vcxproj.filters
-*/*.vcxproj.user
