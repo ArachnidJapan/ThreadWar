@@ -49,6 +49,10 @@ void Stage::Initialize(){
 	////ˆø‚«•ª‚¯‚©‚Ç‚¤‚©
 	//draw = false;
 	gameStart = false;
+
+	crystalCenter._Get()->SetStageMatrix(parameter.matrix);
+	crystalPlayerSide._Get()->SetStageMatrix(parameter.matrix);
+	crystalEnemySide._Get()->SetStageMatrix(parameter.matrix);
 }
 void Stage::Update(float frameTime){
 	//Œˆ’…

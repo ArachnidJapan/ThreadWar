@@ -215,9 +215,9 @@ void Font::Draw(Vector2 pos, Vector2 size, float range, Shader* shader, std::str
 		for (int i = 0; i < s.size(); i++){
 			endPos = endPos + vector3(trueSize.x * range, 0, 0);
 		}
-		endPos = endPos + vector3(trueSize.x * range,truePos.y + trueSize.y, 0);
-		
-		Vector3 centerPos = startPos + endPos / 2.0f;
+		endPos = endPos + vector3(trueSize.x * range,0, 0);
+		endPos.y = truePos.y + trueSize.y;
+		Vector3 centerPos = (endPos - startPos) / 2.0f;
 
 		truePos = truePos - centerPos;
 	}

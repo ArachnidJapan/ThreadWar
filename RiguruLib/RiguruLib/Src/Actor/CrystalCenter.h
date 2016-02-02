@@ -23,6 +23,7 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 	void DrawEffect(Vector3 pos, Vector3 scale_, CAMERA_ID cID, Vector3 color) const;
 	void Damage(bool player);
+	void SetStageMatrix(Matrix4 mat){parameter.matrix = mat;};
 	bool IsPlayer();
 	bool IsEnemy();
 	//point‚ðƒŠƒZƒbƒg‚·‚é

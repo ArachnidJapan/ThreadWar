@@ -28,8 +28,8 @@ const float WEB_BIND_TIME = 60 * 3;
 const float BINDPOW_LINE = 0.5f;
 //巣に拘束されていた場合の速度や移動距離の減衰率
 const float BINDPOW_WEB = 0.25f;
-Player::Player(IWorld& world_, std::weak_ptr<Stage> stage_, CAMERA_ID cID_, int padNum_, int playerNum_) :Actor(world_), stage(stage_), pAM(), cID(cID_), padNum(padNum_),playerNum(playerNum_){
-	animSpeed =new float(5.0f);
+Player::Player(IWorld& world_, std::weak_ptr<Stage> stage_, CAMERA_ID cID_, int padNum_, int playerNum_) :Actor(world_), stage(stage_), pAM(), cID(cID_), padNum(padNum_), playerNum(playerNum_){
+	animSpeed = new float(5.0f);
 	blendSpeed = new float(5.0f);
 	firstFlag = true;
 }
@@ -145,19 +145,19 @@ void Player::Initialize(){
 }
 void Player::Update(float frameTime){
 	if (playerNum == 0)
-	Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 400), vector2(0.20f, 0.25f), 0.5f, "ONGROUNDFLAG:" + std::to_string(RCMatrix4::getPosition(parameter.matrix).y));
-//	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_G, true) && playerNum != 0){
-//		if (playerNum != 4)
-//		parameter.isDead = true;
-//		dokusai = true;
-//		inputAI = false;
-//		Device::GetInstance().GetCamera(cID)->SetDokusai();
-//	}
-//	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_H, true) && playerNum == 0){
-//		inputAI = true;
-//		playerAI = true;
-//		Device::GetInstance().GetCamera(cID)->SetPlayerAI();
-//	}
+		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 400), vector2(0.20f, 0.25f), 0.5f, "ONGROUNDFLAG:" + std::to_string(RCMatrix4::getPosition(parameter.matrix).y));
+	//	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_G, true) && playerNum != 0){
+	//		if (playerNum != 4)
+	//		parameter.isDead = true;
+	//		dokusai = true;
+	//		inputAI = false;
+	//		Device::GetInstance().GetCamera(cID)->SetDokusai();
+	//	}
+	//	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_H, true) && playerNum == 0){
+	//		inputAI = true;
+	//		playerAI = true;
+	//		Device::GetInstance().GetCamera(cID)->SetPlayerAI();
+	//	}
 	Device::GetInstance().GetCamera(cID)->SetIsRespawn(isRespawn);
 
 	//リスポーン中は以降の処理を行わない
@@ -181,11 +181,11 @@ void Player::Update(float frameTime){
 			Graphic::GetInstance().DeleteBackAnimation(shared_from_this());
 			respawnTimer = 0.0f;
 			//無敵化
-			isNodamage = true;			
+			isNodamage = true;
 		}
 	}
 
-	if (RCMatrix4::getPosition(parameter.matrix).y < -9.0f || 
+	if (RCMatrix4::getPosition(parameter.matrix).y < -9.0f ||
 		RCMatrix4::getPosition(parameter.matrix).y > 18.0f)stageOut = true;
 	if (stageOut){
 		Initialize();
@@ -198,7 +198,7 @@ void Player::Update(float frameTime){
 	//カメラのパラメータを取得
 	CAMERA_PARAMETER c = *Device::GetInstance().GetCamera(cID)->CameraParam();
 
-	
+
 
 	//無敵状態のとき
 	if (isNodamage)
@@ -236,7 +236,7 @@ void Player::Update(float frameTime){
 	parameter.inertiaVec = parameter.moveVec;
 	parameter.moveVec = vector3(0, 0, 0);
 	if (!isRespawn)
-	pAM.Update(frameTime);
+		pAM.Update(frameTime);
 	//無敵じゃなければ敵の糸と判定
 	if (!isNodamage)
 	{
@@ -336,7 +336,7 @@ void Player::Update(float frameTime){
 		else if (pAM.ReturnActionID() == ACTION_ID::REWIND_ACTION){
 			Vector3 rewNor = nor;
 			//そのレフトを軸に回転させるmatrixを作り
-				Vector3 newFront = RCVector3::normalize(pAM.ReturnThread()._Get()->GetThreadParameter().startNormal);
+			Vector3 newFront = RCVector3::normalize(pAM.ReturnThread()._Get()->GetThreadParameter().startNormal);
 			if (!pAM.ReturnPlayerControl().isGoingEnd){
 				newFront = RCVector3::normalize(pAM.ReturnThread()._Get()->GetThreadParameter().endNormal);
 			}
@@ -378,7 +378,7 @@ void Player::Update(float frameTime){
 	}
 	if (padNum == 0){
 		//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 600), vector2(0.20f, 0.25f), 0.5f, "PlayerHP:" + std::to_string(hp));
-	//	Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 520), vector2(0.20f, 0.25f), 0.5f, "IsBind:" + std::to_string(bindTime));
+		//	Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 520), vector2(0.20f, 0.25f), 0.5f, "IsBind:" + std::to_string(bindTime));
 	}
 
 	playerParam.onGroundFlag = false;
@@ -401,36 +401,36 @@ void Player::Update(float frameTime){
 //描画
 void Player::Draw(CAMERA_ID cID_) const{
 	//無敵時間中は0.1秒間隔で点滅
-	if (isNodamage && abs(Math::sin(Math::angle(nodamageTimer))) < 0.5f) return;
-	else{
-		//プレイヤー用のシェーダーセット
-		Graphic::GetInstance().SetShader(SHADER_ID::PLAYER_SHADER);
-		//テクニックとパスをセット
-		Graphic::GetInstance().SetTechniquePass(SHADER_ID::PLAYER_SHADER, "TShader", "P0");
-		//アニメーションをバインド
-		//if (cID_ == CAMERA_ID::PLAYER_CAMERA){
-		//	Graphic::GetInstance().BindAnimation(thisCopy->shared_from_this(), SHADER_ID::PLAYER_SHADER, frameTime_);
-		//	if (parameter.id == ACTOR_ID::PLAYER_ACTOR){
-		//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 585), vector2(0.20f, 0.25f), 0.5f, "PlayerPos.x:" + std::to_string(pos.x) + "f");
-		//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 570), vector2(0.20f, 0.25f), 0.5f, "PlayerPos.y:" + std::to_string(pos.y) + "f");
-		//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 555), vector2(0.20f, 0.25f), 0.5f, "PlayerPos.z:" + std::to_string(pos.z) + "f");
-		//	}
-		//	else{
-		//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 540), vector2(0.20f, 0.25f), 0.5f, "EnemyPos.x:" + std::to_string(pos.x) + "f");
-		//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 525), vector2(0.20f, 0.25f), 0.5f, "EnemyPos.y:" + std::to_string(pos.y) + "f");
-		//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 510), vector2(0.20f, 0.25f), 0.5f, "EnemyPos.z:" + std::to_string(pos.z) + "f");
-		//	}
-		//}
-		//else
-		Graphic::GetInstance().BindAnimation(thisCopy->shared_from_this(), SHADER_ID::PLAYER_SHADER, frameTime_);
-		//プレイヤーを描画
-		Graphic::GetInstance().DrawMesh(parameter.id == ACTOR_ID::PLAYER_ACTOR ? MODEL_ID::NEPHILA_MODEL : MODEL_ID::TARENTULE_MODEL, &drawMatrix, cID_);
-	}
+	//if (isNodamage && abs(Math::sin(Math::angle(nodamageTimer))) < 0.5f) return;
+	//else{
+	//プレイヤー用のシェーダーセット
+	Graphic::GetInstance().SetShader(SHADER_ID::PLAYER_SHADER);
+	//テクニックとパスをセット
+	Graphic::GetInstance().SetTechniquePass(SHADER_ID::PLAYER_SHADER, "TShader", "P0");
+	//アニメーションをバインド
+	//if (cID_ == CAMERA_ID::PLAYER_CAMERA){
+	//	Graphic::GetInstance().BindAnimation(thisCopy->shared_from_this(), SHADER_ID::PLAYER_SHADER, frameTime_);
+	//	if (parameter.id == ACTOR_ID::PLAYER_ACTOR){
+	//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 585), vector2(0.20f, 0.25f), 0.5f, "PlayerPos.x:" + std::to_string(pos.x) + "f");
+	//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 570), vector2(0.20f, 0.25f), 0.5f, "PlayerPos.y:" + std::to_string(pos.y) + "f");
+	//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 555), vector2(0.20f, 0.25f), 0.5f, "PlayerPos.z:" + std::to_string(pos.z) + "f");
+	//	}
+	//	else{
+	//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 540), vector2(0.20f, 0.25f), 0.5f, "EnemyPos.x:" + std::to_string(pos.x) + "f");
+	//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 525), vector2(0.20f, 0.25f), 0.5f, "EnemyPos.y:" + std::to_string(pos.y) + "f");
+	//		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 510), vector2(0.20f, 0.25f), 0.5f, "EnemyPos.z:" + std::to_string(pos.z) + "f");
+	//	}
+	//}
+	//else
+	Graphic::GetInstance().BindAnimation(thisCopy->shared_from_this(), SHADER_ID::PLAYER_SHADER, frameTime_);
+	//プレイヤーを描画
+	Graphic::GetInstance().DrawMesh(parameter.id == ACTOR_ID::PLAYER_ACTOR ? MODEL_ID::NEPHILA_MODEL : MODEL_ID::TARENTULE_MODEL, &drawMatrix, cID_, &D3DXCOLOR(0, 0, 0, 0.5f), isNodamage);
+	//}
 	//テストフォント
 	//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.20f, 0.25f), 0.5f, "PlayerHP:" + std::to_string(hp));
-	
-//	if (bindFlag)
-//		Graphic::GetInstance().DrawSphere(RCMatrix4::getPosition(parameter.matrix), 0.5f, cID_);
+
+	//	if (bindFlag)
+	//		Graphic::GetInstance().DrawSphere(RCMatrix4::getPosition(parameter.matrix), 0.5f, cID_);
 }
 
 void Player::OnCollide(Actor& other, CollisionParameter colpara){
@@ -463,7 +463,7 @@ void Player::OnCollide(Actor& other, CollisionParameter colpara){
 			threadHit = true;
 			bindTime = 1.0f;
 			other.SetIsDead(true);
-			world.Add(ACTOR_ID::THREAD_EFFECT_ACTOR, std::make_shared<ThreadEffect>(world,drawMatrix,bindFlag,cID));
+			world.Add(ACTOR_ID::THREAD_EFFECT_ACTOR, std::make_shared<ThreadEffect>(world, drawMatrix, bindFlag, cID));
 		}
 		//Thread* otherT = static_cast<Thread*>(const_cast<Actor*>(&other));
 		////ショット中の糸ならばダメージ。
@@ -540,7 +540,7 @@ Vector3 Player::Control(float frameTime, CAMERA_PARAMETER c){
 
 	//丸まりの処理はこちら とりあえずゆっくり動くようにはできた
 	if (((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LCTRL, true) ||
-		Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_L2,true)) 
+		Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_L2, true))
 		&& !inputAI)
 		|| inputCurlOn){
 		pAM.ChangeAction(ACTION_ID::CURL_ACTION);
@@ -653,12 +653,12 @@ void Player::SetNor(Vector3 nor_){
 }
 
 void Player::ShotThread(){
-	std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID,pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION ? false : true);
+	std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID, pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION ? false : true);
 	//それぞれのチームのIDの糸を生成。
 	ACTOR_ID threadID = ACTOR_ID::PLAYER_THREAD_ACTOR;
 	if (teamID == TEAM_ID::SECOND_TEAM)
 		threadID = ACTOR_ID::ENEMY_THREAD_ACTOR;
-	
+
 	world.Add(threadID, thread);
 	Audio::GetInstance().PlaySE(SE_ID::BOOM_SE);
 }
@@ -725,13 +725,13 @@ void Player::Damage(float damagePoint){
 		isRespawn = true;
 	}
 }
-void Player::SetBindTime(float bindTime_){ 
-	if (!bindFlag){ 
-		bindFlag = true; bindTime = bindTime_; 
+void Player::SetBindTime(float bindTime_){
+	if (!bindFlag){
+		bindFlag = true; bindTime = bindTime_;
 		threadHit = true;
 		world.Add(ACTOR_ID::THREAD_EFFECT_ACTOR, std::make_shared<ThreadEffect>(world, drawMatrix, bindFlag, cID));
-	} 
-	else bindTime += bindTime_; 
+	}
+	else bindTime += bindTime_;
 }
 void Player::SetInputCurlOn(bool set){
 	inputCurlOn = set;

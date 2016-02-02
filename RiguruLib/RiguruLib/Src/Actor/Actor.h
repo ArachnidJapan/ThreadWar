@@ -56,7 +56,7 @@ private:
 	CollisionParameter RayModelStep(const Actor& other)const;
 	//レイとモデルのあたり判定(蜘蛛版)
 	CollisionParameter RayModelNatural(const Actor& other)const;
-	CollisionParameter RayModelNaturalTest(Vector3 pos_)const;
+	CollisionParameter RayModelNaturalTest(Vector3 pos_, Matrix4 stageMat)const;
 	//球とモデルのあたり判定
 	CollisionParameter SphereModel(const Actor& other)const;
 	//球とモデルのあたり判定(蜘蛛版)

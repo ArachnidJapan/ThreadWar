@@ -70,6 +70,7 @@ public:
 	bool ReturnBindFlag(){ return bindFlag; }
 	float ReturnBindTime(){ return bindTime; }
 	int ReturnPlayerNum(){ return playerNum; }
+	std::weak_ptr<Stage> ReturnStage(){ return stage; }
 
 	void Damage(float damagePoint);
 private:

@@ -5,6 +5,7 @@
 #include "../../Thread.h"
 #include "../../../Math/Quaternion.h"
 #include "../../ThreadWeb.h"
+#include "../../Stage.h"
 
 const float FRONTROTATESPEED = 60.0f;
 
@@ -51,6 +52,8 @@ bool ThreadAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	frontRotate = 0;
 	hitGround = false;
 	groundFirstFrame = true;
+
+	matStage = player._Get()->ReturnStage()._Get()->GetParameter().matrix;
 	return true;
 }
 void ThreadAction::Update(float frameTime){
@@ -228,14 +231,6 @@ void ThreadAction::OnCollide(Actor& other, CollisionParameter colpara){
 			player._Get()->SetPos(pos);
 			startPos = pos;
 			radius = player._Get()->GetParameter().radius + 0.1f;
-
-			float size2 = 3.0f;
-			Matrix4 matStage = RCMatrix4::matrix(
-				vector3(size2, size2, size2),
-				0.0f,
-				0.0f,
-				0.0f,
-				vector3(-1, -2.0f, 0));
 
 			if (((IsCollideSphereToSphere(tparam.startPosition, pos, radius, radius).colFlag && tparam.startPosIsGroundTouch) ||
 				IsCollideSphereToSphere(tparam.currentEndPosition, pos, radius, radius).colFlag)){
