@@ -2,7 +2,6 @@
 #include <array>
 #include "../../world/IWorld.h"
 #include "../Actor.h"
-#include "../Base.h"
 #include "../../math/Vector3Utility.h"
 #include "../../math/Vector2Utility.h"
 #include "../../Graphic/Graphic.h"

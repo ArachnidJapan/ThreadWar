@@ -109,7 +109,6 @@
     <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\ActorManager.h" />
     <ClInclude Include="Src\Actor\ActorPtr.h" />
-    <ClInclude Include="Src\Actor\Base.h" />
     <ClInclude Include="Src\Actor\Camera\Camera.h" />
     <ClInclude Include="Src\Actor\Collision.h" />
     <ClInclude Include="Src\Actor\CrystalCenter.h" />
@@ -188,10 +187,10 @@
   <ItemGroup>
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\ActorManager.cpp" />
-    <ClCompile Include="Src\Actor\Base.cpp" />
     <ClCompile Include="Src\Actor\Camera\Camera.cpp" />
     <ClCompile Include="Src\Actor\Collision.cpp" />
     <ClCompile Include="Src\Actor\CrystalCenter.cpp" />
+    <ClCompile Include="Src\Actor\EnemyAI\EnemyAI.cpp" />
     <ClCompile Include="Src\Actor\EnemyAI\FirstAI.cpp" />
     <ClCompile Include="Src\Actor\EnemyAI\SecondAI.cpp" />
     <ClCompile Include="Src\Actor\EnemyAI\TherdAI.cpp" />
