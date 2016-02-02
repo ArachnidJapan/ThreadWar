@@ -6,6 +6,8 @@
 #include "Thread.h"
 #include "ThreadWeb.h"
 #include "ThreadBullet.h"
+#include "Player.h"
+#include "Stage.h"
 Actor::Actor(IWorld& world_) :world(world_)
 {
 	cubeCount = 0;
@@ -61,19 +63,11 @@ CollisionParameter Actor::SphereSphere(const Actor& other) const{
 	float r = parameter.radius + other.parameter.radius;
 	colpara.colFlag = false;
 	colpara.colPos = myPos;
-
-	float size2 = 3.0f;
-	Matrix4 stageMat = RCMatrix4::matrix(
-		vector3(size2, size2, size2),
-		0.0f,
-		0,
-		0.0f,
-		vector3(-1, -2.0f, 0));
-
+	Matrix4 stageMat = static_cast<Player*>(const_cast<Actor*>(&other))->ReturnStage()._Get()->GetParameter().matrix;
 	while (distance <= r){
 		colpara.colFlag = true;
 		colpara.colPos = colpara.colPos + RCVector3::normalize(myPos - otherPos) * 0.1f;// parameter.moveVec;
-		CollisionParameter c = RayModelNaturalTest(colpara.colPos);
+		CollisionParameter c = RayModelNaturalTest(colpara.colPos, stageMat);
 		if (c.colFlag)colpara.colPos = c.colPos;
 		distance = RCVector3::distance_(colpara.colPos, otherPos);
 	}
@@ -224,7 +218,7 @@ CollisionParameter Actor::RayModelNatural(const Actor& other)const{
 }
 
 //ƒŒƒC‚Æƒ‚ƒfƒ‹‚Ì‚ ‚½‚è”»’è(’wå”Å)
-CollisionParameter Actor::RayModelNaturalTest(Vector3 pos_)const{
+CollisionParameter Actor::RayModelNaturalTest(Vector3 pos_,Matrix4 stageMat)const{
 	CollisionParameter colpara;
 	colpara.colFlag = false;
 	colpara.colPos = vector3(0, 0, 0);
@@ -235,14 +229,6 @@ CollisionParameter Actor::RayModelNaturalTest(Vector3 pos_)const{
 	Vector3 pos = pos_ + up;
 	Vector3 end = down * downVec + pos;
 	float len = RCVector3::length(end - pos);
-
-	float size2 = 3.0f;
-	Matrix4 stageMat = RCMatrix4::matrix(
-		vector3(size2, size2, size2),
-		0.0f,
-		0,
-		0.0f,
-		vector3(-1, -2.0f, 0));
 
 	colpara = ModelRay(stageMat, OCT_ID::STAGE_OCT, pos, end);
 

@@ -3,6 +3,7 @@
 #include <vector>
 class Thread;
 class IWorld;
+class Stage;
 
 //’wå‚Ì‘ƒ3’¸“_
 struct ThreadWebParameter
@@ -13,7 +14,7 @@ struct ThreadWebParameter
 class ThreadWeb : public Actor, public std::enable_shared_from_this<ThreadWeb>
 {
 public:
-	ThreadWeb(IWorld& world, std::shared_ptr<Thread> parent1, std::shared_ptr<Thread> parent2);
+	ThreadWeb(IWorld& world, std::shared_ptr<Thread> parent1, std::shared_ptr<Thread> parent2,std::weak_ptr<Stage> stage);
 	~ThreadWeb();
 	virtual void Initialize() override;
 	virtual void Update(float frameTime) override;

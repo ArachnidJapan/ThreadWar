@@ -36,14 +36,6 @@ void UI::Update(float frameTime){
 		}
 	});
 
-	float size2 = 1.0f;
-	mouseMat = RCMatrix4::matrix(
-		vector3(size2, size2, size2),
-		0.0f,
-		0.0f,
-		0,
-		vector3(-500, 0, 0));
-
 	////rectのデバッグ。
 	//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_O))
 	//	barNum = max(barNum - 0.01f, 0.0f);
@@ -96,10 +88,9 @@ void UI::Draw(CAMERA_ID cID) const{
 		}
 	});
 
-	int count = 0;
-	for (auto i : pointPos){
-		Vector3 p = i * RConvert(&Device::GetInstance().GetCamera(cID)->returnView());
-		Vector3 vec = RCVector3::normalize(i - playerPos);
+	for (int a = pointPos.size() - 1; a >= 0;a--){
+		Vector3 p = pointPos[a] * RConvert(&Device::GetInstance().GetCamera(cID)->returnView());
+		Vector3 vec = RCVector3::normalize(pointPos[a] - playerPos);
 		p = p * RConvert(&Device::GetInstance().GetCamera(cID)->returnProj());
 		p.x /= p.z;
 		p.y /= p.z;
@@ -111,7 +102,8 @@ void UI::Draw(CAMERA_ID cID) const{
 			p.y += 1.0f;
 			p.x *= (1920.0f / 2.0f);
 			p.y *= (1080.0f / 2.0f);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(p.x - 45.0f, p.y + 30.0f), vector2(0.25f, 0.40f), 0.5f, "cp" + std::to_string(teamID[count]), vector3(0, 1, 0));
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(p.x, p.y + 60.0f), vector2(0.25f, 0.40f), 0.5f, "cp" + std::to_string(teamID[a]), vector3(0, 1, 0),1,true);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(p.x, p.y + 30.0f), vector2(0.20f, 0.30f), 0.5f,std::to_string((int)(RCVector3::length(playerPos - pointPos[a]))) + "m", vector3(0, 1, 0),1,true);
 		}
 		else{
 			vec.y = 0;
@@ -127,10 +119,9 @@ void UI::Draw(CAMERA_ID cID) const{
 			centerMat = trans * rotate * centerMat;
 			center = RCMatrix4::getPosition(centerMat);
 			Graphic::GetInstance().DrawTexture(TEXTURE_ID::ARROW_TEXTURE, vector2(center.x, center.y), vector2(0.3f, 1.0f), D3DXCOLOR(1, 1, 1, 1), vector2(0.5f, 0.5f), 0, 0, 1, 1, angle);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x - 45.0f, center.y + 30.0f), vector2(0.25f, 0.40f), 0.5f, "cp" + std::to_string(teamID[count]), vector3(0, 1, 0));
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x, center.y + 50.0f), vector2(0.25f, 0.40f), 0.5f, "CP" + std::to_string(teamID[a]), vector3(0, 1, 0),1,true);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x, center.y + 20.0f), vector2(0.20f, 0.30f), 0.5f, std::to_string((int)(RCVector3::length(playerPos - pointPos[a]))) + "m", vector3(0, 1, 0),1,true);
 		}
-
-		count++;
 	}
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::FLOOR_TEXTURE, vector2(1920 - 640 + 150, 0), vector2(1.0f, 1.0f), D3DXCOLOR(1, 1, 1, 1), vector2(0.0f, 0.0f), 0.0f, 0.0f, 1.0f, 1.0f);
 
@@ -173,7 +164,7 @@ void UI::Draw(CAMERA_ID cID) const{
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::CURSOR2_TEXTURE, vector2(1920 / 2, 1080 / 2), vector2(0.4f, 0.4f) * cursorSize, D3DXCOLOR(1, 1, 1, 1), vector2(0.5f, 0.5f), 0, 0, 1, 1, -cursorAngle);
 	int min = stage._Get()->ReturnGameTime() / 60.0f;
 	int sec = stage._Get()->ReturnGameTime() - min * 60;
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f, 140.0f), vector2(0.5f, 0.8f), 0.5f, "0" + std::to_string(min) + ":" + (std::to_string(sec).size() > 1 ? "" : "0") + std::to_string(sec), vector3(1, 1, 1),1.0f,true);
+	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f,1080.0f - 140.0f), vector2(0.5f, 0.8f), 0.5f, "0" + std::to_string(min) + ":" + (std::to_string(sec).size() > 1 ? "" : "0") + std::to_string(sec), vector3(1, 1, 1),1.0f,true);
 	//ゲージ
 	if (stage._Get()->ReturnTotalPoint() == 0)
 	{
@@ -183,8 +174,8 @@ void UI::Draw(CAMERA_ID cID) const{
 		//真ん中の黒棒
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::GAUGE_CENTER_TEXTURE, vector2(1920 / 2, 1080 - 56), vector2(1, 1), D3DXCOLOR(1, 1, 1, 1), vector2(0.5f, 0.5f), 0, 0.0f, 1.0f, 1.0f);
 
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f + 1100, 60.0f), vector2(0.3f, 0.5f) * 1.5f , 0.5f, std::to_string(stage._Get()->ReturnPlayerTeamPoint()) + "pt", vector3(1, 0, 0), 1.0f, true);
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f - 1100, 60.0f), vector2(0.3f, 0.5f) * 1.5f, 0.5f, std::to_string(stage._Get()->ReturnEnemyTeamPoint()) + "pt", vector3(0, 0, 1), 1.0f, true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f - 600.0f,1080.0f - 60.0f), vector2(0.3f, 0.5f) * 1.5f , 0.5f, std::to_string(stage._Get()->ReturnPlayerTeamPoint()) + "pts", vector3(1, 0, 0), 1.0f, true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f + 600.0f, 1080.0f - 60.0f), vector2(0.3f, 0.5f) * 1.5f, 0.5f, std::to_string(stage._Get()->ReturnEnemyTeamPoint()) + "pts", vector3(0, 0, 1), 1.0f, true);
 	}
 	else
 	{
@@ -197,12 +188,10 @@ void UI::Draw(CAMERA_ID cID) const{
 		//ポイント
 		float playerWin = Math::lerp(1.0f, 2.0f, (float)stage._Get()->ReturnPlayerTeamPoint() / (float)stage._Get()->ReturnTotalPoint());
 		float enemyWin = Math::lerp(1.0f, 2.0f, (float)stage._Get()->ReturnEnemyTeamPoint() / (float)stage._Get()->ReturnTotalPoint());
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f + 1100, 60.0f), vector2(0.3f, 0.5f) * playerWin, 0.5f, std::to_string(stage._Get()->ReturnPlayerTeamPoint()) + "pt", vector3(1, 0, 0), 1.0f, true);
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f - 1100, 60.0f), vector2(0.3f, 0.5f) * enemyWin, 0.5f, std::to_string(stage._Get()->ReturnEnemyTeamPoint()) + "pt", vector3(0, 0, 1), 1.0f, true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f - 600.0f, 1080.0f - 60.0f), vector2(0.3f, 0.5f) * playerWin, 0.5f, std::to_string(stage._Get()->ReturnPlayerTeamPoint()) + "pt", vector3(1, 0, 0), 1.0f, true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f + 600.0f, 1080.0f - 60.0f), vector2(0.3f, 0.5f) * enemyWin, 0.5f, std::to_string(stage._Get()->ReturnEnemyTeamPoint()) + "pt", vector3(0, 0, 1), 1.0f, true);
 	}
-
-
-
+	
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::DAMAGE_TEXTURE, vector2(1920 / 2, 1080 / 2), vector2(1.5f, 1.5f), D3DXCOLOR(0, 0, 0, (float)(2 - max(0,hp)) / 4.0f), vector2(0.5f, 0.5f), 0.0f, 0.0f, 1, 1.0f);
 	
 	float startTime = stage._Get()->ReturnStartTime();

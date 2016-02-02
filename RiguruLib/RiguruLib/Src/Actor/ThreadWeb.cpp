@@ -3,8 +3,9 @@
 #include "Thread.h"
 #include "../Graphic/Graphic.h"
 #include "Collision.h"
+#include "Stage.h"
 
-ThreadWeb::ThreadWeb(IWorld& world, std::shared_ptr<Thread> parent1, std::shared_ptr<Thread> parent2)
+ThreadWeb::ThreadWeb(IWorld& world, std::shared_ptr<Thread> parent1, std::shared_ptr<Thread> parent2, std::weak_ptr<Stage> stage)
 :Actor(world), mParent1(parent1), mParent2(parent2){
 	parameter.id = ACTOR_ID::PLAYER_THREADWEB_ACTOR;
 	if (parent1->GetRootActor() != ACTOR_ID::PLAYER_ACTOR)
@@ -21,13 +22,7 @@ ThreadWeb::ThreadWeb(IWorld& world, std::shared_ptr<Thread> parent1, std::shared
 	//’wå‚Ì‘ƒ‚ÌŠÔ‚É•~‚­Ž…‚ÌÀ•W‚ðŒvŽZ‚µŠi”[
 	WebThreadsCalc();
 
-	float size2 = 3.0f;
-	Matrix4 stageMatrix = RCMatrix4::matrix(
-		vector3(size2, size2, size2),
-		0.0f,
-		0,
-		0.0f,
-		vector3(-1, -2.0f, 0));
+	Matrix4 stageMatrix = stage._Get()->GetParameter().matrix;
 	for (int i = 0; i < mDivide * 2; i += 2)
 	{
 		CollisionParameter cp = ModelRay(stageMatrix, OCT_ID::STAGE_OCT, mWebThreads[i], mWebThreads[i + 1]);
@@ -60,8 +55,8 @@ void ThreadWeb::Update(float frameTime) {
 		parameter.isDead = true;
 	}
 	else{
-		color = vector3(1, 0, 0);
-		if (mParent1._Get()->GetParameter().id == ACTOR_ID::ENEMY_THREAD_ACTOR)color = vector3(0, 0, 1);
+		color = vector3(1, 0.5f, 0.5f);
+		if (mParent1._Get()->GetParameter().id == ACTOR_ID::ENEMY_THREAD_ACTOR)color = vector3(0.5f, 0.5f, 1);
 		if (selectThreadWeb)color = vector3(1, 1, 1);
 		selectThreadWeb = false;
 	}

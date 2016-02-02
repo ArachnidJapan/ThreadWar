@@ -12,13 +12,7 @@ CrystalCenter::CrystalCenter(IWorld& world_,ACTOR_ID crystalID) :Actor(world_){
 	parameter.id = crystalID;
 	parameter.cubeScale = vector3(10.0f, 3.0f, 10.0f);
 	parameter.radius = 1.0f;
-	float size2 = 3.0f;
-	parameter.matrix = RCMatrix4::matrix(
-		vector3(size2, size2, size2),
-		0.0f,
-		0,
-		0.0f,
-		vector3(-1, -2.0f, 0));
+	parameter.matrix = RCMatrix4::Identity();
 
 	point = 0;
 

@@ -102,8 +102,8 @@ void Thread::Update(float frameTime){
 			threadParam.startPosition = col_.colPos;
 		}
 	}
-	color = vector3(1, 0, 0);
-	if (parameter.id == ACTOR_ID::ENEMY_THREAD_ACTOR)color = vector3(0, 0, 1);
+	color = vector3(1, 0.5f, 0.5f);
+	if (parameter.id == ACTOR_ID::ENEMY_THREAD_ACTOR)color = vector3(0.5f, 0.5f, 1);
 	if (selectThread)color = vector3(1, 1, 1);
 	selectThread = false;
 
@@ -206,7 +206,7 @@ void Thread::AddThreadWeb(){
 	else webID = ACTOR_ID::ENEMY_THREADWEB_ACTOR;
 	for (auto& i : threads){
 		if (!i._Get()->IsDead())
-		world.Add(webID, std::make_shared<ThreadWeb>(world, this->shared_from_this(), i._Get()->shared_from_this()));
+		world.Add(webID, std::make_shared<ThreadWeb>(world, this->shared_from_this(), i._Get()->shared_from_this(),stage));
 	}
 }
 //巻取り中の移動方向ベクトルを取得（単位ベクトル）

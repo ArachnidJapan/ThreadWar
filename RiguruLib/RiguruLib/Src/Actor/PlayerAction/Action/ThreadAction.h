@@ -21,5 +21,5 @@ private:
 	ThreadParameter hitTparam;
 	Vector3 hitPos;
 	bool groundFirstFrame;
-
+	Matrix4 matStage;
 };

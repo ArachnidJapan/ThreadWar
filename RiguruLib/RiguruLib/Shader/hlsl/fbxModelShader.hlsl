@@ -100,7 +100,7 @@ float4 PS_Texture(VS_OUT In) : SV_TARGET
 	float Color = dot(-normalize(g_vecLight.xyz), normalize(In.normal));
 	float4 dif = g_Tex.Sample(g_Sampler, In.texel);
 	float3 c = dif.rgb  *max(Color,0.3f);
-	return float4(c,dif.a);
+	return float4(c,materialColor.w);
 }
 // エントリーポイントとバージョンを指定する
 technique11 TShader
