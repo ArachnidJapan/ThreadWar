@@ -27,6 +27,10 @@ ThreadWeb::ThreadWeb(IWorld& world, std::shared_ptr<Thread> parent1, std::shared
 	{
 		CollisionParameter cp = ModelRay(stageMatrix, OCT_ID::STAGE_OCT, mWebThreads[i], mWebThreads[i + 1]);
 		if (cp.colFlag){
+			if (i <= 1){
+				parameter.isDead = true;
+				break;
+			}
 			mWebParamater.b = mWebThreads[i-2];
 			mWebParamater.c = mWebThreads[i-2 + 1];
 

@@ -163,4 +163,5 @@ Scene TeamSelectScene::Next() const
 }
 
 void TeamSelectScene::End(){
+	selectSpider.clear();
 }
