@@ -1945,10 +1945,15 @@ void D3D11USER::CreateTexture(TCHAR* texName, ID3D11ShaderResourceView** texture
 }
 
 //アルファブレンディング設定
-void D3D11USER::SetAlphaBlend(bool alphaEnable){
+void D3D11USER::SetAlphaBlend(bool alphaEnable, bool alphaToCoverageEnable){
 	D3D11_RENDER_TARGET_BLEND_DESC BlendDesc;
-	BlendDesc = GetDefaultBlendDesc();
-	SetBlendState(&BlendDesc, 1, alphaEnable);
+	if (alphaEnable)
+		BlendDesc = GetAlignmentBlendDesc();
+	else
+		BlendDesc = GetDefaultBlendDesc();
+
+	if (alphaToCoverageEnable)BlendDesc = GetDefaultBlendDesc();
+	SetBlendState(&BlendDesc, 1, alphaToCoverageEnable);
 }
 
 //描画

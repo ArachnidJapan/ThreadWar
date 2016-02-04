@@ -15,12 +15,12 @@ ID3D11ShaderResourceView* LoadTexture::LoadBindTexture(const char* texName){
 	info.Height = D3DX11_DEFAULT;
 	info.Depth = D3DX11_DEFAULT;
 	info.FirstMipLevel = D3DX11_DEFAULT;          // テクスチャーの最高解像度のミップマップ レベル。実際の使用方法不明
-	info.MipLevels = 0;                           // ミップマップ数。0 または D3DX11_DEFAULT を使用するとすべてのミップマップ チェーンを作成する
+	info.MipLevels = D3DX11_DEFAULT;                           // ミップマップ数。0 または D3DX11_DEFAULT を使用するとすべてのミップマップ チェーンを作成する
 	info.Usage = D3D11_USAGE_DEFAULT;
 	info.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	info.CpuAccessFlags = 0;
 	info.MiscFlags = 0;
-	info.Format = DXGI_FORMAT_FROM_FILE;
+	info.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	info.Filter = D3DX11_FILTER_POINT;            // テクスチャー読み込み時に使用するフィルター
 	info.MipFilter = D3DX11_FILTER_POINT;         // ミップマップ作成時に使用するフィルター
 	info.pSrcInfo = NULL;

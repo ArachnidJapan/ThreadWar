@@ -233,7 +233,7 @@ public:
 	void CreateTexture(TCHAR* texName, ID3D11ShaderResourceView** texture, D3DX11_IMAGE_LOAD_INFO info);
 
 	//アルファブレンディング設定
-	void SetAlphaBlend( bool alphaEnable);
+	void SetAlphaBlend(bool alphaEnable,bool alphaToCoverageEnable);
 
 	//描画
 	void DrawIndexed(UINT indexCount, UINT StartIndexLocation, INT BaseVertexLocation);

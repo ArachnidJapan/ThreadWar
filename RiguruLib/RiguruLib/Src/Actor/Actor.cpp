@@ -111,13 +111,14 @@ CollisionParameter Actor::RayModelStep(const Actor& other)const{
 	CollisionParameter colpara = ModelRay(other.parameter.matrix, other.parameter.octId, start, end);
 	Vector3 nor = colpara.colNormal;
 	if (!colpara.colFlag)return colpara;
-
+	int count = 0;
 	while (true){
+		count++;
 		pos = pos - rad * 0.1f;
 		start = pos + rad	* 0.5f;
 		end = pos - rad		* 0.5f;
 		colpara = ModelRay(other.parameter.matrix, other.parameter.octId, start, end);
-		if (!colpara.colFlag){
+		if (!colpara.colFlag || count > 50){
 			colpara.colFlag = true;
 			colpara.id = COL_ID::RAY_MODEL_STEP_COLL;
 			colpara.colPos = pos - rad * 0.3f;

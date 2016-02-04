@@ -192,7 +192,7 @@ void UI::Draw(CAMERA_ID cID) const{
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f + 600.0f, 1080.0f - 60.0f), vector2(0.3f, 0.5f) * enemyWin, 0.5f, std::to_string(stage._Get()->ReturnEnemyTeamPoint()) + "pt", vector3(0, 0, 1), 1.0f, true);
 	}
 	
-	Graphic::GetInstance().DrawTexture(TEXTURE_ID::DAMAGE_TEXTURE, vector2(1920 / 2, 1080 / 2), vector2(1.5f, 1.5f), D3DXCOLOR(0, 0, 0, (float)(2 - max(0,hp)) / 4.0f), vector2(0.5f, 0.5f), 0.0f, 0.0f, 1, 1.0f);
+	Graphic::GetInstance().DrawTexture(TEXTURE_ID::DAMAGE_TEXTURE, vector2(1920 / 2, 1080 / 2), vector2(1.5f, 1.5f), D3DXCOLOR(1, 1, 1, (float)(2 - max(0, hp)) / 2.0f), vector2(0.5f, 0.5f), 0.0f, 0.0f, 1, 1.0f);
 	
 	float startTime = stage._Get()->ReturnStartTime();
 	if (startTime > 2.0f){

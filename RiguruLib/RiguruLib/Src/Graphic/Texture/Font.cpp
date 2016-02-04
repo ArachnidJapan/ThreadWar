@@ -194,7 +194,7 @@ void Font::Draw(Vector2 pos, Vector2 size, float range, Shader* shader, std::str
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
 	//Device::GetInstance().Getd3d11User()->SetBlendState(&Device::GetInstance().Getd3d11User()->GetAlignmentBlendDesc(), 1, FALSE);
-	Device::GetInstance().Getd3d11User()->SetAlphaBlend(TRUE);
+	Device::GetInstance().Getd3d11User()->SetAlphaBlend(TRUE,FALSE);
 	Device::GetInstance().Getd3d11User()->SetTopology(D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	float assa[4] = { 0.3f, 0.75f, 0.3f, 0 };
 
@@ -231,4 +231,5 @@ void Font::Draw(Vector2 pos, Vector2 size, float range, Shader* shader, std::str
 		Device::GetInstance().Getd3d11User()->DrawIndexed(6, 0, 0);
 		truePos = truePos + vector3(trueSize.x * range, 0, 0);
 	}
+	Device::GetInstance().Getd3d11User()->SetAlphaBlend(FALSE, FALSE);
 }

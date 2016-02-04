@@ -7,7 +7,7 @@
 #include <string>
 #include "Collision.h"
 
-CrystalCenter::CrystalCenter(IWorld& world_,ACTOR_ID crystalID) :Actor(world_){
+CrystalCenter::CrystalCenter(IWorld& world_, ACTOR_ID crystalID, bool teamSelect_) :Actor(world_), teamSelect(teamSelect_){
 	parameter.isDead = false;
 	parameter.id = crystalID;
 	parameter.cubeScale = vector3(10.0f, 3.0f, 10.0f);
@@ -16,8 +16,12 @@ CrystalCenter::CrystalCenter(IWorld& world_,ACTOR_ID crystalID) :Actor(world_){
 
 	point = 0;
 
+
 	crystalParameter.crystalISEnemy = false;
 	crystalParameter.crystalISPlayer = false;
+	if (teamSelect){
+		point = 1000;
+	}
 	keep = false;
 	angle = 0;
 	scaleStart = vector3(0, 0, 0);

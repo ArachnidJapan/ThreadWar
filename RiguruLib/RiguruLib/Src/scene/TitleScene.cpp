@@ -146,7 +146,7 @@ Scene TitleScene::Next() const
 	if (selects == TITLE_SELECT::SELECT_RETURN)
 		return Scene::Demo;
 	else
-		return Scene::GamePlay;
+		return Scene::TeamSelect;
 	
 	/*switch (selects)
 	{

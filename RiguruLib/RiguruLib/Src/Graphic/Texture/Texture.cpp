@@ -121,7 +121,7 @@ void Texture::Draw(Vector3 pos, Vector3 size, Vector3 center, float left, float 
 	// 行列をエフェクトに設定
 	// 頂点バッファ設定
 	//Device::GetInstance().Getd3d11User()->SetBlendState(&Device::GetInstance().Getd3d11User()->GetAlignmentBlendDesc(), 1, FALSE);
-	Device::GetInstance().Getd3d11User()->SetAlphaBlend(TRUE);
+	Device::GetInstance().Getd3d11User()->SetAlphaBlend(TRUE,false);
 	Device::GetInstance().Getd3d11User()->SetTopology(D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	float wi = 1920;
 	float he = 1080;///2;
@@ -162,5 +162,5 @@ void Texture::Draw(Vector3 pos, Vector3 size, Vector3 center, float left, float 
 	//Zの時はSTRIP
 	shader->ShaderApply();
 	Device::GetInstance().Getd3d11User()->DrawIndexed(6, 0, 0);
-	Device::GetInstance().Getd3d11User()->SetAlphaBlend(FALSE);
+	Device::GetInstance().Getd3d11User()->SetAlphaBlend(FALSE,FALSE);
 }

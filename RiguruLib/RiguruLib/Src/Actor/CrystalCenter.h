@@ -15,7 +15,7 @@ struct CrystalParameter{
 
 class CrystalCenter :public Actor, public std::enable_shared_from_this<CrystalCenter>{
 public:
-	CrystalCenter(IWorld& world_, ACTOR_ID crystalID);
+	CrystalCenter(IWorld& world_, ACTOR_ID crystalID,bool teamSelect_ = false);
 	~CrystalCenter();
 	virtual void Initialize() override;
 	virtual void Update(float frameTime) override;
@@ -37,4 +37,5 @@ private:
 	float angle;
 	Vector3 scaleStart;
 	bool startFlag;
+	bool teamSelect;
 };

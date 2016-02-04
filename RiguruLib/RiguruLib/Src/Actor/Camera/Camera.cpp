@@ -9,7 +9,7 @@ const float CAMERA_PLAYER_TARGET_HEIGHT = 0.75f;	// プレイヤー座標からどれだけ高
 const float CAMERA_PLAYER_LENGTH = 2.5f;	// プレイヤーとの距離
 const float CAMERA_COLLISION_SIZE = 0.2f;	// カメラの当たり判定サイズ
 
-Camera::Camera(CAMERA_ID cID_, std::weak_ptr<Stage> stage_) :cID(cID_),stage(stage_){
+Camera::Camera(CAMERA_ID cID_, std::weak_ptr<Stage> stage_) :cID(cID_), stage(stage_){
 	Initialize();
 }
 Camera::~Camera(){
@@ -33,7 +33,7 @@ void Camera::Initialize(){
 		cID == CAMERA_ID::PLAYER_CAMERA_4P)
 		matrix = RCMatrix4::rotateY(180.0f);
 	cameraMove = true;
-	
+
 	siyaChange = 0.0f;
 	playerAI = false;
 	dokusai = false;
@@ -193,37 +193,38 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 }
 
 
-void Camera::GotCamera(float frameTime){
-	{
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1,true))
-			speed += -1;
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_2,true))
-			speed += 1;
-		godFront = 0;
-		godLeft = 0;
-		godUp = 0;
-		mCameraParam.InputAngle = Device::GetInstance().GetInput()->RightStick(0) / 500.0f;
-		if (mCameraParam.InputAngle == vector3(0, 0, 0)){
-			mCameraParam.InputAngle = Device::GetInstance().GetInput()->MouseVec();
-		}
+void Camera::GotCamera(Vector3 cameraPos, float frameTime){
 
-		godFront = RCVector3::normalize(Device::GetInstance().GetInput()->LeftStick(0)).y / 500.0f;
-		godLeft = RCVector3::normalize(Device::GetInstance().GetInput()->LeftStick(0)).x / 500.0f;
-		if (godFront < 0.5f || godLeft < 0.5f){
-			if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP))
-				godFront = 1;
-			if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN))
-				godFront = -1;
-			if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT))
-				godLeft = 1;
-			if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT))
-				godLeft = -1;
-			if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_N))
-				godUp = 1;
-			if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_M))
-				godUp = -1;
-		}
+	godPos = cameraPos;
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))
+		speed += -1;
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_2, true))
+		speed += 1;
+	godFront = 0;
+	godLeft = 0;
+	godUp = 0;
+	mCameraParam.InputAngle = Device::GetInstance().GetInput()->RightStick(0) / 500.0f;
+	if (mCameraParam.InputAngle == vector3(0, 0, 0)){
+		mCameraParam.InputAngle = Device::GetInstance().GetInput()->MouseVec();
 	}
+
+	godFront = RCVector3::normalize(Device::GetInstance().GetInput()->LeftStick(0)).y / 500.0f;
+	godLeft = RCVector3::normalize(Device::GetInstance().GetInput()->LeftStick(0)).x / 500.0f;
+	if (godFront < 0.5f || godLeft < 0.5f){
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP))
+			godFront = 1;
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN))
+			godFront = -1;
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT))
+			godLeft = 1;
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT))
+			godLeft = -1;
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_N))
+			godUp = 1;
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_M))
+			godUp = -1;
+	}
+
 	D3DXMatrixPerspectiveFovLH(&matProj, 3.1415926f / 3.0f, 16.0f / 9.0f /*4.0f / 3.0f*/, 0.1f, 10000.0f);
 	//if (cID != CAMERA_ID::PLAYER_CAMERA){
 	//	Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 485), vector2(0.20f, 0.25f), 0.5f, "AngleH:" + std::to_string(Math::angle(mCameraParam.AngleH)) + "f");
@@ -233,6 +234,7 @@ void Camera::GotCamera(float frameTime){
 	//入力値をもとに計算
 	mCameraParam.AngleH += mCameraParam.InputAngle.x * CAMERA_ANGLE_SPEED *  frameTime;
 	mCameraParam.AngleV += mCameraParam.InputAngle.y * CAMERA_ANGLE_SPEED *  frameTime;
+	mCameraParam.AngleH = Math::radian(150.0f);
 	//クランプ
 	if (mCameraParam.AngleH > Math::radian(180))mCameraParam.AngleH = Math::radian(-180);
 	else if (mCameraParam.AngleH < Math::radian(-180))mCameraParam.AngleH = Math::radian(180);
@@ -277,7 +279,7 @@ void Camera::GotCamera(float frameTime){
 	RCMatrix4::setUp(rotate, up);
 	RCMatrix4::setFront(rotate, front);
 	matrix = rotate;
-	godPos += godShiftFront * godFront * speed * frameTime + godShiftLeft *godLeft * speed * frameTime + vector3(0,1,0) * godUp * speed * frameTime;
+	godPos += godShiftFront * godFront * speed * frameTime + godShiftLeft *godLeft * speed * frameTime + vector3(0, 1, 0) * godUp * speed * frameTime;
 	mCameraParam.Eye = godPos;
 	mCameraParam.Target = mCameraParam.Eye + front * 3.0f;
 

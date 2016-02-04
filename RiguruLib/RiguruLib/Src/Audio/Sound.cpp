@@ -120,8 +120,10 @@ void Sound::Play(bool loop){
 
 //‰¹Šy’â~
 void Sound::Stop(){
-	for (auto& i:g_Buffers)
-	i->Stop();
+	for (auto& i : g_Buffers){
+		i->Stop();
+		i->SetCurrentPosition(0);
+	}
 }
 //0`100‚Ü‚Å‚Å’²®‰Â”\
 void Sound::SetVolume(LONG volume){

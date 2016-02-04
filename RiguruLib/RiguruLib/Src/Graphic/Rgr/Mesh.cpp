@@ -112,7 +112,7 @@ void Mesh::Draw(D3DXMATRIX* matWorld, bool animFlag, Shader* shader, CAMERA_ID c
 	// 頂点バッファ設定
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
-	Device::GetInstance().Getd3d11User()->SetAlphaBlend(alphaFlag);
+	Device::GetInstance().Getd3d11User()->SetAlphaBlend(false,alphaFlag);
 	Device::GetInstance().Getd3d11User()->SetTopology(D3D_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	for (int i = 0; i < meshCount + 1; i++){
@@ -141,7 +141,7 @@ void Mesh::Draw(D3DXMATRIX* matWorld, bool animFlag, Shader* shader, CAMERA_ID c
 		shader->ShaderApply();
 		Device::GetInstance().Getd3d11User()->DrawIndexed(indexSize[i], 0, 0);
 	}
-	Device::GetInstance().Getd3d11User()->SetAlphaBlend(FALSE);
+	Device::GetInstance().Getd3d11User()->SetAlphaBlend(FALSE,FALSE);
 }
 
 MeshUser* Mesh::ReturnMeshUser(){

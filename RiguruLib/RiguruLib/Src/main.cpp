@@ -3,6 +3,7 @@
 #include "scene\SceneManager.h"
 #include "scene\GamePlayScene.h"
 #include "scene\TitleScene.h"
+#include "scene\TeamSelectScene.h"
 #include "scene\DemoScene.h"
 #include "scene\ResultScene.h"
 #include "Math\Vector3.h"
@@ -126,6 +127,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	VICTORY_ID winner = VICTORY_ID::PLAYER_WIN;
 	sm.Add(Scene::Demo, std::make_shared<DemoScene>());
 	sm.Add(Scene::Title, std::make_shared<TitleScene>());
+	sm.Add(Scene::TeamSelect, std::make_shared<TeamSelectScene>());
 	sm.Add(Scene::GamePlay, std::make_shared<GamePlayScene>(winner));
 	sm.Add(Scene::Ending, std::make_shared<ResultScene>(winner));
 	sm.SetScene(Scene::Demo);

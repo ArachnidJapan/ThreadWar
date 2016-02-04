@@ -179,7 +179,9 @@
     <ClInclude Include="Src\scene\ResultScene.h" />
     <ClInclude Include="Src\scene\Scene.h" />
     <ClInclude Include="Src\scene\SceneManager.h" />
+    <ClInclude Include="Src\scene\TeamSelectScene.h" />
     <ClInclude Include="Src\scene\TitleScene.h" />
+    <ClInclude Include="Src\TeamSelect\SelectSpider.h" />
     <ClInclude Include="Src\world\IWorld.h" />
     <ClInclude Include="Src\world\World.h" />
     <ClInclude Include="Src\world\WorldActor.h" />
@@ -249,7 +251,9 @@
     <ClCompile Include="Src\scene\GamePlayScene.cpp" />
     <ClCompile Include="Src\scene\ResultScene.cpp" />
     <ClCompile Include="Src\scene\SceneManager.cpp" />
+    <ClCompile Include="Src\scene\TeamSelectScene.cpp" />
     <ClCompile Include="Src\scene\TitleScene.cpp" />
+    <ClCompile Include="Src\TeamSelect\SelectSpider.cpp" />
     <ClCompile Include="Src\world\World.cpp" />
     <ClCompile Include="Src\world\WorldActor.cpp" />
   </ItemGroup>

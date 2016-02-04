@@ -28,7 +28,7 @@ public:
 	//ポジションとビューをセット
 	void SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime);
 	//ポジションとビューをセット
-	void GotCamera(float frameTime);
+	void GotCamera(Vector3 cameraPos, float frameTime);
 	//ビューのマトリックスを取得
 	D3DXMATRIX returnView();
 	//プロジェクションのマトリックスを取得
