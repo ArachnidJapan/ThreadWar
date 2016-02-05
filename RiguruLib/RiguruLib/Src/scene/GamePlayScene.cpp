@@ -226,20 +226,20 @@ void GamePlayScene::Update(float frameTime)
 	//Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(frameTime);
 	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 
-	//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_C, true))
-	//{
-	//	drawNum++;
-	//	if (drawNum >= 8 || drawNum <= -1) drawNum = 0;
-	//	if (drawNum == 0)drawCamera = CAMERA_ID::PLAYER_CAMERA_1P;
-	//	if (drawNum == 1)drawCamera = CAMERA_ID::PLAYER_CAMERA_2P;
-	//	if (drawNum == 2)drawCamera = CAMERA_ID::PLAYER_CAMERA_3P;
-	//	if (drawNum == 3)drawCamera = CAMERA_ID::PLAYER_CAMERA_4P;
-	//	if (drawNum == 4)drawCamera = CAMERA_ID::ENEMY_CAMERA_5P;
-	//	if (drawNum == 5)drawCamera = CAMERA_ID::ENEMY_CAMERA_6P;
-	//	if (drawNum == 6)drawCamera = CAMERA_ID::ENEMY_CAMERA_7P;
-	//	if (drawNum == 7)drawCamera = CAMERA_ID::ENEMY_CAMERA_8P;
-	//	//if (drawNum == 8)drawCamera = CAMERA_ID::GOD_CAMERA;
-	//}
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_C, true))
+	{
+		drawNum++;
+		if (drawNum >= 8 || drawNum <= -1) drawNum = 0;
+		if (drawNum == 0)drawCamera = CAMERA_ID::PLAYER_CAMERA_1P;
+		if (drawNum == 1)drawCamera = CAMERA_ID::PLAYER_CAMERA_2P;
+		if (drawNum == 2)drawCamera = CAMERA_ID::PLAYER_CAMERA_3P;
+		if (drawNum == 3)drawCamera = CAMERA_ID::PLAYER_CAMERA_4P;
+		if (drawNum == 4)drawCamera = CAMERA_ID::ENEMY_CAMERA_5P;
+		if (drawNum == 5)drawCamera = CAMERA_ID::ENEMY_CAMERA_6P;
+		if (drawNum == 6)drawCamera = CAMERA_ID::ENEMY_CAMERA_7P;
+		if (drawNum == 7)drawCamera = CAMERA_ID::ENEMY_CAMERA_8P;
+		//if (drawNum == 8)drawCamera = CAMERA_ID::GOD_CAMERA;
+	}
 }
 
 //•`‰æ

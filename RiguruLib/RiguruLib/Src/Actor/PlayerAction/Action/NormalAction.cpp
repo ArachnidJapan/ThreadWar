@@ -69,20 +69,12 @@ void NormalAction::Update(float frameTime){
 		//™X‚Éup‚ðvector3(0,1,0)‚É‹ß‚Ã‚¯‚é
 		Vector3 nor;
 		Vector3 pos;
-		if (beforeAction != ACTION_ID::THREAD_ACTION && beforeAction != ACTION_ID::REWIND_ACTION){
-			nor = RCVector3::lerp((moveVecUp), startNor, startRotate);
-			pos = RCVector3::lerp((moveVecPos), startPos, startRotate);
-			if (beforeAction == ACTION_ID::JUMP_ACTION || beforeAction == ACTION_ID::HOVER_ACTION){
-				pos = startPos;
-			}
+		nor = RCVector3::lerp((moveVecUp), startNor, startRotate);
+		pos = RCVector3::lerp((moveVecPos), startPos, startRotate);
+		if (beforeAction == ACTION_ID::JUMP_ACTION || beforeAction == ACTION_ID::HOVER_ACTION){
+			pos = startPos;
 		}
-		else {
-			nor = RCVector3::lerp((moveVecUp), startNor, startRotate);
-			pos = RCVector3::lerp((moveVecPos), startPos, startRotate);
-			//nor = moveVecUp;
-			//pos = moveVecPos;
-			//playerControlFlag.startNorChangeFlag = false;
-		}
+		
 		player._Get()->SetNor(nor);
 		player._Get()->SetPos(pos);
 		startRotate += STARTNORCHANGESPEED * frameTime;
