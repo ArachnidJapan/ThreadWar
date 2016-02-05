@@ -142,7 +142,6 @@ bool TitleScene::IsEnd() const
 //Ÿ‚ÌƒV[ƒ“‚ğ•Ô‚·
 Scene TitleScene::Next() const
 {
-	Audio::GetInstance().StopBGM(BGM_ID::TITLE_BGM);
 	if (selects == TITLE_SELECT::SELECT_RETURN)
 		return Scene::Demo;
 	else

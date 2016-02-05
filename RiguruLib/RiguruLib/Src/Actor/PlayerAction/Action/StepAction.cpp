@@ -3,7 +3,7 @@
 #include "../../../Graphic/Graphic.h"
 #include "../../Player.h"
 #include "../../../Math/Quaternion.h"
-
+#include "../../../Audio/Audio.h"
 StepAction::StepAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :PlayerAction(world, player_, padNum_, cID_,ACTION_ID::STEP_ACTION){
 	isDead = false;
 	nextAction = ACTION_ID::JUMP_ACTION;
@@ -47,6 +47,8 @@ bool StepAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 				WALKANIMSPEED, true, false, abs(controlVecNor.z), WALKANIMBLEND  * 2);
 			hover = false;
 			stepDelay = 0.0f;
+			if (player._Get()->ReturnPlayerNum() == 0)
+			Audio::GetInstance().PlaySE(SE_ID::STEP_SE);
 			return true;
 		}
 	}

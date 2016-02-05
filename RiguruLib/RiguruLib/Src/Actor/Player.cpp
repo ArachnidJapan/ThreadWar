@@ -553,7 +553,7 @@ Vector3 Player::Control(float frameTime, CAMERA_PARAMETER c){
 		!pAM.ReturnPlayerActionPtr()->ReturnRide())
 		&& pAM.ReturnActionID() != ACTION_ID::JUMP_ACTION &&
 		!pAM.ReturnPlayerActionPtr()->ReturnHitGround()){
-
+		
 		pAM.ChangeAction(ACTION_ID::JUMP_ACTION);
 	}
 
@@ -660,7 +660,7 @@ void Player::ShotThread(){
 		threadID = ACTOR_ID::ENEMY_THREAD_ACTOR;
 
 	world.Add(threadID, thread);
-	Audio::GetInstance().PlaySE(SE_ID::BOOM_SE);
+	//Audio::GetInstance().PlaySE(SE_ID::BOOM_SE);
 }
 
 TEAM_ID Player::GetTeam()
