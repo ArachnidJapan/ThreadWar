@@ -163,5 +163,6 @@ Scene TeamSelectScene::Next() const
 }
 
 void TeamSelectScene::End(){
+	Audio::GetInstance().StopBGM(BGM_ID::TITLE_BGM);
 	selectSpider.clear();
 }

@@ -93,12 +93,22 @@ winner(&winner_)
 	Graphic::GetInstance().LoadShader(SHADER_ID::CRYSTAL_SHADER, "Shader/cso/CrystalShader.cso");
 
 	/**************************************************音楽*****************************************************/
-	Audio::GetInstance().LoadSE(SE_ID::BOOM_SE, _T("Res/Sound/thread_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::ENTER_SE, _T("Res/Sound/enter_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::BACK_SE, _T("Res/Sound/back_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::SWITCH_SE, _T("Res/Sound/switch_se.wav"), 10);
-	Audio::GetInstance().LoadBGM(BGM_ID::TITLE_BGM, _T("Res/Sound/title_bgm.wav"));
-	Audio::GetInstance().LoadBGM(BGM_ID::GAME_BGM, _T("Res/Sound/game_bgm.wav"));
+	Audio::GetInstance().LoadSE(SE_ID::ENTER_SE, _T("Res/Sound/SE/enter_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::BACK_SE, _T("Res/Sound/SE/back_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::SWITCH_SE, _T("Res/Sound/SE/switch_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::RESTRAINT_SE, _T("Res/Sound/SE/restraint_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::THREAD_SHOT_SE, _T("Res/Sound/SE/thread_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::CRYSTALGET_SE, _T("Res/Sound/SE/crystalget_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::CRYSTALNORMAL_SE, _T("Res/Sound/SE/crystalnormal_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::DANGLE_SE, _T("Res/Sound/SE/hanging_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::JUMP_SE, _T("Res/Sound/SE/jump_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::ROUND_SE, _T("Res/Sound/SE/round_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::STEP_SE, _T("Res/Sound/SE/step_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::WALK_SE, _T("Res/Sound/SE/walk_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::WIND_SE, _T("Res/Sound/SE/wind_se.wav"), 10);
+
+	Audio::GetInstance().LoadBGM(BGM_ID::TITLE_BGM, _T("Res/Sound/BGM/title_bgm.wav"));
+	Audio::GetInstance().LoadBGM(BGM_ID::GAME_BGM, _T("Res/Sound/BGM/game_bgm.wav"));
 }
 
 //デストラクタ
@@ -203,7 +213,7 @@ void GamePlayScene::Update(float frameTime)
 	//}
 	if (Device::GetInstance().GetInput()->MouseButtonDown(INPUTMOUSEBUTTON::LEFT_BUTTON, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0,GAMEPADKEY::BUTTON_R1,true))
-	Audio::GetInstance().PlaySE(SE_ID::BOOM_SE);
+	Audio::GetInstance().PlaySE(SE_ID::THREAD_SHOT_SE);
 
 	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
 	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_2P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);

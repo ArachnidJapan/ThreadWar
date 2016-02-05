@@ -5,6 +5,7 @@
 #include "../../Thread.h"
 #include "../../ThreadWeb.h"
 #include "../../../Math/Quaternion.h"
+#include "../../../Audio/Audio.h"
 
 JumpAction::JumpAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :PlayerAction(world, player_, padNum_, cID_, ACTION_ID::JUMP_ACTION){
 	isDead = false;
@@ -49,6 +50,8 @@ bool JumpAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 		leftAngle = 0;
 		secondMoveVecUp = vector3(0, 1, 0);
 		hover = false;
+		if (player._Get()->ReturnPlayerNum() == 0)
+		Audio::GetInstance().PlaySE(SE_ID::JUMP_SE);
 		return true;
 	}
 	return false;
