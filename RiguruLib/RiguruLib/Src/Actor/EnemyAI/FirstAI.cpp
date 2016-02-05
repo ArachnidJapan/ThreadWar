@@ -33,6 +33,22 @@ void FirstAI::OnUpdate(float frameTime){
 	FinalInput();
 }
 
+void FirstAI::OnDamage(int num)
+{
+	//目標のマトリックスから計算
+	Matrix4 mat = targetMats[num];
+	Vector3 pos = RCMatrix4::getPosition(mat);
+	Vector3 vec = RCVector3::normalize(pos - myPos);
+	float dist = targetDists[num];
+
+	//targetが確定
+	target.mat = mat;
+	target.pos = pos;
+	target.vec = vec;
+	target.distance = dist;
+	targetNum = num;
+}
+
 void FirstAI::OnDead()
 {
 	aiTimer = 0.0f;
@@ -56,20 +72,33 @@ void FirstAI::AIRun(float frameTime)
 			//CrystalPointMoveAttack(frameTime);
 			ChangeAction(AI_ACTION::CrystalPointMoveAttack);
 		}
+		//すべてのクリスタルが制圧されていたら
 		else
 		{
-			aiTimer += frameTime;
-			if (aiTimer < 8.0f)
-				ChangeAction(AI_ACTION::RandomMove);
-			else if (aiTimer < 11.0f)
-				ChangeAction(AI_ACTION::CreateThreadWeb);
-			else if (aiTimer < 14.0f)
-				ChangeAction(AI_ACTION::JumpShotRewind);
-			else
-			{
-				ChangeAction(AI_ACTION::RandomMove);
-				aiTimer = 0.0f;
+			//とりあえず相手の陣地のクリスタルを目指す
+			if (parameter.id == ACTOR_ID::PLAYER_ACTOR){
+				target.lastLookingPos = iceCrystalPos;
+				target.lastLookingVec = RCVector3::normalize(iceCrystalPos - myPos);
+				target.distance = iceCrystalDist;
 			}
+			else{
+				target.lastLookingPos = caveCrystalPos;
+				target.lastLookingVec = RCVector3::normalize(caveCrystalPos - myPos);
+				target.distance = caveCrystalDist;
+			}
+			ChangeAction(AI_ACTION::CrystalPointMoveAttack);
+			//aiTimer += frameTime;
+			//if (aiTimer < 8.0f)
+			//	ChangeAction(AI_ACTION::RandomMove);
+			//else if (aiTimer < 11.0f)
+			//	ChangeAction(AI_ACTION::CreateThreadWeb);
+			//else if (aiTimer < 14.0f)
+			//	ChangeAction(AI_ACTION::JumpShotRewind);
+			//else
+			//{
+			//	ChangeAction(AI_ACTION::RandomMove);
+			//	aiTimer = 0.0f;
+			//}
 		}
 
 		//敵を発見した場合
@@ -122,29 +151,30 @@ void FirstAI::AIRun(float frameTime)
 		}
 	}
 
-	//４秒以上見失ったら
+	//見失ってから数秒経過したら
 	if (lostTimer > 4.0f)
 	{
-		if (lostTimer  < 12.0f)
-			//見失った地点に向かって移動
-			ChangeAction(AI_ACTION::TargetPointMove);
+		target.isBattle = false;
+		//if (lostTimer  < 12.0f)
+		//	//見失った地点に向かって移動
+		//	ChangeAction(AI_ACTION::TargetPointMove);
 
-		else
-		{
-			//移動し終えたら旋回して索敵
-			aiTimer += frameTime;
-			if (aiTimer < 6.0f)
-				//索敵のために回転
-				ChangeAction(AI_ACTION::TurnLook);
-			//TurnLook(frameTime);
-			else if (aiTimer >= 6.0f)
-			{
-				//回転しても見つからなかった場合は戦闘状態解除
-				target.isBattle = false;
-				lostTimer = 0;
-				aiTimer = 0;
-			}
-		}
+		//else
+		//{
+		//	//移動し終えたら旋回して索敵
+		//	aiTimer += frameTime;
+		//	if (aiTimer < 6.0f)
+		//		//索敵のために回転
+		//		ChangeAction(AI_ACTION::TurnLook);
+		//	//TurnLook(frameTime);
+		//	else if (aiTimer >= 6.0f)
+		//	{
+		//		//回転しても見つからなかった場合は戦闘状態解除
+		//		target.isBattle = false;
+		//		lostTimer = 0;
+		//		aiTimer = 0;
+		//	}
+		//}
 	}
 
 	actionFunc[currentAction](frameTime);

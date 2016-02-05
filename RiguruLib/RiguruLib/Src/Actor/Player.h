@@ -72,7 +72,8 @@ public:
 	int ReturnPlayerNum(){ return playerNum; }
 	std::weak_ptr<Stage> ReturnStage(){ return stage; }
 
-	void Damage(float damagePoint);
+	//食らったダメージ量, 食らった糸を生成してきた敵の番号
+	void Damage(float damagePoint, int num);
 private:
 	PlayerParameter playerParam;
 	PlayerActionManager pAM;

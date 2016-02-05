@@ -14,10 +14,11 @@
 //糸が伸びる速度
 const float THREAD_SPEED = 120;
 
-Thread::Thread(IWorld& world_, std::weak_ptr<Player> player_, std::weak_ptr<Stage> stage_, CAMERA_ID cID,bool startPosGroundTouch_) 
+Thread::Thread(IWorld& world_, std::weak_ptr<Player> player_, std::weak_ptr<Stage> stage_, CAMERA_ID cID, bool startPosGroundTouch_, int playerNum_)
 :Actor(world_),
 player(player_),
-stage(stage_){
+stage(stage_),
+playerNum(playerNum_){
 	//各種パラメーターに値をセット
 	parameter.isDead = false;
 	threadParam.startPosition = RCMatrix4::getPosition(*player._Get()->ReturnMat());
@@ -67,7 +68,7 @@ Thread::~Thread(){
 
 void Thread::Initialize(){
 	world.Add(parameter.id == ACTOR_ID::PLAYER_THREAD_ACTOR ? ACTOR_ID::PLAYER_THREADBULLET_ACTOR : ACTOR_ID::ENEMY_THREADBULLET_ACTOR,
-		std::make_shared<ThreadBullet>(world, stage, parameter.id, threadParam.startPosition, threadParam.currentEndPosition, threadParam.endPosition, shared_from_this(), cID));
+		std::make_shared<ThreadBullet>(world, stage, parameter.id, threadParam.startPosition, threadParam.currentEndPosition, threadParam.endPosition, shared_from_this(), cID, playerNum));
 }
 
 void Thread::Update(float frameTime){
