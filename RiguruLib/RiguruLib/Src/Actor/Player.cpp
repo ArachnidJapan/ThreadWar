@@ -575,7 +575,7 @@ Vector3 Player::Control(float frameTime, CAMERA_PARAMETER c){
 		Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_R1, true))) || inputShot) &&
 		pAM.ReturnActionID() != ACTION_ID::GROUND_CURL_ACTION &&
 		pAM.ReturnActionID() != ACTION_ID::AIR_CURL_ACTION){
-		std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID, (pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION || pAM.ReturnActionID() == ACTION_ID::THREAD_WEB_ACTION) ? false : true);
+		std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID, (pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION || pAM.ReturnActionID() == ACTION_ID::THREAD_WEB_ACTION) ? false : true, playerNum);
 		//それぞれのチームのIDの糸を生成。
 		ACTOR_ID threadID = ACTOR_ID::PLAYER_THREAD_ACTOR;
 		if (parameter.id != ACTOR_ID::PLAYER_ACTOR)
@@ -653,7 +653,7 @@ void Player::SetNor(Vector3 nor_){
 }
 
 void Player::ShotThread(){
-	std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID, pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION ? false : true);
+	std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID, pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION ? false : true, playerNum);
 	//それぞれのチームのIDの糸を生成。
 	ACTOR_ID threadID = ACTOR_ID::PLAYER_THREAD_ACTOR;
 	if (teamID == TEAM_ID::SECOND_TEAM)
@@ -716,13 +716,15 @@ std::weak_ptr<ThreadWeb> Player::ReturnThreadWeb(){
 	return pAM.ReturnThreadWeb();
 }
 
-void Player::Damage(float damagePoint){
+void Player::Damage(float damagePoint, int num){
 	playerParam.hp -= damagePoint;
+	ai[currentAI]->Damage(num);
 
 	if (playerParam.hp <= 0 && !isRespawn)
 	{
 		stage._Get()->AddPoint(parameter.id);
 		isRespawn = true;
+		ai[currentAI]->Dead();
 	}
 }
 void Player::SetBindTime(float bindTime_){

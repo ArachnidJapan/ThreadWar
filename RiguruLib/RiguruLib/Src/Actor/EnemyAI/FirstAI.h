@@ -6,6 +6,7 @@ public:
 	FirstAI(IWorld& wo, PlayerActionManager& action, std::weak_ptr<Player> player, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_);
 	virtual void OnInitialize() override;
 	virtual void OnUpdate(float frameTime) override;
+	virtual void OnDamage(int num) override;
 	virtual void OnDead() override;
 
 private:
