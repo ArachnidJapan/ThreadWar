@@ -93,6 +93,7 @@ public:
 	void Initialize();
 	void Update(float frameTime);
 	void Draw(CAMERA_ID cID);
+	void Damage();
 	virtual AI_STATE NextAI(){ return nextAI; };
 	//éÄñSéûÇÃèàóù
 	void Dead();
@@ -101,6 +102,7 @@ protected:
 	virtual void OnInitialize(){};
 	virtual void OnUpdate(float frameTime){};
 	virtual void OnDraw(CAMERA_ID cID) const{};
+	virtual void OnDamage(){};
 	virtual void OnDead(){};
 
 protected:

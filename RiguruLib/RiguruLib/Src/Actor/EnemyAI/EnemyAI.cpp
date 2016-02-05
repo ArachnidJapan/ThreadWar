@@ -119,6 +119,10 @@ void EnemyAI::Draw(CAMERA_ID cID)
 {
 	OnDraw(cID);
 }
+void EnemyAI::Damage()
+{
+
+}
 void EnemyAI::Dead()
 {
 	target.mat = RCMatrix4::Identity();
@@ -562,56 +566,68 @@ void EnemyAI::TargetPointMoveAttack(float frameTime)
 }
 void EnemyAI::CrystalPointMoveAttack(float frameTime)
 {
-	TargetPointLookH(frameTime);
-	TargetPointLookV(frameTime);
-	//タイマ増加
-	moveTime += frameTime;
-	stepTime += frameTime;
+	//自身とクリスタルとの間にステージポリゴンがあるか調べる
+	Vector3 start = myPos + RCMatrix4::getUp(myMat) * 1.0f;
+	Vector3 end = nearestCrystalPos;
+	end = end - RCVector3::normalize(end - start) * 2.0f;
+	CollisionParameter stageCol = ModelRay(*stage._Get()->ReturnMat(), OCT_ID::STAGE_OCT, start, end);
+	bool isStageCol = stageCol.colFlag;
+	//Graphic::GetInstance().DrawLine(start, end, CAMERA_ID::PLAYER_CAMERA_1P, vector3(0, 1, 0));
 
-
-	//距離によって前後の移動方向を変える
-	if (target.distance > 20.0f)
-		//前進
+	//ポリゴンがある場合
+	if (isStageCol)
+	{
+		//斜めに前進
 		inputVec.z = -1;
-	else
-		//後退
-		inputVec.z = 1;
-
-	//左右入力切替
-	if (moveTime > moveTimeMax){
-		inputVecX = -inputVecX;
-		moveTime = 0;
-		moveTimeMax = Math::random(1.0f, 5.0f);
+		inputVec.x = -0.2f;
+		inputVec = RCVector3::normalize(inputVec);
 	}
-	//左右入力
-	inputVec.x = inputVecX;
-	//正規化
-	inputVec = RCVector3::normalize(inputVec);
+	//ポリゴンがない場合
+	else
+	{
+		TargetPointLookH(frameTime);
+		TargetPointLookV(frameTime);
+		//タイマ増加
+		moveTime += frameTime;
+		stepTime += frameTime;
 
+		//距離によって前後の移動方向を変える
+		if (target.distance > 20.0f)
+			//前進
+			inputVec.z = -1;
+		else
+			//後退
+			inputVec.z = 1;
+
+		//左右入力切替
+		if (moveTime > moveTimeMax){
+			inputVecX = -inputVecX;
+			moveTime = 0;
+			moveTimeMax = Math::random(1.0f, 5.0f);
+		}
+		//左右入力
+		inputVec.x = inputVecX;
+		//正規化
+		inputVec = RCVector3::normalize(inputVec);
+
+		//糸の発射
+		timer += frameTime;
+		if (timer > 0.2f)
+		{
+			InputShotThread();
+			timer = 0;
+		}
+	}
+
+
+	//ポリゴンがあってもなくても
 
 	//ステップ入力
+	stepTime += frameTime;
 	if (stepTime > stepTimeMax){
 		InputStep();
 		stepTime = 0;
 		stepTimeMax = Math::random(1.0f, 3.0f);
-	}
-
-	//糸の発射
-	timer += frameTime;
-
-	Vector3 start = myPos + RCMatrix4::getUp(myMat) * 1.0f;
-	Vector3 end = nearestCrystalPos;
-	end = end - RCVector3::normalize(end - start) * 2.0f;
-	//Graphic::GetInstance().DrawLine(start, end, CAMERA_ID::PLAYER_CAMERA_1P, vector3(0, 1, 0));
-	if (timer > 0.2f)
-	{
-		Vector3 start = myPos + RCMatrix4::getUp(myMat) * 1.0f;
-		Vector3 end = nearestCrystalPos;
-		end = end - RCVector3::normalize(end - start) * 2.0f;
-		CollisionParameter stageCol = ModelRay(*stage._Get()->ReturnMat(), OCT_ID::STAGE_OCT, start, end);
-		if (!stageCol.colFlag)
-			InputShotThread();
-		timer = 0;
 	}
 }
 void EnemyAI::TargetJumpShotRewind(float frameTime)
