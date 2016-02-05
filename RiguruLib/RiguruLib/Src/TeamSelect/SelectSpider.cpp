@@ -120,7 +120,7 @@ void SelectSpider::SetPlayerParam(int playerNum, bool plus){
 			}
 		}
 		else{
-			if (nextParam == SelectPlayerParam::CP4){
+			if (nextParam == SelectPlayerParam::NONE){
 				spp[playerNum] = SelectPlayerParam::NONE;
 				return;
 			}
@@ -142,7 +142,7 @@ void SelectSpider::SetPlayerParam(int playerNum, bool plus){
 						break;
 					}
 					nextParam = (SelectPlayerParam)(nextParam + 1);
-					if (nextParam == SelectPlayerParam::CP4){
+					if (nextParam == SelectPlayerParam::NONE){
 						spp[playerNum] = SelectPlayerParam::NONE;
 						finish = true;
 					}
@@ -164,7 +164,7 @@ void SelectSpider::SetPlayerParam(int playerNum, bool plus){
 						break;
 					}
 					nextParam = (SelectPlayerParam)(nextParam + 1);
-					if (nextParam == SelectPlayerParam::CP4){
+					if (nextParam == SelectPlayerParam::NONE){
 						spp[playerNum] = SelectPlayerParam::NONE;
 						finish = true;
 					}
@@ -201,7 +201,7 @@ void SelectSpider::SetPlayerParam(int playerNum, bool plus){
 			} while (!finish);
 		}
 		else{
-			if (nextParam == SelectPlayerParam::CP4)nextParam = SelectPlayerParam::CP3;
+			//if (nextParam == SelectPlayerParam::CP4)nextParam = SelectPlayerParam::CP3;
 			if (nextParam == SelectPlayerParam::P0){
 				spp[playerNum] = SelectPlayerParam::NONE;
 				return;
