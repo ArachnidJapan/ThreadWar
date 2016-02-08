@@ -98,7 +98,11 @@ void Player::Initialize(){
 		parameter.matrix = RCMatrix4::scale(vector3(0.1f, 0.1f, 0.1f))* RCMatrix4::rotateY(180.0f) * RCMatrix4::translate(pos);
 	}
 	else{
-		pos = respawnPoint = vector3(-2.4f + (1.2f * playerNum - 4), 0.83f, 91.46f);
+		if (!p1)
+		pos = respawnPoint = vector3(-2.4f + (1.2f * (playerNum - 4)), 0.83f, 91.46f);
+		else
+
+			pos = respawnPoint = vector3(-2.4f + (1.2f * (playerNum)), 0.83f, 91.46f);
 		parameter.matrix = RCMatrix4::scale(vector3(0.1f, 0.1f, 0.1f)) * RCMatrix4::translate(pos);
 	}
 
@@ -209,16 +213,22 @@ void Player::Update(float frameTime){
 	//playerParam.vec = Control(frameTime, c);
 	////入力を取得
 	//else
-	pAM.Control();
-	if (stage._Get()->ReturnStartTime() < 0)
-	{
-		if (p1)
-			playerParam.vec = Control(frameTime, c);
-		else
+	if (!isRespawn){
+		pAM.Control();
+		if (stage._Get()->ReturnStartTime() < 0)
 		{
-			ai[currentAI]->Update(frameTime);
-			Control(frameTime, c);
+			if (p1)
+				playerParam.vec = Control(frameTime, c);
+			else
+			{
+				ai[currentAI]->Update(frameTime);
+				Control(frameTime, c);
+			}
 		}
+		//移動ベクトルを初期化
+		parameter.inertiaVec = parameter.moveVec;
+		parameter.moveVec = vector3(0, 0, 0);
+		pAM.Update(frameTime);
 	}
 
 	//if (playerAI){
@@ -227,11 +237,6 @@ void Player::Update(float frameTime){
 	//}
 
 
-	//移動ベクトルを初期化
-	parameter.inertiaVec = parameter.moveVec;
-	parameter.moveVec = vector3(0, 0, 0);
-	if (!isRespawn)
-		pAM.Update(frameTime);
 	//無敵じゃなければ敵の糸と判定
 	if (!isNodamage)
 	{
@@ -582,6 +587,7 @@ Vector3 Player::Control(float frameTime, CAMERA_PARAMETER c){
 		pAM.ReturnActionID() != ACTION_ID::GROUND_CURL_ACTION &&
 		pAM.ReturnActionID() != ACTION_ID::AIR_CURL_ACTION){
 		std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID, (pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION || pAM.ReturnActionID() == ACTION_ID::THREAD_WEB_ACTION) ? false : true, playerNum);
+		if(p1)Audio::GetInstance().PlaySE(SE_ID::THREAD_SHOT_SE);
 		//それぞれのチームのIDの糸を生成。
 		ACTOR_ID threadID = ACTOR_ID::PLAYER_THREAD_ACTOR;
 		if (parameter.id != ACTOR_ID::PLAYER_ACTOR)
