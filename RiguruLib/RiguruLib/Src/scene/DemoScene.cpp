@@ -21,7 +21,7 @@
 #define CHANGE_SCENE_TIME 20
 
 //コンストラクタ
-DemoScene::DemoScene()
+DemoScene::DemoScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 {
 	/************************************************テクスチャー*************************************************/
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TITLE_LOGO_TEXTURE, "Res/Texture/title.png");
@@ -61,19 +61,19 @@ void DemoScene::Initialize()
 	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_2P)->SetPadNum(1);
 	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_3P)->SetPadNum(2);
 	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_4P)->SetPadNum(3);
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_1P, 0, 0));
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_2P, 1, 1));
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_3P, 2, 2));
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_4P, 3, 3));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_1P, 0, 0,false,false));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_2P, 1, 1,false,false));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_3P, 2, 2,false,false));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_4P, 3, 3,false,false));
 	//敵チームを追加
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_5P)->SetPadNum(4);
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_6P)->SetPadNum(5);
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_7P)->SetPadNum(6);
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetPadNum(7);
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_5P, 4, 4));
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_6P, 5, 5));
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_7P, 6, 6));
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_8P, 7, 7));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_5P, 4, 4,false,true));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_6P, 5, 5,false,true));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_7P, 6, 6,false,true));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_8P, 7, 7,false,true));
 
 	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->SetCamera(vector3(0, 2.0f, -5.0f), vector3(0, 0, 0), 1.0f / 60.0f);
 	/***********/

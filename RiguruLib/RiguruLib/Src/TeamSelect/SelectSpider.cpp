@@ -1,18 +1,18 @@
 #include "SelectSpider.h"
 #include "../Graphic/Graphic.h"
 
-SelectSpider::SelectSpider(bool player_, bool spider_, Vector2 pos_, int playerNum_, std::shared_ptr<SelectSpider> spiderSelect_){
-	tarantula = !player;
+SelectSpider::SelectSpider(bool red_, bool spider_, Vector2 pos_, int playerNum_, std::shared_ptr<SelectSpider> spiderSelect_){
+	tarantula = !red_;
 	select = false;
-	player = player_;
-	enemyPlayerHave = !player;
+	red = red_;
+	enemyPlayerHave = !red;
 	spider = spider_;
 	pos = pos_;
 	spiderSelect = spiderSelect_;
 	playerNum = playerNum_;
 
 	int notPlayer = -1;
-	if (player){
+	if (red){
 		spp[0] = SelectPlayerParam::P1;
 		notPlayer = 0;
 	}
@@ -21,18 +21,6 @@ SelectSpider::SelectSpider(bool player_, bool spider_, Vector2 pos_, int playerN
 	spp[1 + notPlayer] = SelectPlayerParam::CP1;
 	spp[2 + notPlayer] = SelectPlayerParam::CP2;
 	spp[3 + notPlayer] = SelectPlayerParam::CP3;
-
-	havePlayerSpp.push_back(SelectPlayerParam::P1);
-	havePlayerSpp.push_back(SelectPlayerParam::CP1);
-	havePlayerSpp.push_back(SelectPlayerParam::CP2);
-	havePlayerSpp.push_back(SelectPlayerParam::CP3);
-	havePlayerSpp.push_back(SelectPlayerParam::NONE);
-
-	notHavePlayerSpp.push_back(SelectPlayerParam::CP1);
-	notHavePlayerSpp.push_back(SelectPlayerParam::CP2);
-	notHavePlayerSpp.push_back(SelectPlayerParam::CP3);
-	notHavePlayerSpp.push_back(SelectPlayerParam::CP4);
-	notHavePlayerSpp.push_back(SelectPlayerParam::NONE);
 
 	sppString[SelectPlayerParam::P1] = "P1";
 	sppString[SelectPlayerParam::CP1] = "CP1";
@@ -252,7 +240,7 @@ void SelectSpider::SpiderSelect(){
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::THREAD_BACK_TEXTURE,
 			pos,
 			vector2(1.0f, 1.0f),
-			player == true ? D3DXCOLOR(1, 0, 0, 1.0f) : D3DXCOLOR(0, 0, 1, 1),
+			red == true ? D3DXCOLOR(1, 0, 0, 1.0f) : D3DXCOLOR(0, 0, 1, 1),
 			vector2(0.5f, 0.5f),
 			0.0f,
 			0.0f,
@@ -260,7 +248,7 @@ void SelectSpider::SpiderSelect(){
 			1.0f);
 
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT,
-			vector2(50 + (player == true ? 0 : 1920 / 2), pos.y + 55.0f),
+			vector2(50 + (red == true ? 0 : 1920 / 2), pos.y + 55.0f),
 			vector2(0.2f, 0.35f),
 			0.6f,
 			"L1",
@@ -269,7 +257,7 @@ void SelectSpider::SpiderSelect(){
 			true);
 
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT,
-			vector2(1920 - 35 + (player != true ? 0 : -1920 / 2), pos.y + 55.0f),
+			vector2(1920 - 35 + (red != true ? 0 : -1920 / 2), pos.y + 55.0f),
 			vector2(0.2f, 0.35f),
 			0.6f,
 			"R1",
@@ -282,12 +270,12 @@ void SelectSpider::SpiderSelect(){
 		vector2(0.3f, 0.5f) * (select == true ? 1.3f : 1.0f),
 		0.6f,
 		"SELECT YOUR SPIDER",
-		player == true ? vector3(1, 0, 0) : vector3(0, 0, 1),
+		red == true ? vector3(1, 0, 0) : vector3(0, 0, 1),
 		1,
 		true);
 
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::MENU_ARROW_LEFT_TEXTURE,
-		vector2(50 + (player == true ? 0 : 1920 / 2), pos.y + 6.0f),
+		vector2(50 + (red == true ? 0 : 1920 / 2), pos.y + 6.0f),
 		vector2(1.0f, 1.0f)* (select == true ? 1.5f : 1.0f),
 		D3DXCOLOR(1, 1, 1, 1),
 		vector2(0.5f, 0.5f),
@@ -297,7 +285,7 @@ void SelectSpider::SpiderSelect(){
 		1.0f);
 
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::MENU_ARROW_RIGHT_TEXTURE,
-		vector2(1920 - 50 + (player != true ? 0 : -1920 / 2), pos.y + 6.0f),
+		vector2(1920 - 50 + (red != true ? 0 : -1920 / 2), pos.y + 6.0f),
 		vector2(1.0f, 1.0f)* (select == true ? 1.5f : 1.0f),
 		D3DXCOLOR(1, 1, 1, 1),
 		vector2(0.5f, 0.5f),
@@ -312,7 +300,7 @@ void SelectSpider::PlayerSelect(){
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::THREAD_BACK_TEXTURE,
 			vector2(pos.x, pos.y - 40.0f),
 			vector2(0.6f, 0.6f),
-			player == true ? D3DXCOLOR(1, 0, 0, 1.0f) : D3DXCOLOR(0, 0, 1, 1),
+			red == true ? D3DXCOLOR(1, 0, 0, 1.0f) : D3DXCOLOR(0, 0, 1, 1),
 			vector2(0.5f, 0.5f),
 			0.0f,
 			0.0f,
@@ -358,7 +346,7 @@ void SelectSpider::PlayerSelect(){
 		1.0f);
 	TEXTURE_ID tID;
 	if (spiderSelect->ReturnTarantula()){
-		if (player){
+		if (red){
 			tID = TEXTURE_ID::TARENTULA_RED_TEXTURE;
 		}
 		else{
@@ -366,7 +354,7 @@ void SelectSpider::PlayerSelect(){
 		}
 	}
 	else{
-		if (player){
+		if (red){
 			tID = TEXTURE_ID::NEPHILA_RED_TEXTURE;
 		}
 		else{
@@ -389,7 +377,7 @@ void SelectSpider::PlayerSelect(){
 		0.6f,
 		sppString[spiderSelect->ReturnMyPlayerParam(playerNum)],
 		spiderSelect->ReturnMyPlayerParam(playerNum) == SelectPlayerParam::P1 ?
-		player ?
+		red ?
 		vector3(1, 0, 0) : vector3(0, 0, 1) :
 		spiderSelect->ReturnMyPlayerParam(playerNum) == SelectPlayerParam::NONE ?
 		vector3(1, 1, 1) : vector3(0, 1, 0),
@@ -401,6 +389,16 @@ void SelectSpider::SetSelect(bool flag){
 	select = flag;
 }
 
+int SelectSpider::CPUCount(){
+	int count = 0;
+	for (auto i : spp){
+		if (i.second != SelectPlayerParam::P0 && i.second != SelectPlayerParam::P1 && i.second != SelectPlayerParam::NONE){
+			count++;
+		}
+	}
+
+	return count;
+}
 
 void SelectSpider::SetTarantula(bool flag){
 	tarantula = flag;

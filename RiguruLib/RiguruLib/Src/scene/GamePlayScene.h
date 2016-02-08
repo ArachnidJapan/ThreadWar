@@ -6,11 +6,12 @@
 #include "../Math/Matrix4.h"
 #include "../Actor/ID.h"
 #include "../Actor/Stage.h"
+#include "SceneParameter.h"
 
 class  GamePlayScene :public IScene{
 public:
 	//コンストラクタ 
-	GamePlayScene(VICTORY_ID& winner_);
+	GamePlayScene(std::weak_ptr<SceneParameter> sp_);
 	//デストラクタ
 	~GamePlayScene();
 
@@ -28,6 +29,7 @@ public:
 	virtual void End()override;
 
 private:
+	std::weak_ptr<SceneParameter> sp;
 	std::shared_ptr<Stage> stage;
 	bool mIsEnd;
 	World wa;
@@ -39,7 +41,6 @@ private:
 	const float teamMemberCount = 4;
 	CAMERA_ID drawCamera = CAMERA_ID::PLAYER_CAMERA_1P;
 	float drawNum = 0;
-	VICTORY_ID* winner;
 	bool fadeIn, fadeOut;
 	float fadeTime;
 };

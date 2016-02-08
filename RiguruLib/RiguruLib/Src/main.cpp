@@ -1,6 +1,7 @@
 #include "Other\DX11User.h"
 #include "Other\Device.h"
 #include "scene\SceneManager.h"
+#include "scene\SceneParameter.h"
 #include "scene\GamePlayScene.h"
 #include "scene\TitleScene.h"
 #include "scene\TeamSelectScene.h"
@@ -16,7 +17,7 @@
 
 // アプリケーション名
 TCHAR* AppName = _T("Thread War");
-
+std::shared_ptr<SceneParameter> sp = std::make_shared<SceneParameter>();
 SceneManager sm;
 float frameTime;
 LARGE_INTEGER timeStart;	//パフォーマンスカウンターの開始値
@@ -124,12 +125,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	::ShowWindow(hwnd_, SW_SHOW);
 	::UpdateWindow(hwnd_);
 
-	VICTORY_ID winner = VICTORY_ID::PLAYER_WIN;
-	sm.Add(Scene::Demo, std::make_shared<DemoScene>());
-	sm.Add(Scene::Title, std::make_shared<TitleScene>());
-	sm.Add(Scene::TeamSelect, std::make_shared<TeamSelectScene>());
-	sm.Add(Scene::GamePlay, std::make_shared<GamePlayScene>(winner));
-	sm.Add(Scene::Ending, std::make_shared<ResultScene>(winner));
+	sm.Add(Scene::Demo, std::make_shared<DemoScene>(sp));
+	sm.Add(Scene::Title, std::make_shared<TitleScene>(sp));
+	sm.Add(Scene::TeamSelect, std::make_shared<TeamSelectScene>(sp));
+	sm.Add(Scene::GamePlay, std::make_shared<GamePlayScene>(sp));
+	sm.Add(Scene::Ending, std::make_shared<ResultScene>(sp));
 	sm.SetScene(Scene::Demo);
 	//高分解能タイマーの準備を試みる
 	if (QueryPerformanceFrequency(&timerFreq) == false)

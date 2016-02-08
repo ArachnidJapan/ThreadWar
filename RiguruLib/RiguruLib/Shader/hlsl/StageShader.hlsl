@@ -13,6 +13,7 @@ float4 g_vecLight;
 float4 materialColor;
 
 float4 blendLevel;
+
 // 頂点シェーダーの入力パラメータ
 struct VS_IN
 {
@@ -29,8 +30,8 @@ struct VS_OUT
 	float4 pos   : SV_POSITION;
 	float3 normal : NORMAL;
 	float2 texel : TEXCOORD0;
+	float Color : COLOR;
 };
-
 // 頂点シェーダー
 VS_OUT VS_Main(VS_IN In)
 {
@@ -53,6 +54,7 @@ VS_OUT VS_Main(VS_IN In)
 
 	Out.texel = float2(In.texel.x, 1 - In.texel.y);
 
+	Out.Color = dot(-normalize(g_vecLight.xyz), normalize(In.normal));
 	return Out;
 }
 
@@ -60,9 +62,8 @@ VS_OUT VS_Main(VS_IN In)
 float4 PS_Texture(VS_OUT In) : SV_TARGET
 {
 	// ランバート拡散照明
-	float Color = dot(-normalize(g_vecLight.xyz), normalize(In.normal));
 	float4 dif = g_Tex.Sample(g_Sampler, In.texel);
-		float3 c = dif.rgb  *max(Color, 0.3f);
+		float3 c = dif.rgb  *max(In.Color, 0.3f);
 		return float4(c, dif.a);
 }
 // エントリーポイントとバージョンを指定する

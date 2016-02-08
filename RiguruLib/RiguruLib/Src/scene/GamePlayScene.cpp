@@ -11,8 +11,7 @@
 
 
 //コンストラクタ
-GamePlayScene::GamePlayScene(VICTORY_ID& winner_) :
-winner(&winner_)
+GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 {
 	//mIsEnd = false;
 	svolume = 80;
@@ -23,6 +22,8 @@ winner(&winner_)
 	Graphic::GetInstance().LoadMesh(MODEL_ID::CUBE_MODEL, "Res/Rgr/shape/cube.rgr");
 	Graphic::GetInstance().LoadMesh(MODEL_ID::TARENTULE_MODEL, "Res/Rgr/kumo/kumo.rgr");
 	Graphic::GetInstance().LoadMesh(MODEL_ID::NEPHILA_MODEL, "Res/Rgr/nephila/nephila.rgr");
+	Graphic::GetInstance().LoadMesh(MODEL_ID::TARENTULE2_MODEL, "Res/Rgr/kumo/kumo2.rgr");
+	Graphic::GetInstance().LoadMesh(MODEL_ID::NEPHILA2_MODEL, "Res/Rgr/nephila/nephila2.rgr");
 	Graphic::GetInstance().LoadMesh(MODEL_ID::THREAD_EFFECT_MODEL, "Res/Rgr/thread/threadEffect.rgr");
 	Graphic::GetInstance().LoadMesh(MODEL_ID::STAGE_MODEL, "Res/Rgr/stage/map01/stageDraw.rgr");
 	Graphic::GetInstance().LoadMesh(MODEL_ID::CRYSTAL_CENTER_MODEL, "Res/Rgr/stage/crystal1.rgr");
@@ -122,7 +123,7 @@ void GamePlayScene::Initialize()
 	mIsEnd = false;
 	fadeIn = true; 
 	fadeOut = false;
-	*winner = VICTORY_ID::PLAYER_WIN;
+	sp._Get()->SetVictoryID(VICTORY_ID::PLAYER_WIN);
 	fadeTime = 1;
 
 	wa.Initialize();
@@ -134,6 +135,34 @@ void GamePlayScene::Initialize()
 	wa.Add(ACTOR_ID::CRYSTAL_PLAYERSIDE_ACTOR, crystalPlayerSide);
 	wa.Add(ACTOR_ID::CRYSTAL_ENEMYSIDE_ACTOR, crystalEnemySide);
 	stage = std::make_shared<Stage>(wa, crystalCenter, crystalPlayerSide, crystalEnemySide,true);
+	TeamSelectResult tsr = *sp._Get()->ReturnTeamSelectResult();
+	//if (tsr.redHavePlayer){
+	//	for (int i = 0; i < tsr.redHaveCPU + 1; i++){
+	//		Device::GetInstance().CameraInit((CAMERA_ID)(CAMERA_ID::PLAYER_CAMERA_1P + i), stage);
+	//	}
+	//
+	//	for (int i = 0; i < tsr.blueHaveCPU; i++){
+	//		Device::GetInstance().CameraInit((CAMERA_ID)(CAMERA_ID::ENEMY_CAMERA_5P + i), stage);
+	//	}
+	//}
+	//else if (tsr.blueHavePlayer){
+	//	for (int i = 0; i < tsr.redHaveCPU; i++){
+	//		Device::GetInstance().CameraInit((CAMERA_ID)(CAMERA_ID::PLAYER_CAMERA_1P + i), stage);
+	//	}
+	//	for (int i = 0; i < tsr.blueHaveCPU + 1; i++){
+	//		Device::GetInstance().CameraInit((CAMERA_ID)(CAMERA_ID::ENEMY_CAMERA_5P + i), stage);
+	//	}
+	//}
+	//else{
+	//	for (int i = 0; i < tsr.redHaveCPU; i++){
+	//		Device::GetInstance().CameraInit((CAMERA_ID)(CAMERA_ID::PLAYER_CAMERA_1P + i), stage);
+	//	}
+	//
+	//	for (int i = 0; i < tsr.blueHaveCPU; i++){
+	//		Device::GetInstance().CameraInit((CAMERA_ID)(CAMERA_ID::ENEMY_CAMERA_5P + i), stage);
+	//	}
+	//}
+
 	Device::GetInstance().CameraInit(CAMERA_ID::PLAYER_CAMERA_1P, stage);
 	Device::GetInstance().CameraInit(CAMERA_ID::PLAYER_CAMERA_2P, stage);
 	Device::GetInstance().CameraInit(CAMERA_ID::PLAYER_CAMERA_3P, stage);
@@ -144,27 +173,29 @@ void GamePlayScene::Initialize()
 	Device::GetInstance().CameraInit(CAMERA_ID::ENEMY_CAMERA_8P, stage);
 	//Device::GetInstance().CameraInit(CAMERA_ID::GOD_CAMERA, stage);
 
-	wa.Add(ACTOR_ID::UI_ACTOR, std::make_shared<UI>(wa,stage));
+	wa.Add(ACTOR_ID::UI_ACTOR, std::make_shared<UI>(wa,stage,ACTOR_ID::ENEMY_ACTOR));
 	wa.Add(ACTOR_ID::STAGE_ACTOR, stage);
 
 	//プレイヤーチームを追加
-	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetPadNum(0);
-	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_2P)->SetPadNum(1);
+	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetPadNum(1);
+	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_2P)->SetPadNum(4);
 	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_3P)->SetPadNum(2);
 	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_4P)->SetPadNum(3);
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_1P, 0, 0));
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_2P, 1, 1));
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_3P, 2, 2));
-	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_4P, 3, 3));
+	bool tarentula = tsr.redTarantula;
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_1P, 0, 0, false, tarentula));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_2P, 1, 1, false, tarentula));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_3P, 2, 2, false, tarentula));
+	wa.Add(ACTOR_ID::PLAYER_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::PLAYER_CAMERA_4P, 3, 3, false, tarentula));
 	//敵チームを追加
-	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_5P)->SetPadNum(4);
+	tarentula = tsr.blueTarantula;
+	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_5P)->SetPadNum(0);
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_6P)->SetPadNum(5);
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_7P)->SetPadNum(6);
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetPadNum(7);
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_5P, 1, 4));
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_6P, 5, 5));
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_7P, 6, 6));
-	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_8P, 7, 7));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_5P, 1, 4, true, tarentula));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_6P, 5, 5, false, tarentula));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_7P, 6, 6, false, tarentula));
+	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_8P, 7, 7, false, tarentula));
 
 	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA)->SetPadNum(0);
 	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA)->SetPadNum(1);
@@ -189,7 +220,7 @@ void GamePlayScene::Update(float frameTime)
 	}*/
 	if (stage.get()->ReturnGameTime() <= 0){
 		mIsEnd = true;
-		*winner = stage.get()->ReturnWinner();
+		sp._Get()->SetVictoryID(stage.get()->ReturnWinner());
 	}
 	//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))mIsEnd = true;
 	//カメラの設定
@@ -215,14 +246,15 @@ void GamePlayScene::Update(float frameTime)
 		Device::GetInstance().GetInput()->GamePadButtonDown(0,GAMEPADKEY::BUTTON_R1,true))
 	Audio::GetInstance().PlaySE(SE_ID::THREAD_SHOT_SE);
 
-	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_2P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_3P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_4P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_5P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_6P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_7P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
+	Device::GetInstance().SetCamera(frameTime);
+	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
+	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_2P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
+	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_3P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
+	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_4P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
+	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_5P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
+	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_6P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
+	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_7P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
+	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
 	//Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(frameTime);
 	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 

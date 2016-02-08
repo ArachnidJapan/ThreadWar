@@ -47,8 +47,8 @@ bool NormalAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 
 	player._Get()->SetAnimBlend(WALKANIMBLEND);
 	player._Get()->SetAnimation(
-		(ANIM_ID)(leftRightID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(frontBackID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(leftRightID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(frontBackID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		WALKANIMSPEED, animTimeReset, true, abs(controlVecNor.z), WALKANIMBLEND);
 
 	moveVecUp = beforeUp;
@@ -159,8 +159,8 @@ void NormalAction::Update(float frameTime){
 	else beforeActionCurl = false;
 
 	if (changeFlag || playerControlFlag.firstFrameFlag)	player._Get()->SetAnimation(
-		(ANIM_ID)(leftRightID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(frontBackID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(leftRightID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(frontBackID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		WALKANIMSPEED, false, true, abs(controlVecNor.z), WALKANIMBLEND);
 
 	Vector3 moveVec = (moveVecFront * controlVec.z + moveVecLeft * controlVec.x) * SPEED * frameTime;

@@ -9,3 +9,12 @@ enum SelectPlayerParam{
 	CP4,
 	NONE,
 };
+
+struct TeamSelectResult{
+	bool redTarantula = false;
+	bool blueTarantula = true;
+	bool redHavePlayer = true;
+	bool blueHavePlayer = false;
+	int redHaveCPU = 3;
+	int blueHaveCPU = 4;
+};

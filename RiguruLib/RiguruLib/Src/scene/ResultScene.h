@@ -5,11 +5,12 @@
 #include "../world/World.h"
 #include "../Actor/Actor.h"
 #include "../Math/Vector2.h"
+#include "SceneParameter.h"
 
 class  ResultScene :public IScene{
 public:
 	//コンストラクタ 
-	ResultScene(VICTORY_ID& winner_);
+	ResultScene(std::weak_ptr<SceneParameter> sp_);
 	//デストラクタ
 	~ResultScene();
 
@@ -27,7 +28,7 @@ public:
 	virtual void End()override;
 
 private:
+	std::weak_ptr<SceneParameter> sp;
 	bool mIsEnd;
 	float timer;
-	VICTORY_ID* winner;
 };

@@ -8,13 +8,14 @@
 
 class SelectSpider{
 public:
-	SelectSpider(bool player_, bool spider_, Vector2 pos_,int playerNum = 1000,std::shared_ptr<SelectSpider> spiderSelect = nullptr);
+	SelectSpider(bool red_, bool spider_, Vector2 pos_, int playerNum = 1000, std::shared_ptr<SelectSpider> spiderSelect = nullptr);
 	~SelectSpider();
 	void Update();
 	void Draw();
 	void SetSelect(bool flag);
 	void SetTarantula(bool flag);
 	bool ReturnTarantula(){ return tarantula; }
+	int CPUCount();
 
 	void SpiderSelect();
 	void PlayerSelect();
@@ -30,11 +31,10 @@ private:
 	bool tarantula;
 	bool select;
 	Vector2 pos;
-	bool player;
+	bool red;
 	bool spider;
 	std::shared_ptr<SelectSpider> spiderSelect;
 	int playerNum;
-	std::vector<SelectPlayerParam> havePlayerSpp,notHavePlayerSpp;
 	std::map<SelectPlayerParam, std::string> sppString;
 	std::map<int,SelectPlayerParam> spp;
 

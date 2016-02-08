@@ -52,8 +52,8 @@ bool ThreadWebAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 		leftRightID = ANIM_ID::NEPHILA_WAIT_ANIM;
 	}
 	player._Get()->SetAnimation(
-		(ANIM_ID)(leftRightID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(frontBackID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(leftRightID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(frontBackID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		THREADANIMSPEED, false, true, abs(controlVecNor.z), WALKANIMBLEND);
 	startRotate = 0;
 	change = false;
@@ -152,8 +152,8 @@ void ThreadWebAction::Update(float frameTime){
 
 	if (changeFlag || playerControlFlag.firstFrameFlag)	
 		player._Get()->SetAnimation(
-		(ANIM_ID)(leftRightID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(frontBackID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(leftRightID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(frontBackID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		THREADANIMSPEED, false, true, abs(controlVecNor.z), WALKANIMBLEND);
 	beforeVec = controlVec;
 	Vector3 moveVec = (moveVecFront * controlVec.z + moveVecLeft * controlVec.x) * THREADSPEED * frameTime;

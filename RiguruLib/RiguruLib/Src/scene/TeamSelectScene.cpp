@@ -9,9 +9,10 @@
 #include "../Actor/CrystalCenter.h"
 #include "../Math/Converter.h"
 #include "../Audio/Audio.h"
+#include "../TeamSelect/SelectPlayerParam.h"
 
 //コンストラクタ
-TeamSelectScene::TeamSelectScene()
+TeamSelectScene::TeamSelectScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 {
 	mIsEnd = false;
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::NEPHILA_WHITE_TEXTURE, "Res/Texture/nephila white.png");
@@ -73,8 +74,8 @@ void TeamSelectScene::Initialize()
 void TeamSelectScene::Update(float frameTime)
 {
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true)){
-
 		mIsEnd = true;
+		return;
 	}
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true)){
 		if (count % 2 == 0){
@@ -166,5 +167,13 @@ Scene TeamSelectScene::Next() const
 
 void TeamSelectScene::End(){
 	Audio::GetInstance().StopBGM(BGM_ID::TITLE_BGM);
+	TeamSelectResult tsr;
+	tsr.redTarantula = selectSpider[0]->ReturnTarantula();
+	tsr.blueTarantula = selectSpider[1]->ReturnTarantula();
+	tsr.redHavePlayer = selectSpider[0]->PlayerHave();
+	tsr.blueHavePlayer = selectSpider[1]->PlayerHave();
+	tsr.redHaveCPU = selectSpider[0]->CPUCount();
+	tsr.blueHaveCPU = selectSpider[1]->CPUCount();
+	sp._Get()->SetTeamSelectResult(tsr);
 	selectSpider.clear();
 }

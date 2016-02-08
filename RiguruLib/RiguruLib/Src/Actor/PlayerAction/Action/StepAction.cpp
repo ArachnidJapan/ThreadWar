@@ -42,12 +42,12 @@ bool StepAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 			float upAniTime = STEPRANIMSPEED;
 			float blendAnim = STEPRANIMBLEND;
 			player._Get()->SetAnimation(
-				(ANIM_ID)(leftRightID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-				(ANIM_ID)(frontBackID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+				(ANIM_ID)(leftRightID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+				(ANIM_ID)(frontBackID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 				WALKANIMSPEED, true, false, abs(controlVecNor.z), WALKANIMBLEND  * 2);
 			hover = false;
 			stepDelay = 0.0f;
-			if (player._Get()->ReturnPlayerNum() == 0)
+			if (player._Get()->ReturnP1())
 			Audio::GetInstance().PlaySE(SE_ID::STEP_SE);
 			return true;
 		}
@@ -83,8 +83,8 @@ void StepAction::Update(float frameTime){
 			float upAniTime = HOVERANIMSPEED;
 			float blendAnim = HOVERANIMBLEND;
 			player._Get()->SetAnimation(
-				(ANIM_ID)(leftRightID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-				(ANIM_ID)(frontBackID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+				(ANIM_ID)(leftRightID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+				(ANIM_ID)(frontBackID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 				WALKANIMSPEED, true, true, abs(controlVecNor.z), WALKANIMBLEND);
 		}
 	}

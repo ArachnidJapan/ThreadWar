@@ -5,11 +5,11 @@
 #include "../world/World.h"
 #include "../Actor/Actor.h"
 #include "../Math/Vector2.h"
-
+#include "SceneParameter.h"
 class  DemoScene :public IScene{
 public:
 	//コンストラクタ 
-	DemoScene();
+	DemoScene(std::weak_ptr<SceneParameter> sp_);
 	//デストラクタ
 	~DemoScene();
 
@@ -27,6 +27,7 @@ public:
 	virtual void End()override;
 
 private:
+	std::weak_ptr<SceneParameter> sp;
 	bool mIsEnd;
 	bool effectEnd, pressStart;
 	World wa;
