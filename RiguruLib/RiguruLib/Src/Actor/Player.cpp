@@ -559,8 +559,8 @@ Vector3 Player::Control(float frameTime, CAMERA_PARAMETER c){
 	}
 	//スペースが押されたかつジャンプ中じゃなかったら
 	if ((((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-		Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_R3, true) &&
-		!inputAI)
+		Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_R3, true)) &&
+		!inputAI
 		|| inputJump) &&
 		!pAM.ReturnPlayerActionPtr()->ReturnRide())
 		&& pAM.ReturnActionID() != ACTION_ID::JUMP_ACTION &&
