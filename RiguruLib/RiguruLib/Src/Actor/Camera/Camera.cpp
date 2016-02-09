@@ -6,7 +6,7 @@
 #include "../Stage.h"
 const float CAMERA_ANGLE_SPEED = 0.003f * 60.0f;		// 旋回速度
 const float CAMERA_PLAYER_TARGET_HEIGHT = 0.75f;	// プレイヤー座標からどれだけ高い位置を注視点とするか
-const float CAMERA_PLAYER_LENGTH = 0.01f;	// プレイヤーとの距離
+const float CAMERA_PLAYER_LENGTH = 2.5f;	// プレイヤーとの距離
 const float CAMERA_AI_PLAYER_LENGTH = 0.01f;
 const float CAMERA_COLLISION_SIZE = 0.2f;	// カメラの当たり判定サイズ
 
