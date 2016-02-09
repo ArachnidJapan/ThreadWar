@@ -123,10 +123,10 @@ void Option::Draw(){
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(scrCenter.x - 512 - 128, scrCenter.y + space *-3), vector2(0.4f, 0.4f)*manualBack, 0.5f, "BACK", vector3(1, 1, 1), manualAlpha, false);
 	}
 
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 256), vector2(0.3f, 0.3f), 0.5f, "select:" + std::to_string(select), vector3(1, 1, 1), 1.0f);
+	/*Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 256), vector2(0.3f, 0.3f), 0.5f, "select:" + std::to_string(select), vector3(1, 1, 1), 1.0f);
 	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 256+32), vector2(0.3f, 0.3f), 0.5f, "bgm:" + std::to_string(config.at((CONFIG_DATA)0)), vector3(1, 1, 1), 1.0f);
 	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 256+64), vector2(0.3f, 0.3f), 0.5f, "se:" + std::to_string(config.at((CONFIG_DATA)1)), vector3(1, 1, 1), 1.0f);
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 256 + 64+32), vector2(0.3f, 0.3f), 0.5f, "allalpha:" + std::to_string(allAlpha), vector3(1, 1, 1), 1.0f);
+	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 256 + 64+32), vector2(0.3f, 0.3f), 0.5f, "allalpha:" + std::to_string(allAlpha), vector3(1, 1, 1), 1.0f);*/
 
 }
 

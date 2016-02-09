@@ -127,8 +127,8 @@ void TitleScene::Draw() const
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale[0], 0.5f, "START GAME", vector3(1, 1, 1), ts_alpha[0] * allAlpha, true);
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale[1], 0.5f, "OPTIONS", vector3(1, 1, 1), ts_alpha[1] * allAlpha, true);
 		//デバッグ用。
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.5f, 0.5f), 0.5f, "timer:" + std::to_string(timer), vector3(1, 1, 1));
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 475), vector2(0.5f, 0.5f), 0.5f, "select:" + std::to_string(selects), vector3(1, 1, 1));
+		/*Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.5f, 0.5f), 0.5f, "timer:" + std::to_string(timer), vector3(1, 1, 1));
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 475), vector2(0.5f, 0.5f), 0.5f, "select:" + std::to_string(selects), vector3(1, 1, 1));*/
 	}
 }
 
