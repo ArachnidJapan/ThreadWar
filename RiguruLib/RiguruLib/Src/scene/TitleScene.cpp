@@ -19,20 +19,28 @@
 #define DEFAULT_X SCREEN_CENTER_X - 256
 
 //コンストラクタ
-TitleScene::TitleScene(std::weak_ptr<SceneParameter> sp_, Option& option_) :
+TitleScene::TitleScene(std::weak_ptr<SceneParameter> sp_, std::weak_ptr<Option> option_) :
 sp(sp_),
-option(&option_)
+option(option_)
 {
 	/************************************************テクスチャー*************************************************/
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TITLE_BACK_TEXTURE, "Res/Texture/test_back.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MENU_BLACK_TEXTURE, "Res/Texture/menu_black.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::THREAD_BACK_TEXTURE, "Res/Texture/thread_back.png");
 
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MANUAL_TEXTURE, "Res/Texture/gamepad.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::LINE_WHITE_TEXTURE, "Res/Texture/line_white.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, "Res/Texture/line_black.png");
 }
 
 //デストラクタ
 TitleScene::~TitleScene()
 {
+	ts_scale.clear();
+	ts_nextScale.clear();
+	ts_prevScale.clear();
+	ts_alpha.clear();
+	ts_nextAlpha.clear();
 }
 
 //開始
@@ -64,26 +72,26 @@ void TitleScene::Initialize()
 
 	//3つの選択肢のパラメータを初期化。
 	for (int i = 0; i <= 1; i++){
-		ts_scale[i] = 0.6f;
-		ts_alpha[i] = 0.5f;
+		ts_scale.push_back(0.6f);
+		ts_alpha.push_back(0.5f);
 		if (selects == (TITLE_SELECT)i){
-			ts_scale[i] = 1.0f;
-			ts_alpha[i] = 1.0f;
+			ts_scale.push_back(1.0f);
+			ts_alpha.push_back(1.0f);
 		}
-		ts_nextScale[i] = ts_scale[i];
-		ts_prevScale[i] = ts_scale[i];
-		ts_nextAlpha[i] = ts_alpha[i];
+		ts_nextScale.push_back(ts_scale.at(i));
+		ts_prevScale.push_back(ts_scale.at(i));
+		ts_nextAlpha.push_back(ts_alpha.at(i));
 	}
-	option->Initialize();
+	option._Get()->Initialize();
 }
 
 void TitleScene::Update(float frameTime)
 {
 	wa.Update(frameTime);
 
-	if (option->IsOption()){
-		option->Update(frameTime);
-		if (option->ReturnMenu()){
+	if (option._Get()->IsOption()){
+		option._Get()->Update(frameTime);
+		if (option._Get()->ReturnMenu()){
 			mIsEnd = true;
 			selects == TITLE_SELECT::SELECT_RETURN;
 		}
@@ -102,9 +110,9 @@ void TitleScene::Update(float frameTime)
 		else if (selects == TITLE_SELECT::SELECT_OPTION){
 			timer = min(timer + 1.0f / 60.0f*60.0f*frameTime, 1.0f);
 			allAlpha = Math::lerp3(1.0f, 0.0f, timer);
-			ts_scale[selects] = Math::lerp3(ts_scale[selects], 1.1f, timer);
+			ts_scale.at(selects) = Math::lerp3(ts_scale.at(selects), 1.1f, timer);
 			if (timer == 1.0f){
-				option->Pop(frameTime);
+				option._Get()->Pop(frameTime);
 				isSelect = false;
 			}
 		}
@@ -115,8 +123,8 @@ void TitleScene::Update(float frameTime)
 void TitleScene::Draw() const
 {
 	wa.Draw(CAMERA_ID::GOD_CAMERA);
-	if (option->IsOption()){
-		option->Draw();
+	if (option._Get()->IsOption()){
+		option._Get()->Draw();
 	}
 	else{
 		//現在のスクリーンサイズに拡大。
@@ -124,8 +132,8 @@ void TitleScene::Draw() const
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::MENU_BLACK_TEXTURE, vector2(0, 0), screenPow, D3DXCOLOR(1, 1, 1, allAlpha), vector2(0, 0));
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::THREAD_BACK_TEXTURE, threadBackPos, vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha));
 		//文字
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale[0], 0.5f, "START GAME", vector3(1, 1, 1), ts_alpha[0] * allAlpha, true);
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale[1], 0.5f, "OPTIONS", vector3(1, 1, 1), ts_alpha[1] * allAlpha, true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale.at(0), 0.5f, "START GAME", vector3(1, 1, 1), ts_alpha.at(0) * allAlpha, true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale.at(1), 0.5f, "OPTIONS", vector3(1, 1, 1), ts_alpha.at(1) * allAlpha, true);
 		//デバッグ用。
 		/*Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.5f, 0.5f), 0.5f, "timer:" + std::to_string(timer), vector3(1, 1, 1));
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 475), vector2(0.5f, 0.5f), 0.5f, "select:" + std::to_string(selects), vector3(1, 1, 1));*/
@@ -191,8 +199,8 @@ void TitleScene::TitleSelect(float frameTime){
 	}
 
 	for (int i = 0; i <= TITLE_SELECT_NUM - 1; i++){
-		ts_scale[i] = Math::lerp3(ts_prevScale[i], ts_nextScale[i], lerpTime);
-		ts_alpha[i] = Math::lerp3(ts_alpha[i], ts_nextAlpha[i], lerpTime);
+		ts_scale.at(i) = Math::lerp3(ts_prevScale.at(i), ts_nextScale.at(i), lerpTime);
+		ts_alpha.at(i) = Math::lerp3(ts_alpha.at(i), ts_nextAlpha.at(i), lerpTime);
 	}
 
 	lerpTime = min(lerpTime + 1.0f / 15.0f, 1.0f);
@@ -226,13 +234,13 @@ void TitleScene::Move(){
 	lerpTime = 0;
 
 	for (int i = 0; i <= TITLE_SELECT_NUM - 1; i++){
-		ts_prevScale[i] = ts_scale[i];
+		ts_prevScale.at(i) = ts_scale.at(i);
 
-		ts_nextScale[i] = 0.6f;
-		ts_nextAlpha[i] = 0.5f;
+		ts_nextScale.at(i) = 0.6f;
+		ts_nextAlpha.at(i) = 0.5f;
 		if (selects == (TITLE_SELECT)i){
-			ts_nextScale[i] = 1.0f;
-			ts_nextAlpha[i] = 1.0f;
+			ts_nextScale.at(i) = 1.0f;
+			ts_nextAlpha.at(i) = 1.0f;
 		}
 	}
 	threadBackPos = vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2.0f + (selects * -MOVE_AMOUNT));

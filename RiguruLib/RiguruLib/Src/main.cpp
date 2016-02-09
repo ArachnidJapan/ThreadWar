@@ -20,7 +20,7 @@
 TCHAR* AppName = _T("Thread War");
 std::shared_ptr<SceneParameter> sp = std::make_shared<SceneParameter>();
 SceneManager sm;
-std::shared_ptr<Option> option;
+std::shared_ptr<Option> option= std::make_shared<Option>();
 std::vector<int> configData;
 float frameTime;
 LARGE_INTEGER timeStart;	//パフォーマンスカウンターの開始値
@@ -127,11 +127,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	::ShowWindow(hwnd_, SW_SHOW);
 	::UpdateWindow(hwnd_);
-
-	option = std::make_shared<Option>();
 	
 	sm.Add(Scene::Demo, std::make_shared<DemoScene>(sp));
-	sm.Add(Scene::Title, std::make_shared<TitleScene>(sp, *option));
+	sm.Add(Scene::Title, std::make_shared<TitleScene>(sp, option));
 	sm.Add(Scene::TeamSelect, std::make_shared<TeamSelectScene>(sp));
 	sm.Add(Scene::GamePlay, std::make_shared<GamePlayScene>(sp));
 	sm.Add(Scene::Ending, std::make_shared<ResultScene>(sp));

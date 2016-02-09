@@ -7,6 +7,7 @@
 #include "../Math/Vector2.h"
 #include "../scene/Option/Option.h"
 #include "SceneParameter.h"
+#include <vector>
 #define TITLE_SELECT_NUM 2
 
 enum TITLE_SELECT{
@@ -18,7 +19,7 @@ enum TITLE_SELECT{
 class  TitleScene :public IScene{
 public:
 	//コンストラクタ 
-	TitleScene(std::weak_ptr<SceneParameter> sp_, Option& option_);
+	TitleScene(std::weak_ptr<SceneParameter> sp_, std::weak_ptr<Option> option_);
 	//デストラクタ
 	~TitleScene();
 
@@ -46,7 +47,7 @@ public:
 
 private:
 	std::weak_ptr<SceneParameter> sp; 
-	Option* option;
+	std::weak_ptr<Option> option;
 
 private:
 	bool mIsEnd;
@@ -64,8 +65,10 @@ private:
 	Vector2 threadBackPos;
 
 	//選択肢のパラメータ。
-	float ts_scale[TITLE_SELECT_NUM];
+	std::vector<float> ts_scale, ts_nextScale, ts_prevScale;
+	std::vector<float> ts_alpha, ts_nextAlpha;
+	/*float ts_scale[TITLE_SELECT_NUM];
 	float ts_nextScale[TITLE_SELECT_NUM], ts_prevScale[TITLE_SELECT_NUM];
 	float ts_alpha[TITLE_SELECT_NUM];
-	float ts_nextAlpha[TITLE_SELECT_NUM];
+	float ts_nextAlpha[TITLE_SELECT_NUM];*/
 };

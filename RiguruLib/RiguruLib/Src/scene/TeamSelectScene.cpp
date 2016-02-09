@@ -22,7 +22,6 @@ TeamSelectScene::TeamSelectScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TARENTULA_RED_TEXTURE,"Res/Texture/tarentula_red.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TARENTULA_BLUE_TEXTURE, "Res/Texture/tarentula_blue.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TEAM_TEXTURE,"Res/Texture/team.png");
-	Graphic::GetInstance().LoadTexture(TEXTURE_ID::THREAD_BACK_TEXTURE, "Res/Texture/thread_back.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::WHITE_BAR_TEXTURE, "Res/Texture/white bar.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MENU_ARROW_LEFT_TEXTURE, "Res/Texture/menu_Arrow_Left.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MENU_ARROW_RIGHT_TEXTURE, "Res/Texture/menu_Arrow_Right.png");

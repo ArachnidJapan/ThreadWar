@@ -2,6 +2,7 @@
 #include "../Scene.h"
 #include <map>
 #include "../../Reader/CSVReader.h"
+#include <vector>
 
 #define OPTION_SELECT_NUM 6
 
@@ -43,8 +44,8 @@ public:
 private:
 	int timer, selectAlphaTime;
 	float lerpTime, allAlpha, manualAlpha, selectScaleTime, manualBack;
-	float gaugeLerpTime[2];
-	float gaugeLength[2], prevGaugeLength[2], nextGaugeLength[2];
+	std::vector<float> gaugeLerpTime;
+	std::vector<float> gaugeLength, prevGaugeLength, nextGaugeLength;
 	//OptionUIを起動中か,マニュアル画面を起動中か,メニューに戻るか,ゲーム終了を選択したか。
 	bool isPop, isShut, isManual, isReturnMenu, isExitGame, isOption, decision;
 	bool manualEnd;
@@ -52,8 +53,10 @@ private:
 	std::map<CONFIG_DATA, int> config;
 
 	//選択肢のパラメータ。
-	float os_scale[OPTION_SELECT_NUM];
+	std::vector<float> os_scale, os_nextScale, os_prevScale;
+	std::vector<float> os_alpha, os_nextAlpha;
+	/*float os_scale[OPTION_SELECT_NUM];
 	float os_nextScale[OPTION_SELECT_NUM], os_prevScale[OPTION_SELECT_NUM];
 	float os_alpha[OPTION_SELECT_NUM];
-	float os_nextAlpha[OPTION_SELECT_NUM];
+	float os_nextAlpha[OPTION_SELECT_NUM];*/
 };

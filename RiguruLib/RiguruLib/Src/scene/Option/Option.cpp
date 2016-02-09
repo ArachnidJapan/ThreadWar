@@ -11,11 +11,19 @@
 
 Option::Option(){
 	isExitGame = false;
-	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MANUAL_TEXTURE, "Res/Texture/gamepad.png");
-	Graphic::GetInstance().LoadTexture(TEXTURE_ID::LINE_WHITE_TEXTURE, "Res/Texture/line_white.png");
-	Graphic::GetInstance().LoadTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, "Res/Texture/line_black.png");
+
 }
-Option::~Option(){}
+Option::~Option(){
+	os_scale.clear();
+	os_nextScale.clear(); 
+	os_prevScale.clear();
+	os_alpha.clear(); 
+	os_nextAlpha.clear();
+	gaugeLerpTime.clear();
+	gaugeLength.clear();
+	prevGaugeLength.clear();
+	nextGaugeLength.clear();
+}
 
 void Option::Initialize(){
 	isOption = false;
@@ -34,19 +42,15 @@ void Option::Initialize(){
 	selectScaleTime = 0;
 	timer = 0;
 	lerpTime = 0;
-	for (auto i : gaugeLerpTime){
-		i = 1.0f;
-	}
-
 	for (int i = 0; i <= OPTION_SELECT_NUM - 1; i++){
-		os_scale[i] = OPTION_SCALE;
-		os_nextScale[i] = os_scale[i];
-		os_prevScale[i] = os_scale[i];
-		os_alpha[i] = OPTION_ALPHA;
-		os_nextAlpha[i] = os_alpha[i];
+		os_scale.push_back(OPTION_SCALE);
+		os_nextScale.push_back(os_scale.at(i));
+		os_prevScale.push_back(os_scale.at(i));
+		os_alpha.push_back(OPTION_ALPHA);
+		os_nextAlpha.push_back(os_alpha.at(i));
 		if (select == i){
-			os_nextScale[i] = 1.0f;
-			os_nextAlpha[i] = 1.0f;
+			os_nextScale.at(i) = 1.0f;
+			os_nextAlpha.at(i) = 1.0f;
 		}
 	}
 
@@ -58,11 +62,12 @@ void Option::Initialize(){
 		config[(CONFIG_DATA)row] = CSVReader::GetInstance().geti(FILE_ID::CONFIG_FILE, row, 1);
 	}
 	for (int i = 0; i <= 1; i++){
-		gaugeLength[i] = 0;
+		gaugeLength.push_back(0);
 		if (config.at((CONFIG_DATA)i) > 0)
-			gaugeLength[i] = config.at((CONFIG_DATA)i) / 10.0f;	
-		nextGaugeLength[i] = gaugeLength[i];
-		prevGaugeLength[i] = gaugeLength[i];
+			gaugeLength.push_back(config.at((CONFIG_DATA)i) / 10.0f);	
+		nextGaugeLength.push_back(gaugeLength.at(i));
+		prevGaugeLength.push_back(gaugeLength.at(i));
+		gaugeLerpTime.push_back(1.0f);
 	}
 }
 void Option::Update(float frameTime){
@@ -74,7 +79,7 @@ void Option::Update(float frameTime){
 	}
 	if (decision){
 		selectScaleTime = min((selectScaleTime + 1.0f / 60.0f)*60.0f*frameTime, 1.0f);
-		os_scale[select] = Math::lerp3(os_scale[select], 1.1f, selectScaleTime);
+		os_scale.at(select) = Math::lerp3(os_scale.at(select), 1.1f, selectScaleTime);
 		allAlpha = Math::lerp3(1.0f, 0.0f, selectScaleTime);
 		if (selectScaleTime == 1.0f)
 			decision = false;
@@ -110,13 +115,13 @@ void Option::Draw(){
 
 		//BGMとSEのゲージの長さを求める。
 		for (int i = 0; i <= 1; i++){
-			gaugeLength[i] = Math::lerp3(prevGaugeLength[i], nextGaugeLength[i], gaugeLerpTime[i]);
+			gaugeLength.at(i) = Math::lerp3(prevGaugeLength.at(i), nextGaugeLength.at(i), gaugeLerpTime.at(i));
 		}
 		//BGMとSEのゲージの描画。
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_WHITE_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 2), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0));
-		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 2), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0), 0, 0, gaugeLength[0]);
+		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 2), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0), 0, 0, gaugeLength.at(0));
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_WHITE_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 1), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0));
-		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 1), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0), 0, 0, gaugeLength[1]);
+		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 1), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0), 0, 0, gaugeLength.at(1));
 	}
 	else{
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::MANUAL_TEXTURE, vector2(1920 / 2, 1080), vector2(1.7f, 1.7f), D3DXCOLOR(1, 1, 1, manualAlpha), vector2(0.5, 1.0f));
@@ -184,12 +189,12 @@ void Option::Move(float frameTime){
 	timer = 0;
 	selectAlphaTime = 0;
 	for (int i = 0; i <= OPTION_SELECT_NUM - 1; i++){
-		os_prevScale[i] = os_scale[i];
-		os_nextScale[i] = OPTION_SCALE;
-		os_nextAlpha[i] = OPTION_ALPHA;
+		os_prevScale.at(i) = os_scale.at(i);
+		os_nextScale.at(i) = OPTION_SCALE;
+		os_nextAlpha.at(i) = OPTION_ALPHA;
 		if (select == i){
-			os_nextScale[i] = 1.0f;
-			os_nextAlpha[i] = 1.0f;
+			os_nextScale.at(i) = 1.0f;
+			os_nextAlpha.at(i) = 1.0f;
 		}
 	}
 }
@@ -216,11 +221,11 @@ void Option::OptionSelect(float frameTime){
 			return;
 
 		config[(CONFIG_DATA)select] = max(config[(CONFIG_DATA)select]--, 0);
-		gaugeLerpTime[select] = 0;
-		prevGaugeLength[select] = gaugeLength[select];
-		nextGaugeLength[select] = 0;
-		if (config.at((CONFIG_DATA)select) > 0)
-			nextGaugeLength[select] = config.at((CONFIG_DATA)select) / 10.0f;
+		gaugeLerpTime.at(select) = 0;
+		prevGaugeLength.at(select) = gaugeLength.at(select);
+		nextGaugeLength.at(select) = 0;
+		if (config[(CONFIG_DATA)select] > 0)
+			nextGaugeLength.at(select) = config[(CONFIG_DATA)select] / 10.0f;
 
 		Audio::GetInstance().SetBGMVolume(config[CONFIG_DATA::MUSIC_VOL] * 10);
 		Audio::GetInstance().SetSEVolume(config[CONFIG_DATA::SE_VOL] * 10);
@@ -230,11 +235,11 @@ void Option::OptionSelect(float frameTime){
 			return;
 
 		config[(CONFIG_DATA)select] = min(config[(CONFIG_DATA)select]++, 10);
-		gaugeLerpTime[select] = 0;
-		prevGaugeLength[select] = gaugeLength[select];
-		nextGaugeLength[select] = 0;
+		gaugeLerpTime.at(select) = 0;
+		prevGaugeLength.at(select) = gaugeLength.at(select);
+		nextGaugeLength.at(select) = 0;
 		if (config.at((CONFIG_DATA)select) > 0)
-			nextGaugeLength[select] = config.at((CONFIG_DATA)select) / 10.0f;
+			nextGaugeLength.at(select) = config.at((CONFIG_DATA)select) / 10.0f;
 
 		Audio::GetInstance().SetBGMVolume(config[CONFIG_DATA::MUSIC_VOL] * 10);
 		Audio::GetInstance().SetSEVolume(config[CONFIG_DATA::SE_VOL] * 10);
@@ -283,12 +288,12 @@ void Option::OptionSelect(float frameTime){
 	}
 	//各演出のLerp
 	for (int i = 0; i <= OPTION_SELECT_NUM - 1; i++){
-		os_scale[i] = Math::lerp4(os_prevScale[i], os_nextScale[i], lerpTime);
-		os_alpha[i] = Math::lerp4(os_alpha[i], os_nextAlpha[i], lerpTime);
+		os_scale.at(i) = Math::lerp4(os_prevScale.at(i), os_nextScale.at(i), lerpTime);
+		os_alpha.at(i) = Math::lerp4(os_alpha.at(i), os_nextAlpha.at(i), lerpTime);
 	}
 	lerpTime = min(lerpTime + 1.0f / 10.0f, 1.0f);
 	for (int i = 0; i <= 1; i++)
-		gaugeLerpTime[i] = min(gaugeLerpTime[i] + 1.0f / 5.0f, 1.0f);
+		gaugeLerpTime.at(i) = min(gaugeLerpTime.at(i) + 1.0f / 5.0f, 1.0f);
 	selectAlphaTime = min(selectAlphaTime + 5 * 60 * frameTime, 360);
 	selectAlphaTime %= 360;
 }
@@ -298,8 +303,8 @@ void Option::Manual(float frameTime){
 		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true)){
 		manualEnd = true;
-		os_scale[select] = 1.0f;
-		os_alpha[select] = 1.0f;
+		os_scale.at(select) = 1.0f;
+		os_alpha.at(select) = 1.0f;
 	}
 
 	if (!manualEnd)
