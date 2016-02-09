@@ -63,8 +63,8 @@ void Option::Initialize(){
 	}
 	for (int i = 0; i <= 1; i++){
 		gaugeLength.push_back(0);
-		if (config.at((CONFIG_DATA)i) > 0)
-			gaugeLength.push_back(config.at((CONFIG_DATA)i) / 10.0f);	
+		if (config[(CONFIG_DATA)i] > 0)
+			gaugeLength.at(i) = config[(CONFIG_DATA)i] / 10.0f;	
 		nextGaugeLength.push_back(gaugeLength.at(i));
 		prevGaugeLength.push_back(gaugeLength.at(i));
 		gaugeLerpTime.push_back(1.0f);
