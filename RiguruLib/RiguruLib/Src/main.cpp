@@ -109,7 +109,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	// とりあえず最初に見つかったディスプレイモードを選択する
 	int gasitu = (Device::GetInstance().Getd3d11User()->displayModeSize - 1) ;// = 28;
 	if (gasitu < 0)gasitu = 0;
-	CopyMemory(&sd, &Device::GetInstance().Getd3d11User()->m_DisplayModeDesc[27], sizeof(DXGI_MODE_DESC));
+	CopyMemory(&sd, &Device::GetInstance().Getd3d11User()->m_DisplayModeDesc[gasitu], sizeof(DXGI_MODE_DESC));
 
 	// ウィンドウの作成およびDirect3D の初期化
 	hr = Device::GetInstance().Getd3d11User()->InitD3D11(AppName, hInstance, WndProc, &sd, TRUE, false, TRUE, TRUE);
