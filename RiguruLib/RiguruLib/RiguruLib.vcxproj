@@ -171,11 +171,15 @@
     <ClInclude Include="Src\Other\D3D11User.h" />
     <ClInclude Include="Src\Other\Device.h" />
     <ClInclude Include="Src\Other\DX11User.h" />
+    <ClInclude Include="Src\Reader\CSVReader.h" />
+    <ClInclude Include="Src\Reader\FileID.h" />
     <ClInclude Include="Src\scene\DemoScene.h" />
+    <ClInclude Include="Src\scene\Fade\Fade.h" />
     <ClInclude Include="Src\scene\GamePlayScene.h" />
     <ClInclude Include="Src\scene\IScene.h" />
     <ClInclude Include="Src\scene\ISceneMediator.h" />
     <ClInclude Include="Src\scene\IScenePtr.h" />
+    <ClInclude Include="Src\scene\Option\Option.h" />
     <ClInclude Include="Src\scene\ResultScene.h" />
     <ClInclude Include="Src\scene\Scene.h" />
     <ClInclude Include="Src\scene\SceneManager.h" />
@@ -249,8 +253,11 @@
     <ClCompile Include="Src\Math\Vector3.cpp" />
     <ClCompile Include="Src\Math\Vector3Utility.cpp" />
     <ClCompile Include="Src\Other\D3D11User.cpp" />
+    <ClCompile Include="Src\Reader\CSVReader.cpp" />
     <ClCompile Include="Src\scene\DemoScene.cpp" />
+    <ClCompile Include="Src\scene\Fade\Fade.cpp" />
     <ClCompile Include="Src\scene\GamePlayScene.cpp" />
+    <ClCompile Include="Src\scene\Option\Option.cpp" />
     <ClCompile Include="Src\scene\ResultScene.cpp" />
     <ClCompile Include="Src\scene\SceneManager.cpp" />
     <ClCompile Include="Src\scene\TeamSelectScene.cpp" />

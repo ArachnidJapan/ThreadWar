@@ -19,10 +19,14 @@
 #define DEFAULT_X SCREEN_CENTER_X - 256
 
 //コンストラクタ
-TitleScene::TitleScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
+TitleScene::TitleScene(std::weak_ptr<SceneParameter> sp_, Option& option_) :
+sp(sp_),
+option(&option_)
 {
 	/************************************************テクスチャー*************************************************/
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TITLE_BACK_TEXTURE, "Res/Texture/test_back.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MENU_BLACK_TEXTURE, "Res/Texture/menu_black.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::THREAD_BACK_TEXTURE, "Res/Texture/thread_back.png");
 
 }
 
@@ -35,27 +39,28 @@ TitleScene::~TitleScene()
 void TitleScene::Initialize()
 {
 	/*マップ関係*/
-	std::shared_ptr<CrystalCenter> crystalCenter = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_CENTER_ACTOR);
+	std::shared_ptr<CrystalCenter> crystalCenter = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_CENTER_ACTOR, true);
 	std::shared_ptr<CrystalCenter> crystalPlayerSide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_PLAYERSIDE_ACTOR);
 	std::shared_ptr<CrystalCenter> crystalEnemySide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_ENEMYSIDE_ACTOR);
 	wa.Add(ACTOR_ID::CRYSTAL_CENTER_ACTOR, crystalCenter);
 	wa.Add(ACTOR_ID::CRYSTAL_PLAYERSIDE_ACTOR, crystalPlayerSide);
 	wa.Add(ACTOR_ID::CRYSTAL_ENEMYSIDE_ACTOR, crystalEnemySide);
 	std::shared_ptr<Stage> stage = std::make_shared<Stage>(wa, crystalCenter, crystalPlayerSide, crystalEnemySide,false);
-	Device::GetInstance().CameraInit(CAMERA_ID::PLAYER_CAMERA_1P, stage);
 	wa.Add(ACTOR_ID::STAGE_ACTOR, stage);
-	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetCamera(vector3(0,0,0.3f), vector3(0, 0, 0), 1.0f / 60.0f);
-	/***********/
+	//Device::GetInstance().CameraInit(CAMERA_ID::PLAYER_CAMERA_1P, stage);
+	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetCamera(vector3(0, 0, 0.3f), vector3(0, 0, 0), 1.0f / 60.0f);
+	Device::GetInstance().CameraInit(CAMERA_ID::GOD_CAMERA, stage);
 
-	Audio::GetInstance().SetSEVolume(80);
-	Audio::GetInstance().SetBGMVolume(80);
+	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-3.5f, 3, 2.0f), 0);/***********/
 
 	mIsEnd = false;
 	isSelect = false;
 	timer = 0;
 	lerpTime = 1;
+	allAlpha = 1.0f;
 	selects = SELECT_GAMESTART;
 	teamID = TEAM_ID::FIRST_TEAM;
+	threadBackPos = vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2.0f + (selects * -MOVE_AMOUNT));
 
 	//3つの選択肢のパラメータを初期化。
 	for (int i = 0; i <= 1; i++){
@@ -69,67 +74,61 @@ void TitleScene::Initialize()
 		ts_prevScale[i] = ts_scale[i];
 		ts_nextAlpha[i] = ts_alpha[i];
 	}
-	pos = vector3(0, 0, 0);
+	option->Initialize();
 }
 
 void TitleScene::Update(float frameTime)
 {
 	wa.Update(frameTime);
 
-	//PRESS_STARTが押されたら、"一人プレイ"、"画面分割"、"オプション"の3つの選択肢。
-	if (!isSelect){
-		TitleSelect();
-		timer += 5 * 60 * frameTime;
-		timer %= 360;
+	if (option->IsOption()){
+		option->Update(frameTime);
+		if (option->ReturnMenu()){
+			mIsEnd = true;
+			selects == TITLE_SELECT::SELECT_RETURN;
+		}
+		return;
 	}
-	//3つの選択肢の一つが選択されたら、チーム選択。
-	else if (isSelect)
-		mIsEnd = true;
-		//TeamSelect();
-
-	/*if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_W))
-		pos.z += 0.1f;
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_S))
-		pos.z -= 0.1f;
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_D))
-		pos.x += 0.1f;
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_A))
-		pos.x -= 0.1f;
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_E))
-		pos.y += 0.1f;
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Q))
-		pos.y -= 0.1f;
-	Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetCamera(pos, vector3(0, 0, 0), 1.0f / 60.0f);
-	Vector3 p = pos;*/
+	//PRESS_STARTが押されたら、"ゲームプレイ"、"オプション"の2つの選択肢。
+	if (!isSelect){
+		timer += 5 * 60 * frameTime;
+		timer = fmodf(timer, 360.0f);
+		TitleSelect(frameTime);
+	}
+	//2つの選択肢の一つが選択されたら、チーム選択。
+	else if (isSelect){
+		if (selects == TITLE_SELECT::SELECT_GAMESTART)
+			mIsEnd = true;
+		else if (selects == TITLE_SELECT::SELECT_OPTION){
+			timer = min(timer + 1.0f / 60.0f*60.0f*frameTime, 1.0f);
+			allAlpha = Math::lerp3(1.0f, 0.0f, timer);
+			ts_scale[selects] = Math::lerp3(ts_scale[selects], 1.1f, timer);
+			if (timer == 1.0f){
+				option->Pop(frameTime);
+				isSelect = false;
+			}
+		}
+	}
 }
 
 //描画
 void TitleScene::Draw() const
 {
-	wa.Draw(CAMERA_ID::PLAYER_CAMERA_1P);
-	if (!isSelect){
-		//文字
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale[0], 0.5f, "START GAME", vector3(1, 1, 1), ts_alpha[0], true);
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale[1], 0.5f, "OPTIONS", vector3(1, 1, 1), ts_alpha[1], true);
-		//デバッグ用。
-		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.20f, 0.25f), 0.5f, "gamestartts_scale:" + std::to_string(ts_scale[0]));
-		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 475), vector2(0.20f, 0.25f), 0.5f, "select:" + std::to_string(selects));
+	wa.Draw(CAMERA_ID::GOD_CAMERA);
+	if (option->IsOption()){
+		option->Draw();
 	}
 	else{
-		Vector2 pos = vector2(128, 1080 - 64);
-		//背景字
-		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, pos, vector2(0.3f, 0.3f), 0.5f, teamID == TEAM_ID::FIRST_TEAM ? "TEAM_ONE" : "TEAM_TWO", vector3(0, 0, 0), 1.0f);
+		//現在のスクリーンサイズに拡大。
+		Vector2 screenPow = vector2(1920.0f / 1280.0f, 1080.0f / 720.0f);
+		Graphic::GetInstance().DrawTexture(TEXTURE_ID::MENU_BLACK_TEXTURE, vector2(0, 0), screenPow, D3DXCOLOR(1, 1, 1, allAlpha), vector2(0, 0));
+		Graphic::GetInstance().DrawTexture(TEXTURE_ID::THREAD_BACK_TEXTURE, threadBackPos, vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha));
 		//文字
-		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, pos, vector2(0.29f, 0.29f), 0.5f, teamID == TEAM_ID::FIRST_TEAM ? "TEAM_ONE" : "TEAM_TWO", vector3(1, 1, 1), 1.0f);
-
-		pos = vector2(1920 - (pos.x * 2), pos.y);
-		//背景字
-		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, pos, vector2(0.3f, 0.3f), 0.5f, teamID == TEAM_ID::SECOND_TEAM ? "TEAM_ONE" : "TEAM_TWO", vector3(0, 0, 0), 1.0f);
-		//文字
-		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, pos, vector2(0.29f, 0.29f), 0.5f, teamID == TEAM_ID::SECOND_TEAM ? "TEAM_ONE" : "TEAM_TWO", vector3(1, 1, 1), 1.0f);
-
-		//デバッグ用
-		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 475), vector2(0.20f, 0.25f), 0.5f, "team:" + std::to_string(teamID));
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale[0], 0.5f, "START GAME", vector3(1, 1, 1), ts_alpha[0] * allAlpha, true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale[1], 0.5f, "OPTIONS", vector3(1, 1, 1), ts_alpha[1] * allAlpha, true);
+		//デバッグ用。
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.5f, 0.5f), 0.5f, "timer:" + std::to_string(timer), vector3(1, 1, 1));
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 475), vector2(0.5f, 0.5f), 0.5f, "select:" + std::to_string(selects), vector3(1, 1, 1));
 	}
 }
 
@@ -142,10 +141,10 @@ bool TitleScene::IsEnd() const
 //次のシーンを返す
 Scene TitleScene::Next() const
 {
-	if (selects == TITLE_SELECT::SELECT_RETURN)
-		return Scene::Demo;
-	else
+	if (selects == TITLE_SELECT::SELECT_GAMESTART)
 		return Scene::TeamSelect;
+	else
+		return Scene::Demo;
 	
 	/*switch (selects)
 	{
@@ -164,25 +163,26 @@ Scene TitleScene::Next() const
 	}*/
 }
 
-void TitleScene::TitleSelect(){
+void TitleScene::TitleSelect(float frameTime){
 	if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP) ||
 		Device::GetInstance().GetInput()->LeftStick(0).z >= 0.5f) &&
 		lerpTime == 1.0f){
 		selects = (TITLE_SELECT)(selects - 1);
 		selects = (TITLE_SELECT)(selects < 0 ? 1 : selects);
-		UMove();
+		Move();
 	}
 	if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN) ||
 		Device::GetInstance().GetInput()->LeftStick(0).z <= -0.5f) &&
 		lerpTime == 1.0f){
 		selects = (TITLE_SELECT)(selects + 1);
 		selects = (TITLE_SELECT)(selects % TITLE_SELECT_NUM);
-		DMove();
+		Move();
 	}
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
 		isSelect = true;
+		timer = 0;
 	}
 	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
@@ -196,6 +196,7 @@ void TitleScene::TitleSelect(){
 	}
 
 	lerpTime = min(lerpTime + 1.0f / 15.0f, 1.0f);
+	allAlpha = min(allAlpha + 1.0f / 30.0f*60.0f*frameTime, 1.0f);
 }
 
 void TitleScene::TeamSelect(){
@@ -221,7 +222,7 @@ void TitleScene::TeamSelect(){
 	}
 }
 
-void TitleScene::DMove(){
+void TitleScene::Move(){
 	lerpTime = 0;
 
 	for (int i = 0; i <= TITLE_SELECT_NUM - 1; i++){
@@ -234,21 +235,7 @@ void TitleScene::DMove(){
 			ts_nextAlpha[i] = 1.0f;
 		}
 	}
-}
-
-void TitleScene::UMove(){
-	lerpTime = 0;
-
-	for (int i = 0; i <= TITLE_SELECT_NUM - 1; i++){
-		ts_prevScale[i] = ts_scale[i];
-
-		ts_nextScale[i] = 0.6f;
-		ts_nextAlpha[i] = 0.5f;
-		if (selects == (TITLE_SELECT)i){
-			ts_nextScale[i] = 1.0f;
-			ts_nextAlpha[i] = 1.0f;
-		}
-	}
+	threadBackPos = vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2.0f + (selects * -MOVE_AMOUNT));
 }
 
 void TitleScene::End(){
