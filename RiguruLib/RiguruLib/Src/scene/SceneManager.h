@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ISceneMediator.h"
-
 #include"IScenePtr.h"
+#include "Fade\Fade.h"
 #include <unordered_map>
 enum class Scene;
 
@@ -11,6 +11,10 @@ public:
 	static const int MaxStageCount;
 
 public:
+	static SceneManager &GetInstance(){
+		static SceneManager s;
+		return s;
+	}
 	//コンストラクタ
 	SceneManager();
 	//更新前初期化
@@ -47,6 +51,11 @@ public:
 
 	__declspec(property(get = GetStageCount, put = SetStageCount)) int StageCount;
 
+	// フェード開始
+	void fadestart(bool isFadeIn, float time);
+
+	// フェードしているか？
+	bool isFadeUpdate();
 private:
 	//コピー禁止
 	SceneManager(const SceneManager& other) = delete;
@@ -57,4 +66,8 @@ private:
 	//現在のシーン
 	IScenePtr mCurrentScene;
 	int mStageCount;
+
+	// フェード用クラス
+	Fade fade;
+	bool isFade;
 };

@@ -9,6 +9,8 @@
 #include "../Actor/CrystalCenter.h"
 #include "../Math/Converter.h"
 #include "../Audio/Audio.h"
+#include "../Reader/CSVReader.h"
+#include <vector>
 
 #define SCREEN_CENTER_X 1920/2
 #define SCREEN_CENTER_Y 1080/2
@@ -77,9 +79,18 @@ void DemoScene::Initialize()
 
 	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->SetCamera(vector3(0, 2.0f, -5.0f), vector3(0, 0, 0), 1.0f / 60.0f);
 	/***********/
-	Audio::GetInstance().SetBGMVolume(0);
-	Audio::GetInstance().SetSEVolume(80);
-	Audio::GetInstance().SetBGMVolume(80);
+	/*コンフィグファイル読み込み。*/
+	CSVReader::GetInstance().FileSet(FILE_ID::CONFIG_FILE, "Res/Config/config.ini");
+	CSVReader::GetInstance().load(FILE_ID::CONFIG_FILE);
+	configData.clear();
+	//コンフィグデータ格納。
+	for (int row = 0; row < CSVReader::GetInstance().rows(FILE_ID::CONFIG_FILE); row++){
+		configData.push_back(CSVReader::GetInstance().geti(FILE_ID::CONFIG_FILE, row, 1));
+	}
+	//音量の設定。
+	Audio::GetInstance().SetBGMVolume(configData.at(0) * 10);
+	Audio::GetInstance().SetSEVolume(configData.at(1) * 10);
+
 	Audio::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, true);
 
 	mIsEnd = false;
@@ -107,12 +118,12 @@ void DemoScene::Update(float frameTime)
 
 	//最初のPRESS_STARTが押されていなければ、PRESS_START文字を明滅。
 	if (!effectEnd){
-		backLerp = max(backLerp - (1.0f / 20.0f), 0.0f);
+		backLerp = max(backLerp - ((1.0f / 20.0f) * 60.0f*frameTime), 0.0f);
 		if (timer >= BACK_ALPHA_TIME + BACK_BLANK_TIME){
-			logoLerp = min(logoLerp + (1.0f / (60.0f*4.0f)), 1.0f);
+			logoLerp = min(logoLerp + (1.0f / (60.0f*4.0f) * 60.0f*frameTime), 1.0f);
 		}
 		if (timer >= BACK_ALPHA_TIME + BACK_BLANK_TIME + LOGO_ALPHA_TIME){
-			pressLerp = min(pressLerp + (1.0f / 20.0f), 1.0f);
+			pressLerp = min(pressLerp + (1.0f / 20.0f) * 60.0f*frameTime, 1.0f);
 		}
 		if (timer >= BACK_ALPHA_TIME + BACK_BLANK_TIME + LOGO_ALPHA_TIME + START_ALPHA_TIME){
 			effectEnd = true;
@@ -133,7 +144,7 @@ void DemoScene::Update(float frameTime)
 	}
 	else if (effectEnd && !pressStart){
 		timer += 3 * 60 * frameTime;
-		timer %= 360;
+		timer = fmodf(timer, 360.0f);
 		pressLerp = Math::sin(timer) + 1.0f;
 
 		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
@@ -171,12 +182,10 @@ void DemoScene::Draw() const
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::TITLE_LOGO_TEXTURE, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y), screenPow, D3DXCOLOR(1, 1, 1, logoLerp), vector2(0.5f, 0.5f), 0, 0, 1.0f, 1.0f, 0);
 
 	float startAlpha = Math::lerp3(0.0f, 1.0f, pressLerp);
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + 256), vector2(0.5f, 0.5f), 0.5f, "press SPACE or Circle button", vector3(1, 1, 1), pressLerp, true);
+	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - 256), vector2(0.5f, 0.5f), 0.5f, "press SPACE or Circle button", vector3(1, 1, 1), pressLerp, true);
 
 	float backAlpha = Math::lerp3(0.0f, 1.0f, backLerp);
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::BLACK_TEXTURE, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y), vector2(1920, 1080), D3DXCOLOR(1, 1, 1, backLerp), vector2(0.5f, 0.5f), 0, 0, 1.0f, 1.0f, 0);
-
-	//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 256), vector2(0.3f, 0.3f), 0.5f, "logo:"+(int)(logoLerp*100), vector3(0, 0, 0), 1.0f);
 }
 
 //終了しているか？

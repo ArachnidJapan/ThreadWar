@@ -11,7 +11,6 @@
 #include "Math\Vector2.h"
 #include "Graphic\Graphic.h"
 #include "Actor\ID.h"
-#include "scene\Option\Option.h"
 #include <string>
 #include <crtdbg.h>
 
@@ -20,8 +19,6 @@
 TCHAR* AppName = _T("Thread War");
 std::shared_ptr<SceneParameter> sp = std::make_shared<SceneParameter>();
 SceneManager sm;
-std::shared_ptr<Option> option;
-std::vector<int> configData;
 float frameTime;
 LARGE_INTEGER timeStart;	//パフォーマンスカウンターの開始値
 LARGE_INTEGER timeEnd;		//パフォーマンスカウンターの終了値
@@ -48,7 +45,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, UINT wParam, LONG lParam)
 	{
 	case WM_KEYUP:
 		// アプリ終了
-		if (wParam == VK_ESCAPE || option->ReturnExitGame())
+		if (wParam == VK_ESCAPE)
 			::DestroyWindow(hWnd);
 		//// F2キーを押すと、ウィンドウモードを切り替える。
 		//// 自動的にウィンドウモードを切り替える機能もあるが、ウィンドウスタイルを自由に変更するために自分で実装することにした。
@@ -128,10 +125,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	::ShowWindow(hwnd_, SW_SHOW);
 	::UpdateWindow(hwnd_);
 
-	option = std::make_shared<Option>();
-	
 	sm.Add(Scene::Demo, std::make_shared<DemoScene>(sp));
-	sm.Add(Scene::Title, std::make_shared<TitleScene>(sp, *option));
+	sm.Add(Scene::Title, std::make_shared<TitleScene>(sp));
 	sm.Add(Scene::TeamSelect, std::make_shared<TeamSelectScene>(sp));
 	sm.Add(Scene::GamePlay, std::make_shared<GamePlayScene>(sp));
 	sm.Add(Scene::Ending, std::make_shared<ResultScene>(sp));

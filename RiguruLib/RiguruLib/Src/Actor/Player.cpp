@@ -17,6 +17,7 @@
 #include "PlayerAction\PlayerAction.h"
 #include "ThreadEffect.h"
 #include "EnemyAI\EnemyAI.h"
+#include "../scene/SceneManager.h"
 
 //ƒvƒŒƒCƒ„[‚Ì”¼Œa
 const float RADIUS = 0.5f;
@@ -215,7 +216,7 @@ void Player::Update(float frameTime){
 	//else
 	if (!isRespawn){
 		pAM.Control();
-		if (stage._Get()->ReturnStartTime() < 0)
+		if (stage._Get()->ReturnStartTime() < 0 && !SceneManager::GetInstance().isFadeUpdate())
 		{
 			if (p1)
 				playerParam.vec = Control(frameTime, c);
