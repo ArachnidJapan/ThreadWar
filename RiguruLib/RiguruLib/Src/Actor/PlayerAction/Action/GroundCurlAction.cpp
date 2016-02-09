@@ -22,8 +22,8 @@ bool GroundCurlAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	curlInertiaVec = RCVector3::normalize(curlInertiaVec);
 
 	player._Get()->SetAnimation(
-		(ANIM_ID)(ANIM_ID::NEPHILA_ROUND_ANIM + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(ANIM_ID::NEPHILA_ROUND_ANIM + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(ANIM_ID::NEPHILA_ROUND_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(ANIM_ID::NEPHILA_ROUND_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		CURLANIMSPEED, true, true, 0, CURLANIMBLEND);
 	cameraMove = true;
 	playerControlFlag.firstFrameFlag = false;

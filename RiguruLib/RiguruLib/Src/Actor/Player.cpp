@@ -28,7 +28,15 @@ const float WEB_BIND_TIME = 60 * 3;
 const float BINDPOW_LINE = 0.5f;
 //巣に拘束されていた場合の速度や移動距離の減衰率
 const float BINDPOW_WEB = 0.25f;
-Player::Player(IWorld& world_, std::weak_ptr<Stage> stage_, CAMERA_ID cID_, int padNum_, int playerNum_) :Actor(world_), stage(stage_), pAM(), cID(cID_), padNum(padNum_), playerNum(playerNum_){
+Player::Player(IWorld& world_, std::weak_ptr<Stage> stage_, CAMERA_ID cID_, int padNum_, int playerNum_, bool p1_, bool tarentula_)
+:Actor(world_),
+stage(stage_),
+pAM(),
+cID(cID_),
+padNum(padNum_),
+playerNum(playerNum_),
+p1(p1_),
+tarentula(tarentula_){
 	animSpeed = new float(5.0f);
 	blendSpeed = new float(5.0f);
 	firstFlag = true;
@@ -69,16 +77,15 @@ void Player::Initialize(){
 	hpHealTime = 60;
 	damageCoolTime = 0;
 
-	if (cID == CAMERA_ID::PLAYER_CAMERA_1P){
+	inputAI = false;
+	if ((int)cID <= CAMERA_ID::PLAYER_CAMERA_4P){
 		parameter.id = ACTOR_ID::PLAYER_ACTOR;
-		inputAI = false;
-	}
-	else if ((int)cID <= CAMERA_ID::PLAYER_CAMERA_4P){
-		parameter.id = ACTOR_ID::PLAYER_ACTOR;
+		if (!p1)
 		inputAI = true;
 	}
 	else{
 		parameter.id = ACTOR_ID::ENEMY_ACTOR;
+		if (!p1)
 		inputAI = true;
 	}
 
@@ -91,9 +98,14 @@ void Player::Initialize(){
 		parameter.matrix = RCMatrix4::scale(vector3(0.1f, 0.1f, 0.1f))* RCMatrix4::rotateY(180.0f) * RCMatrix4::translate(pos);
 	}
 	else{
-		pos = respawnPoint = vector3(-2.4f + (1.2f * playerNum - 4), 0.83f, 91.46f);
+		if (!p1)
+		pos = respawnPoint = vector3(-2.4f + (1.2f * (playerNum - 4)), 0.83f, 91.46f);
+		else
+
+			pos = respawnPoint = vector3(-2.4f + (1.2f * (playerNum)), 0.83f, 91.46f);
 		parameter.matrix = RCMatrix4::scale(vector3(0.1f, 0.1f, 0.1f)) * RCMatrix4::translate(pos);
 	}
+
 	respawnTimer = 0.0f;
 	isRespawn = false;
 	stageOut = false;
@@ -124,19 +136,6 @@ void Player::Initialize(){
 	playerParam.hp = 2;
 	hpHealTime = 60;
 	damageCoolTime = 0;
-
-	if (cID == CAMERA_ID::PLAYER_CAMERA_1P){
-		parameter.id = ACTOR_ID::PLAYER_ACTOR;
-		inputAI = false;
-	}
-	else if ((int)cID <= CAMERA_ID::PLAYER_CAMERA_4P){
-		parameter.id = ACTOR_ID::PLAYER_ACTOR;
-		inputAI = true;
-	}
-	else{
-		parameter.id = ACTOR_ID::ENEMY_ACTOR;
-		inputAI = true;
-	}
 	respawnTimer = 0.0f;
 	isRespawn = false;
 
@@ -144,7 +143,7 @@ void Player::Initialize(){
 	isNodamage = false;
 }
 void Player::Update(float frameTime){
-	if (playerNum == 0)
+	if (p1)
 		Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 400), vector2(0.20f, 0.25f), 0.5f, "ONGROUNDFLAG:" + std::to_string(RCMatrix4::getPosition(parameter.matrix).y));
 	//	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_G, true) && playerNum != 0){
 	//		if (playerNum != 4)
@@ -169,7 +168,7 @@ void Player::Update(float frameTime){
 		bindTime = 10000.0f;
 		if (respawnTimer < 0.01f){
 			pAM.SetAnimation(
-				(ANIM_ID)(ANIM_ID::NEPHILA_DEAD_ANIM + (parameter.id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+				(ANIM_ID)(ANIM_ID::NEPHILA_DEAD_ANIM + (!tarentula ? 0 : ANIM_ID::CENTER)),
 				ANIM_ID::NEPHILA_DEAD_ANIM, 30.0f, true, false, 0, 5.0f);
 		}
 		respawnTimer += frameTime;
@@ -214,16 +213,22 @@ void Player::Update(float frameTime){
 	//playerParam.vec = Control(frameTime, c);
 	////入力を取得
 	//else
-	pAM.Control();
-	if (stage._Get()->ReturnStartTime() < 0)
-	{
-		if (padNum == 0)
-			playerParam.vec = Control(frameTime, c);
-		else
+	if (!isRespawn){
+		pAM.Control();
+		if (stage._Get()->ReturnStartTime() < 0)
 		{
-			ai[currentAI]->Update(frameTime);
-			Control(frameTime, c);
+			if (p1)
+				playerParam.vec = Control(frameTime, c);
+			else
+			{
+				ai[currentAI]->Update(frameTime);
+				Control(frameTime, c);
+			}
 		}
+		//移動ベクトルを初期化
+		parameter.inertiaVec = parameter.moveVec;
+		parameter.moveVec = vector3(0, 0, 0);
+		pAM.Update(frameTime);
 	}
 
 	//if (playerAI){
@@ -232,11 +237,6 @@ void Player::Update(float frameTime){
 	//}
 
 
-	//移動ベクトルを初期化
-	parameter.inertiaVec = parameter.moveVec;
-	parameter.moveVec = vector3(0, 0, 0);
-	if (!isRespawn)
-		pAM.Update(frameTime);
 	//無敵じゃなければ敵の糸と判定
 	if (!isNodamage)
 	{
@@ -423,8 +423,19 @@ void Player::Draw(CAMERA_ID cID_) const{
 	//}
 	//else
 	Graphic::GetInstance().BindAnimation(thisCopy->shared_from_this(), SHADER_ID::PLAYER_SHADER, frameTime_);
+	
+	MODEL_ID playerModel;
+	if (tarentula){
+		playerModel = MODEL_ID::TARENTULE_MODEL;
+		if (parameter.id == ACTOR_ID::ENEMY_ACTOR)playerModel = MODEL_ID::TARENTULE2_MODEL;
+	}
+	else{
+		playerModel = MODEL_ID::NEPHILA_MODEL;
+		if (parameter.id == ACTOR_ID::ENEMY_ACTOR)playerModel = MODEL_ID::NEPHILA2_MODEL;
+	}
+
 	//プレイヤーを描画
-	Graphic::GetInstance().DrawMesh(parameter.id == ACTOR_ID::PLAYER_ACTOR ? MODEL_ID::NEPHILA_MODEL : MODEL_ID::TARENTULE_MODEL, &drawMatrix, cID_, &D3DXCOLOR(0, 0, 0, 0.5f), isNodamage);
+	Graphic::GetInstance().DrawMesh(playerModel, &drawMatrix, cID_, &D3DXCOLOR(0, 0, 0, 0.5f), isNodamage);
 	//}
 	//テストフォント
 	//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.20f, 0.25f), 0.5f, "PlayerHP:" + std::to_string(hp));
@@ -553,7 +564,7 @@ Vector3 Player::Control(float frameTime, CAMERA_PARAMETER c){
 		!pAM.ReturnPlayerActionPtr()->ReturnRide())
 		&& pAM.ReturnActionID() != ACTION_ID::JUMP_ACTION &&
 		!pAM.ReturnPlayerActionPtr()->ReturnHitGround()){
-		
+
 		pAM.ChangeAction(ACTION_ID::JUMP_ACTION);
 	}
 
@@ -575,7 +586,8 @@ Vector3 Player::Control(float frameTime, CAMERA_PARAMETER c){
 		Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_R1, true))) || inputShot) &&
 		pAM.ReturnActionID() != ACTION_ID::GROUND_CURL_ACTION &&
 		pAM.ReturnActionID() != ACTION_ID::AIR_CURL_ACTION){
-		std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID, (pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION || pAM.ReturnActionID() == ACTION_ID::THREAD_WEB_ACTION) ? false : true);
+		std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID, (pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION || pAM.ReturnActionID() == ACTION_ID::THREAD_WEB_ACTION) ? false : true, playerNum);
+		if(p1)Audio::GetInstance().PlaySE(SE_ID::THREAD_SHOT_SE);
 		//それぞれのチームのIDの糸を生成。
 		ACTOR_ID threadID = ACTOR_ID::PLAYER_THREAD_ACTOR;
 		if (parameter.id != ACTOR_ID::PLAYER_ACTOR)
@@ -653,7 +665,7 @@ void Player::SetNor(Vector3 nor_){
 }
 
 void Player::ShotThread(){
-	std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID, pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION ? false : true);
+	std::shared_ptr<Thread> thread = std::make_shared<Thread>(world, shared_from_this(), stage, cID, pAM.ReturnActionID() == ACTION_ID::THREAD_ACTION ? false : true, playerNum);
 	//それぞれのチームのIDの糸を生成。
 	ACTOR_ID threadID = ACTOR_ID::PLAYER_THREAD_ACTOR;
 	if (teamID == TEAM_ID::SECOND_TEAM)
@@ -716,13 +728,15 @@ std::weak_ptr<ThreadWeb> Player::ReturnThreadWeb(){
 	return pAM.ReturnThreadWeb();
 }
 
-void Player::Damage(float damagePoint){
+void Player::Damage(float damagePoint, int num){
 	playerParam.hp -= damagePoint;
+	ai[currentAI]->Damage(num);
 
 	if (playerParam.hp <= 0 && !isRespawn)
 	{
 		stage._Get()->AddPoint(parameter.id);
 		isRespawn = true;
+		ai[currentAI]->Dead();
 	}
 }
 void Player::SetBindTime(float bindTime_){

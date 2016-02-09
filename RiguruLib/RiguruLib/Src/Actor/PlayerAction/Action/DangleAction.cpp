@@ -15,8 +15,8 @@ DangleAction::~DangleAction(){
 }
 bool DangleAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	player._Get()->SetAnimation(
-		(ANIM_ID)(ANIM_ID::NEPHILA_WALKFRONT_ANIM + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(ANIM_ID::NEPHILA_WALKFRONT_ANIM + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(ANIM_ID::NEPHILA_WALKFRONT_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(ANIM_ID::NEPHILA_WALKFRONT_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		HOVERANIMSPEED, false, true, 0, HOVERANIMBLEND);
 	beforeAction = beforeId;
 	cameraMove = true;

@@ -7,6 +7,7 @@
 const float CAMERA_ANGLE_SPEED = 0.003f * 60.0f;		// 旋回速度
 const float CAMERA_PLAYER_TARGET_HEIGHT = 0.75f;	// プレイヤー座標からどれだけ高い位置を注視点とするか
 const float CAMERA_PLAYER_LENGTH = 2.5f;	// プレイヤーとの距離
+const float CAMERA_AI_PLAYER_LENGTH = 0.01f;
 const float CAMERA_COLLISION_SIZE = 0.2f;	// カメラの当たり判定サイズ
 
 Camera::Camera(CAMERA_ID cID_, std::weak_ptr<Stage> stage_) :cID(cID_), stage(stage_){
@@ -57,7 +58,7 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 			siyaChange = max(0.0f, siyaChange);
 		}
 		siya += siyaChange;
-		if ((cID == CAMERA_ID::PLAYER_CAMERA_1P || dokusai) && !playerAI)
+		if ((padNum == 0 || dokusai) && !playerAI)
 		{
 			mCameraParam.InputAngle = Device::GetInstance().GetInput()->RightStick(padNum) / 500.0f;
 			if (mCameraParam.InputAngle == vector3(0, 0, 0)){
@@ -119,8 +120,10 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 	front = RCVector3::normalize(RCVector3::cross(left, up));// *yawMat);
 	//left = left * yawMat;
 
+	float cameraLength = CAMERA_AI_PLAYER_LENGTH;
+	if (padNum == 0)cameraLength = CAMERA_PLAYER_LENGTH;
 	//後ろに下げる
-	Matrix4 trans = RCMatrix4::translate(front * CAMERA_PLAYER_LENGTH);
+	Matrix4 trans = RCMatrix4::translate(front * cameraLength);
 	//Targetの位置から後ろに下げる
 	Matrix4 x = t* trans;
 	//プレイヤーのけつ方向とカメラ方向のなす角
@@ -157,31 +160,33 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 	}
 
 	//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 470), vector2(0.20f, 0.25f), 0.5f, "angle:" + std::to_string(angle) + "f");
-	trans = RCMatrix4::translate(front * CAMERA_PLAYER_LENGTH);
+	trans = RCMatrix4::translate(front * cameraLength);
 	x = t* trans;
 	mCameraParam.Eye = RCMatrix4::getPosition(x);//* Time::DeltaTime;
 
-	//カメラとのあたり判定(２分探索法を用いて距離を短くしていく)
-	bool hitNum = ModelCapsule(*stage._Get()->ReturnMat(), OCT_ID::STAGE_OCT, CreateCapsule(mCameraParam.Eye, mCameraParam.Target, CAMERA_COLLISION_SIZE)).colFlag;
-	std::string s = (hitNum == true ? "TRUE" : "FALSE");
-	//Graphic::GetInstance().
-	(FONT_ID::TEST_FONT, vector2(0, 455), vector2(0.20f, 0.25f), 0.5f, "MODELCAPSULEFLAG:" + s);
-	if (hitNum){
-		float notHitLength = 0.0f;
-		float cameraLen = CAMERA_PLAYER_LENGTH;
-		do{
-			float testLen = notHitLength + (cameraLen - notHitLength) / 2.0f;
-			trans = RCMatrix4::translate(front * testLen);
-			x = t* trans;
-			mCameraParam.Eye = RCMatrix4::getPosition(x);//* Time::DeltaTime;
-			bool hit = ModelCapsule(*stage._Get()->ReturnMat(), OCT_ID::STAGE_OCT, CreateCapsule(mCameraParam.Eye, mCameraParam.Target, CAMERA_COLLISION_SIZE)).colFlag;
-			if (hit){
-				cameraLen = testLen;
-			}
-			else{
-				notHitLength = testLen;
-			}
-		} while (cameraLen - notHitLength > 0.01f);
+	if (padNum == 0){
+		//カメラとのあたり判定(２分探索法を用いて距離を短くしていく)
+		bool hitNum = ModelCapsule(*stage._Get()->ReturnMat(), OCT_ID::STAGE_OCT, CreateCapsule(mCameraParam.Eye, mCameraParam.Target, CAMERA_COLLISION_SIZE)).colFlag;
+		std::string s = (hitNum == true ? "TRUE" : "FALSE");
+		//Graphic::GetInstance().
+		(FONT_ID::TEST_FONT, vector2(0, 455), vector2(0.20f, 0.25f), 0.5f, "MODELCAPSULEFLAG:" + s);
+		if (hitNum){
+			float notHitLength = 0.0f;
+			float cameraLen = cameraLength;
+			do{
+				float testLen = notHitLength + (cameraLen - notHitLength) / 2.0f;
+				trans = RCMatrix4::translate(front * testLen);
+				x = t* trans;
+				mCameraParam.Eye = RCMatrix4::getPosition(x);//* Time::DeltaTime;
+				bool hit = ModelCapsule(*stage._Get()->ReturnMat(), OCT_ID::STAGE_OCT, CreateCapsule(mCameraParam.Eye, mCameraParam.Target, CAMERA_COLLISION_SIZE)).colFlag;
+				if (hit){
+					cameraLen = testLen;
+				}
+				else{
+					notHitLength = testLen;
+				}
+			} while (cameraLen - notHitLength > 0.01f);
+		}
 	}
 
 	mCameraParam.Up = up;//* Time::DeltaTime;

@@ -119,9 +119,9 @@ void EnemyAI::Draw(CAMERA_ID cID)
 {
 	OnDraw(cID);
 }
-void EnemyAI::Damage()
+void EnemyAI::Damage(int num)
 {
-
+	OnDamage(num);
 }
 void EnemyAI::Dead()
 {
@@ -577,10 +577,17 @@ void EnemyAI::CrystalPointMoveAttack(float frameTime)
 	//ポリゴンがある場合
 	if (isStageCol)
 	{
-		//斜めに前進
+		//0～10秒の間は直進のみ、10～12秒の間はクリスタルを向く
 		inputVec.z = -1;
-		inputVec.x = -0.2f;
-		inputVec = RCVector3::normalize(inputVec);
+
+		timer += frameTime;
+		if (timer > 10.0f)
+		{
+			TargetPointLookH(frameTime);
+			TargetPointLookV(frameTime);
+		}
+		if (timer > 12.0f)
+			timer = 0.0f;
 	}
 	//ポリゴンがない場合
 	else
@@ -618,9 +625,6 @@ void EnemyAI::CrystalPointMoveAttack(float frameTime)
 			timer = 0;
 		}
 	}
-
-
-	//ポリゴンがあってもなくても
 
 	//ステップ入力
 	stepTime += frameTime;

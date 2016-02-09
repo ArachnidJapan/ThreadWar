@@ -10,7 +10,7 @@
 class Stage;
 class UI :public Actor{
 public:
-	UI(IWorld& world_,std::weak_ptr<Stage> stage_);
+	UI(IWorld& world_,std::weak_ptr<Stage> stage_,ACTOR_ID playerTeam_);
 	~UI();
 	virtual void Initialize() override;
 	virtual void Update(float frameTime) override;
@@ -19,6 +19,7 @@ public:
 	void SetHP(float hp);
 
 private:
+	ACTOR_ID playerTeam;
 	Matrix4 mouseMat;
 	float angle = 0;
 	float angleZ = 0;

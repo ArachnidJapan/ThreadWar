@@ -41,7 +41,7 @@ PlayerAction::~PlayerAction(){
 }
 void PlayerAction::Control(){
 	ride = false;
-	if (player._Get()->ReturnPlayerNum() == 0 && (thisAction == ACTION_ID::NORMAL_ACTION || (thisAction == ACTION_ID::THREAD_ACTION && !hitGround) || (thisAction == ACTION_ID::THREAD_WEB_ACTION && !hitGround))){
+	if (player._Get()->ReturnP1() && (thisAction == ACTION_ID::NORMAL_ACTION || (thisAction == ACTION_ID::THREAD_ACTION && !hitGround) || (thisAction == ACTION_ID::THREAD_WEB_ACTION && !hitGround))){
 		Vector3 playerPos = RCMatrix4::getPosition(player._Get()->GetParameter().matrix);
 		Vector3 cameraVec = RCVector3::normalize(Device::GetInstance().GetCamera(cID)->CameraParam()->Target - Device::GetInstance().GetCamera(cID)->CameraParam()->Eye);
 		std::weak_ptr<Thread> threadWeak;

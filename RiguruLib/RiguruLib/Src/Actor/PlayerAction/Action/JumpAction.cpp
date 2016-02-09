@@ -50,7 +50,7 @@ bool JumpAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 		leftAngle = 0;
 		secondMoveVecUp = vector3(0, 1, 0);
 		hover = false;
-		if (player._Get()->ReturnPlayerNum() == 0)
+		if (player._Get()->ReturnP1())
 		Audio::GetInstance().PlaySE(SE_ID::JUMP_SE);
 		return true;
 	}
@@ -71,8 +71,8 @@ void JumpAction::Update(float frameTime){
 			float upAniTime = HOVERANIMSPEED;
 			float blendAnim = HOVERANIMBLEND * player._Get()->BindPow(true);
 			player._Get()->SetAnimation(
-				(ANIM_ID)(ANIM_ID::NEPHILA_WALKFRONT_ANIM + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-				(ANIM_ID)(ANIM_ID::NEPHILA_WALKFRONT_ANIM + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+				(ANIM_ID)(ANIM_ID::NEPHILA_WALKFRONT_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+				(ANIM_ID)(ANIM_ID::NEPHILA_WALKFRONT_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 				upAniTime, true, true, 0, blendAnim);
 		}
 		

@@ -41,6 +41,10 @@ public:
 		return camera[id];
 	}
 
+	void SetCamera(float frameTime){
+		for (auto i : camera)i.second->SetCamera(vector3(0, 0, 0), vector3(0, 0, 0), frameTime);
+	}
+
 	Input* GetInput(){
 		return input;
 	}

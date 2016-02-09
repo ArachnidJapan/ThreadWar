@@ -4,11 +4,12 @@
 #include "ISceneMediator.h"
 #include "../world/World.h"
 #include "../TeamSelect/SelectSpider.h"
+#include "SceneParameter.h"
 
 class TeamSelectScene :public IScene{
 public:
 	//コンストラクタ 
-	TeamSelectScene();
+	TeamSelectScene(std::weak_ptr<SceneParameter> sp_);
 	//デストラクタ
 	~TeamSelectScene();
 
@@ -26,6 +27,7 @@ public:
 	virtual void End()override;
 
 private:
+	std::weak_ptr<SceneParameter> sp;
 	bool mIsEnd;
 	World wa;
 	std::vector<std::shared_ptr<SelectSpider>> selectSpider;

@@ -43,8 +43,8 @@ bool ThreadAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 		}
 	}
 	player._Get()->SetAnimation(
-		(ANIM_ID)(leftRightID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(frontBackID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(leftRightID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(frontBackID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		THREADANIMSPEED, true, true, animFront == true ? 1 : 0, WALKANIMBLEND);
 
 	startRotate = 0;
@@ -118,8 +118,8 @@ void ThreadAction::Update(float frameTime){
 	}
 	if (beforeAnimFront != animFront)
 		player._Get()->SetAnimation(
-		(ANIM_ID)(leftRightID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(frontBackID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(leftRightID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(frontBackID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		THREADANIMSPEED, true, true, animFront == true ? 1 : 0, WALKANIMBLEND);
 
 	if (!(controlVec == vector3(0, 0, 0))){
@@ -201,7 +201,7 @@ void ThreadAction::OnCollide(Actor& other, CollisionParameter colpara){
 			//ボタン入力で巻取りを開始
 			if ((Device::GetInstance().GetInput()->MouseButtonDown(INPUTMOUSEBUTTON::RIGHT_BUTTON, true) ||
 				Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_R2, true)) &&
-				player._Get()->ReturnPlayerNum() == 0){
+				player._Get()->ReturnP1()){
 				ChangeAction(ACTION_ID::REWIND_ACTION);
 			}
 			float radius = player._Get()->GetParameter().radius;

@@ -11,7 +11,7 @@
 #include "Player.h"
 #include "Stage.h"
 
-UI::UI(IWorld& world_, std::weak_ptr<Stage> stage_) :Actor(world_), stage(stage_){
+UI::UI(IWorld& world_, std::weak_ptr<Stage> stage_,ACTOR_ID playerTeam_) :Actor(world_), stage(stage_),playerTeam(playerTeam_){
 	Initialize();
 }
 
@@ -30,8 +30,8 @@ void UI::Initialize(){
 
 }
 void UI::Update(float frameTime){
-	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		if (static_cast<Player*>(const_cast<Actor*>(&other))->ReturnPlayerNum() == 0){
+	world.EachActor(playerTeam, [&](const Actor& other){
+		if (static_cast<Player*>(const_cast<Actor*>(&other))->ReturnP1()){
 			hp = static_cast<Player*>(const_cast<Actor*>(&other))->ReturnPlayerParameter()->hp;
 		}
 	});
@@ -74,20 +74,18 @@ void UI::Update(float frameTime){
 void UI::Draw(CAMERA_ID cID) const{
 	//if (drawFlag){
 	std::vector<Vector3> pointPos;
-	std::vector<int> teamID;
 		Vector3 playerPos, playerFront, playerUp;
-	world.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
-		if (static_cast<Player*>(const_cast<Actor*>(&other))->ReturnPlayerNum() == 0){
+	world.EachActor(playerTeam, [&](const Actor& other){
+		if (static_cast<Player*>(const_cast<Actor*>(&other))->ReturnP1()){
 			playerPos = RCMatrix4::getPosition(const_cast<Actor*>(&other)->GetParameter().matrix);
 			playerFront = RCVector3::normalize(RCMatrix4::getFront(const_cast<Actor*>(&other)->GetParameter().matrix));
 			playerUp = RCVector3::normalize(RCMatrix4::getUp(const_cast<Actor*>(&other)->GetParameter().matrix));
 		}
 		else{
 			pointPos.push_back(RCMatrix4::getPosition(const_cast<Actor*>(&other)->GetParameter().matrix));
-			teamID.push_back(static_cast<Player*>(const_cast<Actor*>(&other))->ReturnPlayerNum());
 		}
 	});
-
+	
 	for (int a = pointPos.size() - 1; a >= 0;a--){
 		Vector3 p = pointPos[a] * RConvert(&Device::GetInstance().GetCamera(cID)->returnView());
 		Vector3 vec = RCVector3::normalize(pointPos[a] - playerPos);
@@ -102,7 +100,7 @@ void UI::Draw(CAMERA_ID cID) const{
 			p.y += 1.0f;
 			p.x *= (1920.0f / 2.0f);
 			p.y *= (1080.0f / 2.0f);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(p.x, p.y + 60.0f), vector2(0.25f, 0.40f), 0.5f, "cp" + std::to_string(teamID[a]), vector3(0, 1, 0),1,true);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(p.x, p.y + 60.0f), vector2(0.25f, 0.40f), 0.5f, "cp" + std::to_string(a+1), vector3(0, 1, 0),1,true);
 			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(p.x, p.y + 30.0f), vector2(0.20f, 0.30f), 0.5f,std::to_string((int)(RCVector3::length(playerPos - pointPos[a]))) + "m", vector3(0, 1, 0),1,true);
 		}
 		else{
@@ -119,7 +117,7 @@ void UI::Draw(CAMERA_ID cID) const{
 			centerMat = trans * rotate * centerMat;
 			center = RCMatrix4::getPosition(centerMat);
 			Graphic::GetInstance().DrawTexture(TEXTURE_ID::ARROW_TEXTURE, vector2(center.x, center.y), vector2(0.3f, 1.0f), D3DXCOLOR(1, 1, 1, 1), vector2(0.5f, 0.5f), 0, 0, 1, 1, angle);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x, center.y + 50.0f), vector2(0.25f, 0.40f), 0.5f, "CP" + std::to_string(teamID[a]), vector3(0, 1, 0),1,true);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x, center.y + 50.0f), vector2(0.25f, 0.40f), 0.5f, "CP" + std::to_string(a+1), vector3(0, 1, 0),1,true);
 			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x, center.y + 20.0f), vector2(0.20f, 0.30f), 0.5f, std::to_string((int)(RCVector3::length(playerPos - pointPos[a]))) + "m", vector3(0, 1, 0),1,true);
 		}
 	}

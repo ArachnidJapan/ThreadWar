@@ -19,7 +19,7 @@
 #define DEFAULT_X SCREEN_CENTER_X - 256
 
 //コンストラクタ
-TitleScene::TitleScene()
+TitleScene::TitleScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 {
 	/************************************************テクスチャー*************************************************/
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TITLE_BACK_TEXTURE, "Res/Texture/test_back.png");

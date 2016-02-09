@@ -39,8 +39,8 @@ bool RewindAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	}
 
 	player._Get()->SetAnimation(
-		(ANIM_ID)(ANIM_ID::NEPHILA_REWIND_ANIM + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(ANIM_ID::NEPHILA_REWIND_ANIM + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(ANIM_ID::NEPHILA_REWIND_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(ANIM_ID::NEPHILA_REWIND_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		WALKANIMSPEED * 1.0f, true, true, 0, WALKANIMBLEND);
 	return true;
 }

@@ -28,7 +28,7 @@ struct PlayerParameter{
 
 class Player :public Actor, public std::enable_shared_from_this<Player>{
 public:
-	Player(IWorld& world_, std::weak_ptr<Stage> stage_,CAMERA_ID cID_,int padNum_,int playerNum_);
+	Player(IWorld& world_, std::weak_ptr<Stage> stage_,CAMERA_ID cID_,int padNum_,int playerNum_,bool p1_,bool tarentula_);
 	~Player();
 	virtual void Initialize() override;
 	virtual void Update(float frameTime) override;
@@ -70,9 +70,12 @@ public:
 	bool ReturnBindFlag(){ return bindFlag; }
 	float ReturnBindTime(){ return bindTime; }
 	int ReturnPlayerNum(){ return playerNum; }
+	bool ReturnTarentula(){ return tarentula; }
+	bool ReturnP1(){ return p1; }
 	std::weak_ptr<Stage> ReturnStage(){ return stage; }
 
-	void Damage(float damagePoint);
+	//食らったダメージ量, 食らった糸を生成してきた敵の番号
+	void Damage(float damagePoint, int num);
 private:
 	PlayerParameter playerParam;
 	PlayerActionManager pAM;
@@ -81,11 +84,12 @@ private:
 	//ノーマルからRotateを計算
 	Matrix4 NorToRotateMat(CAMERA_PARAMETER c, Vector3 normal, Matrix4 matrix, float angle);
 
-	Player* thisCopy;
-
 	//bool dokusai,playerAI;
 
 private:
+	Player* thisCopy;
+	bool p1;
+	bool tarentula;
 	//PlayerAction playerAction;
 	/********基本パラメータ********/
 	//ステージのポインタ、Threadに送る用

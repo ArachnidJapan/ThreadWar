@@ -5,6 +5,7 @@
 #include "../world/World.h"
 #include "../Actor/Actor.h"
 #include "../Math/Vector2.h"
+#include "SceneParameter.h"
 #define TITLE_SELECT_NUM 2
 
 enum TITLE_SELECT{
@@ -16,7 +17,7 @@ enum TITLE_SELECT{
 class  TitleScene :public IScene{
 public:
 	//コンストラクタ 
-	TitleScene();
+	TitleScene(std::weak_ptr<SceneParameter> sp_);
 	//デストラクタ
 	~TitleScene();
 
@@ -44,6 +45,7 @@ public:
 	/*******************/
 
 private:
+	std::weak_ptr<SceneParameter> sp;
 	bool mIsEnd;
 	//2つの選択肢のうちの1つが選択されたか。
 	bool isSelect;

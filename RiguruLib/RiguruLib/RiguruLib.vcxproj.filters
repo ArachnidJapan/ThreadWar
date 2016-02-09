@@ -294,6 +294,12 @@
     <ClInclude Include="Src\TeamSelect\SelectSpider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Src\TeamSelect\SelectPlayerParam.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\scene\SceneParameter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Actor\Player.cpp">

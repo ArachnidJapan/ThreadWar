@@ -9,9 +9,10 @@
 #include "../Actor/CrystalCenter.h"
 #include "../Math/Converter.h"
 #include "../Audio/Audio.h"
+#include "../TeamSelect/SelectPlayerParam.h"
 
 //コンストラクタ
-TeamSelectScene::TeamSelectScene()
+TeamSelectScene::TeamSelectScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 {
 	mIsEnd = false;
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::NEPHILA_WHITE_TEXTURE, "Res/Texture/nephila white.png");
@@ -58,14 +59,14 @@ void TeamSelectScene::Initialize()
 	selectSpider.push_back(playerSpiderSelect);
 	selectSpider.push_back(enemySpiderSelect);
 
-	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 - 100, 1080 - 300), playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 300), enemySpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 + 100, 1080 - 500), playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 500), enemySpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 - 100, 1080 - 700), playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 700), enemySpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 + 100, 1080 - 900), playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 900), enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 - 100, 1080 - 300),0, playerSpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 300),0, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 + 100, 1080 - 500),1, playerSpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 500),1, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 - 100, 1080 - 700),2, playerSpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 700),2, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 + 100, 1080 - 900),3, playerSpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 900),3, enemySpiderSelect));
 
 	count = 0;
 }
@@ -73,8 +74,8 @@ void TeamSelectScene::Initialize()
 void TeamSelectScene::Update(float frameTime)
 {
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true)){
-
 		mIsEnd = true;
+		return;
 	}
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true)){
 		if (count % 2 == 0){
@@ -105,9 +106,11 @@ void TeamSelectScene::Update(float frameTime)
 		selectSpider[i]->SetSelect(false);
 	}
 	selectSpider[count]->SetSelect(true);
-	for (int i = 0; i < 2; i++){
-		selectSpider[i]->Update();
-	}
+
+	selectSpider[0]->SetEnemyPlayerHave(selectSpider[1]->PlayerHave());
+	selectSpider[1]->SetEnemyPlayerHave(selectSpider[0]->PlayerHave());
+
+	selectSpider[count]->Update();
 	wa.Update(frameTime);
 }
 
@@ -164,5 +167,13 @@ Scene TeamSelectScene::Next() const
 
 void TeamSelectScene::End(){
 	Audio::GetInstance().StopBGM(BGM_ID::TITLE_BGM);
+	TeamSelectResult tsr;
+	tsr.redTarantula = selectSpider[0]->ReturnTarantula();
+	tsr.blueTarantula = selectSpider[1]->ReturnTarantula();
+	tsr.redHavePlayer = selectSpider[0]->PlayerHave();
+	tsr.blueHavePlayer = selectSpider[1]->PlayerHave();
+	tsr.redHaveCPU = selectSpider[0]->CPUCount();
+	tsr.blueHaveCPU = selectSpider[1]->CPUCount();
+	sp._Get()->SetTeamSelectResult(tsr);
 	selectSpider.clear();
 }

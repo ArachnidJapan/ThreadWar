@@ -5,8 +5,7 @@
 #include "../Math/MathUtility.h"
 
 //コンストラクタ
-ResultScene::ResultScene(VICTORY_ID& winner_):
-winner(&winner_)
+ResultScene::ResultScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 {
 }
 
@@ -41,11 +40,11 @@ void ResultScene::Draw() const
 	Vector2 screenPow = vector2(1920.0f / 1280.0f, 1080.0f / 720.0f);
 
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::DAMAGE_TEXTURE, vector2(0, 0), screenPow, D3DXCOLOR(1, 1, 1, 1), vector2(0.0f, 0.0f), 0, 0, 1.0f, 1.0f, 0);
-	if (*winner == VICTORY_ID::PLAYER_WIN)
+	if (*sp._Get()->ReturnVictoryID() == VICTORY_ID::PLAYER_WIN)
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "PLAYER TEAM WINS", vector3(1, 0, 0), 1.0f, true);
-	else if (*winner == VICTORY_ID::ENEMY_WIN)
+	else if (*sp._Get()->ReturnVictoryID() == VICTORY_ID::ENEMY_WIN)
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "ENEMY TEAM WINS", vector3(0, 0, 1), 1.0f, true);
-	else if (*winner == VICTORY_ID::DRAW_WIN)
+	else if (*sp._Get()->ReturnVictoryID() == VICTORY_ID::DRAW_WIN)
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "DRAW", vector3(0, 1, 0), 1.0f, true);
 
 	float backAlpha = Math::lerp3(1.0f, 0.0f, timer);

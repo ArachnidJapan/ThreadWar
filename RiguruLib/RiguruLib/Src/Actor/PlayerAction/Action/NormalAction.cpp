@@ -47,8 +47,8 @@ bool NormalAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 
 	player._Get()->SetAnimBlend(WALKANIMBLEND);
 	player._Get()->SetAnimation(
-		(ANIM_ID)(leftRightID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(frontBackID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(leftRightID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(frontBackID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		WALKANIMSPEED, animTimeReset, true, abs(controlVecNor.z), WALKANIMBLEND);
 
 	moveVecUp = beforeUp;
@@ -69,20 +69,12 @@ void NormalAction::Update(float frameTime){
 		//™X‚Éup‚ðvector3(0,1,0)‚É‹ß‚Ã‚¯‚é
 		Vector3 nor;
 		Vector3 pos;
-		if (beforeAction != ACTION_ID::THREAD_ACTION && beforeAction != ACTION_ID::REWIND_ACTION){
-			nor = RCVector3::lerp((moveVecUp), startNor, startRotate);
-			pos = RCVector3::lerp((moveVecPos), startPos, startRotate);
-			if (beforeAction == ACTION_ID::JUMP_ACTION || beforeAction == ACTION_ID::HOVER_ACTION){
-				pos = startPos;
-			}
+		nor = RCVector3::lerp((moveVecUp), startNor, startRotate);
+		pos = RCVector3::lerp((moveVecPos), startPos, startRotate);
+		if (beforeAction == ACTION_ID::JUMP_ACTION || beforeAction == ACTION_ID::HOVER_ACTION){
+			pos = startPos;
 		}
-		else {
-			nor = RCVector3::lerp((moveVecUp), startNor, startRotate);
-			pos = RCVector3::lerp((moveVecPos), startPos, startRotate);
-			//nor = moveVecUp;
-			//pos = moveVecPos;
-			//playerControlFlag.startNorChangeFlag = false;
-		}
+		
 		player._Get()->SetNor(nor);
 		player._Get()->SetPos(pos);
 		startRotate += STARTNORCHANGESPEED * frameTime;
@@ -167,8 +159,8 @@ void NormalAction::Update(float frameTime){
 	else beforeActionCurl = false;
 
 	if (changeFlag || playerControlFlag.firstFrameFlag)	player._Get()->SetAnimation(
-		(ANIM_ID)(leftRightID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-		(ANIM_ID)(frontBackID + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(leftRightID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+		(ANIM_ID)(frontBackID + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		WALKANIMSPEED, false, true, abs(controlVecNor.z), WALKANIMBLEND);
 
 	Vector3 moveVec = (moveVecFront * controlVec.z + moveVecLeft * controlVec.x) * SPEED * frameTime;

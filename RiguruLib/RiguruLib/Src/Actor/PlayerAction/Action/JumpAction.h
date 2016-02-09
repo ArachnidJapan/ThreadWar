@@ -15,8 +15,8 @@ private:
 	float startRotate;
 	Vector3 cameraMoveVecUp;
 	bool cameraNorChangeFlag;
-	bool plusFlag;
 	float frontAngle;
+	bool plusFlag;
 	float leftAngle;
 	Vector3 secondMoveVecUp;
 	bool hover;

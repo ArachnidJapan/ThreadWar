@@ -18,7 +18,7 @@ class ThreadWeb;
 
 class Thread :public Actor, public std::enable_shared_from_this<Thread>{
 public:
-	Thread(IWorld& world_, std::weak_ptr<Player> player_, std::weak_ptr<Stage> stage_, CAMERA_ID cID_, bool startPosGroundTouch_);
+	Thread(IWorld& world_, std::weak_ptr<Player> player_, std::weak_ptr<Stage> stage_, CAMERA_ID cID_, bool startPosGroundTouch_, int playerNum_);
 	~Thread();
 	virtual void Initialize() override;
 	virtual void Update(float frameTime) override;
@@ -60,6 +60,7 @@ public:
 	void SetIsRewind(bool flag){ isRewind = flag; }
 private:
 	CAMERA_ID cID;
+	int playerNum;
 private:
 	std::weak_ptr<Player> player;
 	ACTOR_ID rootActor;//íNÇ™î≠éÀÇµÇΩéÖÇ©ÅB
