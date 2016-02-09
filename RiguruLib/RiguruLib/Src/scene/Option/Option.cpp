@@ -221,6 +221,9 @@ void Option::OptionSelect(float frameTime){
 		nextGaugeLength[select] = 0;
 		if (config.at((CONFIG_DATA)select) > 0)
 			nextGaugeLength[select] = config.at((CONFIG_DATA)select) / 10.0f;
+
+		Audio::GetInstance().SetBGMVolume(config[CONFIG_DATA::MUSIC_VOL] * 10);
+		Audio::GetInstance().SetSEVolume(config[CONFIG_DATA::SE_VOL] * 10);
 }
 	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true)){
 		if (select != OPTION_SELECT::BGM_SELECT && select != OPTION_SELECT::SE_SELECT)
@@ -233,6 +236,8 @@ void Option::OptionSelect(float frameTime){
 		if (config.at((CONFIG_DATA)select) > 0)
 			nextGaugeLength[select] = config.at((CONFIG_DATA)select) / 10.0f;
 
+		Audio::GetInstance().SetBGMVolume(config[CONFIG_DATA::MUSIC_VOL] * 10);
+		Audio::GetInstance().SetSEVolume(config[CONFIG_DATA::SE_VOL] * 10);
 	}
 	//Œˆ’è
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
