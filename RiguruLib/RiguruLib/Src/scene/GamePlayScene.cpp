@@ -106,7 +106,7 @@ GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	Audio::GetInstance().LoadSE(SE_ID::JUMP_SE, _T("Res/Sound/SE/jump_se.wav"), 2);
 	Audio::GetInstance().LoadSE(SE_ID::ROUND_SE, _T("Res/Sound/SE/round_se.wav"), 1);
 	Audio::GetInstance().LoadSE(SE_ID::STEP_SE, _T("Res/Sound/SE/step_se.wav"), 2);
-	Audio::GetInstance().LoadSE(SE_ID::WALK_SE, _T("Res/Sound/SE/walk_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::WALK_SE, _T("Res/Sound/SE/walk_se.wav"), 10);
 	Audio::GetInstance().LoadSE(SE_ID::WIND_SE, _T("Res/Sound/SE/wind_se.wav"), 1);
 
 	Audio::GetInstance().LoadBGM(BGM_ID::TITLE_BGM, _T("Res/Sound/BGM/title_bgm.wav"));

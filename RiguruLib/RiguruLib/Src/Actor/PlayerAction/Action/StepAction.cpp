@@ -57,8 +57,6 @@ bool StepAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 }
 
 void StepAction::Rasterize(){
-
-	Audio::GetInstance().StopSE(SE_ID::STEP_SE);
 }
 
 void StepAction::Update(float frameTime){

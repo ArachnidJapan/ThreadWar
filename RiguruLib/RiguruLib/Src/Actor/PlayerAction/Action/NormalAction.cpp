@@ -63,6 +63,7 @@ bool NormalAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	//firstFrameFlag = true;
 	change = false;
 	sp = 0;
+	Audio::GetInstance().PlaySE(SE_ID::WALK_SE);
 	return true;
 }
 
@@ -106,12 +107,13 @@ void NormalAction::Update(float frameTime){
 			changeFlag = true;
 		}
 	}
-
-	sp = 0;
+	if (sp > 1.0f){
+		Audio::GetInstance().PlaySE(SE_ID::WALK_SE);
+		sp = 0.0f;
+	}
 	CAMERA_PARAMETER c = *Device::GetInstance().GetCamera(cID)->CameraParam();
 	if (!(controlVec == vector3(0, 0, 0))){
-		Audio::GetInstance().PlaySE(SE_ID::WALK_SE, true);
-		sp = 55000;
+		sp += RCVector3::length(controlVec) / 11.0f * 60.0f * frameTime;
 		player._Get()->SetAnimTime(WALKANIMSPEED * min(abs(RCVector3::length(controlVec)), 10.0f));
 		player._Get()->SetAnimBlend(WALKANIMBLEND);
 		if (controlVec.x >= 0){
@@ -132,7 +134,7 @@ void NormalAction::Update(float frameTime){
 		player._Get()->SetAnimTime(0);
 		//ˆÚ“®‚ð‚¹‚¸‚É‰ñ“]‚ð‚µ‚Ä‚¢‚½‚ç(‰E‰ñ‚è)
 		if (c.InputAngle.x > 0){
-			Audio::GetInstance().PlaySE(SE_ID::WALK_SE, true);
+			sp += abs(c.InputAngle.x) / 11.0f * frameTime;
 			if (leftRightID != ANIM_ID::NEPHILA_TURNLEFT_ANIM)
 				changeFlag = true;
 			//‰E‰ñ“]‚ðƒZƒbƒg
@@ -144,7 +146,7 @@ void NormalAction::Update(float frameTime){
 		}
 		//ˆÚ“®‚ð‚¹‚¸‚É‰ñ“]‚ð‚µ‚Ä‚¢‚½‚ç(‰E‰ñ‚è)
 		else if (c.InputAngle.x < 0){
-			Audio::GetInstance().PlaySE(SE_ID::WALK_SE, true);
+			sp += abs(c.InputAngle.x) / 11.0f * frameTime;
 			if (leftRightID != ANIM_ID::NEPHILA_TURNLEFT_ANIM)
 				changeFlag = true;
 			leftRightID = ANIM_ID::NEPHILA_TURNLEFT_ANIM;
@@ -164,7 +166,6 @@ void NormalAction::Update(float frameTime){
 			changeFlag = false;
 		}
 	}
-	Audio::GetInstance().SetPlaySpeedSE(SE_ID::WALK_SE, sp);
 
 	if (beforeActionCurl)player._Get()->SetAnimBlend(CURLANIMBLEND);
 	if (beforeActionCurlCount < 1.0f)
