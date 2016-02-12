@@ -107,15 +107,11 @@ void NormalAction::Update(float frameTime){
 		}
 	}
 
+	sp = 0;
 	CAMERA_PARAMETER c = *Device::GetInstance().GetCamera(cID)->CameraParam();
 	if (!(controlVec == vector3(0, 0, 0))){
 		Audio::GetInstance().PlaySE(SE_ID::WALK_SE, true);
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))sp = 1000;
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_2, true))sp = 5000;
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_3, true))sp = 10000;
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_4, true))sp = 15000;
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_5, true))sp = 30000;
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_6, true))sp = 50000;
+		sp = 55000;
 		player._Get()->SetAnimTime(WALKANIMSPEED * min(abs(RCVector3::length(controlVec)), 10.0f));
 		player._Get()->SetAnimBlend(WALKANIMBLEND);
 		if (controlVec.x >= 0){

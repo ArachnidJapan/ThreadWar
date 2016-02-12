@@ -3,6 +3,7 @@
 #include "../../../Graphic/Graphic.h"
 #include "../../Player.h"
 #include "../../Thread.h"
+#include "../../../Audio/Audio.h"
 #include "../../../Math/Quaternion.h"
 
 GroundCurlAction::GroundCurlAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :
@@ -28,12 +29,11 @@ bool GroundCurlAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	cameraMove = true;
 	playerControlFlag.firstFrameFlag = false;
 	wallVec = vector3(0, 0, 0);
-
 	return true;
 }
 
 void GroundCurlAction::Rasterize(){
-
+	Audio::GetInstance().StopSE(SE_ID::ROUND_SE);
 }
 
 void GroundCurlAction::Update(float frameTime){
@@ -57,6 +57,8 @@ void GroundCurlAction::Update(float frameTime){
 	world.SetCollideSelect(player._Get()->shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::RAY_MODEL_NATURAL_COLL);
 	//•Ç‚É‚ß‚èž‚Ü‚È‚¢‚æ‚¤‚É‚·‚éStep—p‚Ìˆ—
 	world.SetCollideSelect(player._Get()->shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::RAY_MODEL_STEP_COLL);
+	Audio::GetInstance().SetPlaySpeedSE(SE_ID::ROUND_SE, 100000.0f *Math::lerp(0.1f,0.99f, RCVector3::length(moveVec) * 7.0f));
+	Audio::GetInstance().PlaySE(SE_ID::ROUND_SE, true);
 }
 void GroundCurlAction::OnCollide(Actor& other, CollisionParameter colpara){
 	//‚à‚µŠÛ‚ª“–‚½‚Á‚Ä‚¢‚½‚ç
@@ -70,7 +72,6 @@ void GroundCurlAction::OnCollide(Actor& other, CollisionParameter colpara){
 		if (colpara.colNormal.y < 0.0f){
 			ChangeAction(ACTION_ID::AIR_CURL_ACTION);
 		}
-
 	}
 	//‚à‚µStep’†ƒŒƒC‚ª•Ç‚É‚ß‚èž‚ñ‚¾‚ç
 	else if (colpara.id == COL_ID::RAY_MODEL_STEP_COLL){
