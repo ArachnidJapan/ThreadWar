@@ -112,6 +112,7 @@
     <ClInclude Include="Src\Actor\Camera\Camera.h" />
     <ClInclude Include="Src\Actor\Collision.h" />
     <ClInclude Include="Src\Actor\CrystalCenter.h" />
+    <ClInclude Include="Src\Actor\EnemyAI\AITargetManager.h" />
     <ClInclude Include="Src\Actor\EnemyAI\EnemyAI.h" />
     <ClInclude Include="Src\Actor\EnemyAI\FirstAI.h" />
     <ClInclude Include="Src\Actor\EnemyAI\SecondAI.h" />
@@ -194,6 +195,7 @@
     <ClCompile Include="Src\Actor\Camera\Camera.cpp" />
     <ClCompile Include="Src\Actor\Collision.cpp" />
     <ClCompile Include="Src\Actor\CrystalCenter.cpp" />
+    <ClCompile Include="Src\Actor\EnemyAI\AITargetManager.cpp" />
     <ClCompile Include="Src\Actor\EnemyAI\EnemyAI.cpp" />
     <ClCompile Include="Src\Actor\EnemyAI\FirstAI.cpp" />
     <ClCompile Include="Src\Actor\EnemyAI\SecondAI.cpp" />

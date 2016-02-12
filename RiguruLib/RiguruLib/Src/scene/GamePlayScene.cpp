@@ -8,7 +8,7 @@
 #include "../Graphic/Graphic.h"
 #include "../Audio/Audio.h"
 #include "../Actor/CrystalCenter.h"
-
+#include "../Actor/EnemyAI/AITargetManager.h"
 
 //コンストラクタ
 GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
@@ -235,10 +235,16 @@ void GamePlayScene::Initialize()
 
 	Audio::GetInstance().SetSEVolume(svolume);
 	Audio::GetInstance().SetBGMVolume(bvolume);
+
+	//AIの目標管理クラス初期化
+	AITargetManager::GetInstance().Initialize(wa);
 }
 
 void GamePlayScene::Update(float frameTime)
 {
+	//AIの目標管理クラス更新
+	AITargetManager::GetInstance().Update(wa);
+
 	/*if (fadeIn){
 		fadeTime = max((fadeTime + 1.0f / 60.0f) * 60.0f * frameTime, 0.0f);
 		if (fadeTime == 0.0f)
