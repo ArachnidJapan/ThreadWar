@@ -40,12 +40,12 @@ public:
 	int GetBlueHaveNum();
 
 private:
-	//クリスタルの位置　中央
-	const Vector3 centerCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, -1.5f), vector3(0.5f, 5.5f, 1.5f), 0.5);
-	//氷側(PlayerSide)
-	const Vector3 iceCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, 62.0f), vector3(0.5f, 5.5f, 65.3f), 0.5);
-	//洞窟側(EnemySide)
-	const Vector3 caveCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, -67.0f), vector3(0.5f, 5.5f, -64.0f), 0.5);
+	////クリスタルの位置　中央
+	//const Vector3 centerCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, -1.5f), vector3(0.5f, 5.5f, 1.5f), 0.5);
+	////氷側(PlayerSide)
+	//const Vector3 iceCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, 62.0f), vector3(0.5f, 5.5f, 65.3f), 0.5);
+	////洞窟側(EnemySide)
+	//const Vector3 caveCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, -67.0f), vector3(0.5f, 5.5f, -64.0f), 0.5);
 
 	//氷側チーム4体のマトリックス
 	std::array<Matrix4, 4> redMatList;
@@ -56,7 +56,7 @@ private:
 	//洞窟側チーム4体のポジション
 	std::array<Vector3, 4> bluePosList;
 	//クリスタル3箇所
-	std::array<Vector3, 3> crystalPosList;
+	//std::array<Vector3, 3> crystalPosList;
 
 	//赤チーム人数
 	int redHaveNum;

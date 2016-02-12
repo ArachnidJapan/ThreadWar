@@ -117,6 +117,17 @@ void TeamSelectScene::Update(float frameTime)
 void TeamSelectScene::Draw() const
 {
 	wa.Draw(CAMERA_ID::GOD_CAMERA);
+	
+	Graphic::GetInstance().DrawTexture(TEXTURE_ID::DAMAGE_TEXTURE,
+		vector2(1920 / 2, 1080 / 2),
+		vector2(1.5f, 1.5f),
+		D3DXCOLOR(1, 1, 1, 0.5f),
+		vector2(0.5f, 0.5f),
+		0.0f,
+		0.0f,
+		1,
+		1.0f);
+
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::TEAM_TEXTURE,
 		vector2(1920 / 2, 1080 / 2),
 		vector2(1,1),
@@ -127,15 +138,6 @@ void TeamSelectScene::Draw() const
 		1,
 		1.0f);
 
-	Graphic::GetInstance().DrawTexture(TEXTURE_ID::DAMAGE_TEXTURE,
-		vector2(1920 / 2, 1080 / 2),
-		vector2(1.5f, 1.5f),
-		D3DXCOLOR(1,1,1, 0.5f),
-		vector2(0.5f, 0.5f),
-		0.0f,
-		0.0f,
-		1,
-		1.0f);
 
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::WHITE_BAR_TEXTURE,
 		vector2(1920 / 2, 1080 / 2),

@@ -116,8 +116,20 @@ void DemoScene::Update(float frameTime)
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 	//Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(frameTime);
 
+
 	//Å‰‚ÌPRESS_START‚ª‰Ÿ‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎAPRESS_START•¶Žš‚ð–¾–ÅB
 	if (!effectEnd){
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
+			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
+			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
+			pressStart = false;
+			effectEnd = false;
+			timer = BACK_ALPHA_TIME + BACK_BLANK_TIME + LOGO_ALPHA_TIME + START_ALPHA_TIME;
+			backLerp = 0.0f;
+			logoLerp = 1.0f;
+			pressLerp = 1.0f;
+		}
+
 		backLerp = max(backLerp - ((1.0f / 20.0f) * 60.0f*frameTime), 0.0f);
 		if (timer >= BACK_ALPHA_TIME + BACK_BLANK_TIME){
 			logoLerp = min(logoLerp + (1.0f / (60.0f*4.0f) * 60.0f*frameTime), 1.0f);
@@ -131,16 +143,6 @@ void DemoScene::Update(float frameTime)
 		}
 		timer += 60 * frameTime;
 
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
-			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true)||
-			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
-			pressStart = true;
-			effectEnd = true;
-			timer = 0;
-			backLerp = 0.0f;
-			logoLerp = 1.0f;
-			pressLerp = 1.0f;
-		}
 	}
 	else if (effectEnd && !pressStart){
 		timer += 3 * 60 * frameTime;
@@ -151,11 +153,7 @@ void DemoScene::Update(float frameTime)
 			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
 			pressStart = true;
-			effectEnd = true;
-			timer = 0;
-			backLerp = 0.0f;
-			logoLerp = 1.0f;
-			pressLerp = 1.0f;
+			mIsEnd = true;
 		}
 		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
 			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){

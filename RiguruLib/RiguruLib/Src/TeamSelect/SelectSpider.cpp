@@ -17,7 +17,7 @@ SelectSpider::SelectSpider(bool red_, bool spider_, Vector2 pos_, int playerNum_
 		notPlayer = 0;
 	}
 	else
-		spp[3] = SelectPlayerParam::CP4;
+	spp[3] = SelectPlayerParam::CP4;
 	spp[1 + notPlayer] = SelectPlayerParam::CP1;
 	spp[2 + notPlayer] = SelectPlayerParam::CP2;
 	spp[3 + notPlayer] = SelectPlayerParam::CP3;

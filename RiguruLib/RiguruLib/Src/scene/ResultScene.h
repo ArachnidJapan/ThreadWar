@@ -6,6 +6,7 @@
 #include "../Actor/Actor.h"
 #include "../Math/Vector2.h"
 #include "SceneParameter.h"
+#include <vector>
 
 class  ResultScene :public IScene{
 public:
@@ -29,6 +30,12 @@ public:
 
 private:
 	std::weak_ptr<SceneParameter> sp;
+	std::vector<int> points;
+	std::vector<std::string> names;
+	float teamPoint, prevTeamPoint, nextTeamPoint;
+	float playerTeamPoint, enemyTeamPoint;
 	bool mIsEnd;
-	float timer;
+	float timer, pointTimer, vicTimer;
+	World wa;
+	VICTORY_ID victory;
 };
