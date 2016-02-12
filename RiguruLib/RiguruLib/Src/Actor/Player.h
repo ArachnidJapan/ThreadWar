@@ -76,6 +76,8 @@ public:
 
 	//食らったダメージ量, 食らった糸を生成してきた敵の番号
 	void Damage(float damagePoint, int num);
+	//リスポーン中か？
+	bool IsRespawn();
 private:
 	PlayerParameter playerParam;
 	PlayerActionManager pAM;
