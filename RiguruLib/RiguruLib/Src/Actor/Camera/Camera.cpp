@@ -47,7 +47,7 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 	// ŽË‰es—ñ
 	float siya = 4.0f;
 	float sp = CAMERA_ANGLE_SPEED;
-	if (stage._Get()->ReturnStartTime() < 0){
+	if (stage._Get()->ReturnStartTime() < 0 && !isRespawn){
 		if (Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_L1) || Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_TAB)){
 			sp = CAMERA_ANGLE_SPEED / 5.0f;
 			siyaChange += 24.0f * frameTime;

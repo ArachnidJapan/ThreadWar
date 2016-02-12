@@ -343,6 +343,7 @@ bool GamePlayScene::IsEnd() const
 Scene GamePlayScene::Next() const
 {
 	Audio::GetInstance().StopBGM(BGM_ID::GAME_BGM);
+	Audio::GetInstance().StopAllSE();
 	return Scene::Ending;
 }
 

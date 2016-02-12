@@ -40,7 +40,7 @@ bool DangleAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	grabity = player._Get()->GetParameter().moveVec;
 	moveVecUp = RCMatrix4::getUp(player._Get()->GetParameter().matrix);
 
-
+	if (player._Get()->ReturnP1() && nor.y > 0)
 	Audio::GetInstance().PlaySE(SE_ID::DANGLE_SE, true);
 	startRotate = 0;
 
@@ -52,6 +52,7 @@ bool DangleAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 }
 
 void DangleAction::Rasterize(){
+	if (player._Get()->ReturnP1())
 	Audio::GetInstance().StopSE(SE_ID::DANGLE_SE);
 }
 

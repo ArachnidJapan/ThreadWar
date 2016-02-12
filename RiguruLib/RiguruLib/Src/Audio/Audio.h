@@ -25,6 +25,8 @@ public:
 	//‚r‚d’âŽ~
 	void StopSE(SE_ID id);
 
+	void StopAllSE();
+
 	void SetPlaySpeedBGM(BGM_ID id, float speed);
 
 	void SetPlaySpeedSE(SE_ID id, float speed);

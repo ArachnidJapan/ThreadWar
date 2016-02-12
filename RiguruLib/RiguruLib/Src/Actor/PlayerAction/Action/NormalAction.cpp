@@ -63,11 +63,13 @@ bool NormalAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	//firstFrameFlag = true;
 	change = false;
 	sp = 0;
+	if (player._Get()->ReturnP1())
 	Audio::GetInstance().PlaySE(SE_ID::WALK_SE);
 	return true;
 }
 
 void NormalAction::Rasterize(){
+	if (player._Get()->ReturnP1())
 	Audio::GetInstance().StopSE(SE_ID::WALK_SE);
 }
 
@@ -108,6 +110,7 @@ void NormalAction::Update(float frameTime){
 		}
 	}
 	if (sp > 1.0f){
+		if (player._Get()->ReturnP1())
 		Audio::GetInstance().PlaySE(SE_ID::WALK_SE);
 		sp = 0.0f;
 	}
@@ -157,6 +160,7 @@ void NormalAction::Update(float frameTime){
 
 		}
 		else{
+			if (player._Get()->ReturnP1())
 			Audio::GetInstance().StopSE(SE_ID::WALK_SE);
 			if (leftRightID == ANIM_ID::NEPHILA_WAIT_ANIM && frontBackID == ANIM_ID::NEPHILA_WAIT_ANIM)
 				player._Get()->SetAnimBlend(WALKANIMBLEND);
