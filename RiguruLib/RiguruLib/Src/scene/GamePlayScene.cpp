@@ -8,14 +8,14 @@
 #include "../Graphic/Graphic.h"
 #include "../Audio/Audio.h"
 #include "../Actor/CrystalCenter.h"
-#include "../Actor/EnemyAI/AITargetManager.h"
+
 
 //コンストラクタ
 GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 {
 	//mIsEnd = false;
-	svolume = 80;
-	bvolume = 80;
+	/*svolume = 80;
+	bvolume = 80;*/
 
 	/************************************************モデル*****************************************************/
 	Graphic::GetInstance().LoadMesh(MODEL_ID::SPHERE_MODEL, "Res/Rgr/shape/ball.rgr");
@@ -233,18 +233,12 @@ void GamePlayScene::Initialize()
 //	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_7P, 6, 6, false, tarentula));
 //	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_8P, 7, 7, false, tarentula));
 
-	Audio::GetInstance().SetSEVolume(svolume);
-	Audio::GetInstance().SetBGMVolume(bvolume);
-
-	//AIの目標管理クラス初期化
-	AITargetManager::GetInstance().Initialize(wa);
+	/*Audio::GetInstance().SetSEVolume(svolume);
+	Audio::GetInstance().SetBGMVolume(bvolume);*/
 }
 
 void GamePlayScene::Update(float frameTime)
 {
-	//AIの目標管理クラス更新
-	AITargetManager::GetInstance().Update(wa);
-
 	/*if (fadeIn){
 		fadeTime = max((fadeTime + 1.0f / 60.0f) * 60.0f * frameTime, 0.0f);
 		if (fadeTime == 0.0f)

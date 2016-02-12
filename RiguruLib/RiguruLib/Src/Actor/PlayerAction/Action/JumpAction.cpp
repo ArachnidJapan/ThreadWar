@@ -36,8 +36,8 @@ bool JumpAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 		float upAniTime = JUMPANIMSPEED * player._Get()->BindPow(true);
 		float blendAnim = JUMPANIMBLEND * player._Get()->BindPow(true);
 		player._Get()->SetAnimation(
-			(ANIM_ID)(ANIM_ID::NEPHILA_JUMP_ANIM + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
-			(ANIM_ID)(ANIM_ID::NEPHILA_JUMP_ANIM + (player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ? 0 : ANIM_ID::CENTER)),
+			(ANIM_ID)(ANIM_ID::NEPHILA_JUMP_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
+			(ANIM_ID)(ANIM_ID::NEPHILA_JUMP_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 			upAniTime, true, false, 0, blendAnim);
 
 		playerControlFlag.startNorChangeFlag = true;

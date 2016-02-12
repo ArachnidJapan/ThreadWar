@@ -38,7 +38,6 @@ void SceneManager::Update(float frameTime){
 //•`‰æ
 void SceneManager::Draw() const{
 	mCurrentScene->Draw();
-	fade.draw();
 }
 
 //I—¹

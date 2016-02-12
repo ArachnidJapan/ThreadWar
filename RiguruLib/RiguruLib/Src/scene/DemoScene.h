@@ -32,7 +32,8 @@ private:
 	bool effectEnd, pressStart;
 	World wa;
 	//演出のブランクタイムに使用。
-	int timer;
+	float timer;
 	//演出のアルファ値用lerp。
 	float backLerp, logoLerp, pressLerp;
+	std::vector<int> configData;
 };

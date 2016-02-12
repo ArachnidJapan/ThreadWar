@@ -300,7 +300,16 @@
     <ClInclude Include="Src\scene\SceneParameter.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Actor\EnemyAI\AITargetManager.h">
+    <ClInclude Include="Src\Reader\CSVReader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Reader\FileID.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\scene\Fade\Fade.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\scene\Option\Option.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -512,7 +521,13 @@
     <ClCompile Include="Src\TeamSelect\SelectSpider.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Actor\EnemyAI\AITargetManager.cpp">
+    <ClCompile Include="Src\Reader\CSVReader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\scene\Fade\Fade.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\scene\Option\Option.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

@@ -17,6 +17,7 @@
 #include "PlayerAction\PlayerAction.h"
 #include "ThreadEffect.h"
 #include "EnemyAI\EnemyAI.h"
+#include "../scene/SceneManager.h"
 
 //プレイヤーの半径
 const float RADIUS = 0.5f;
@@ -215,7 +216,7 @@ void Player::Update(float frameTime){
 	//else
 	if (!isRespawn){
 		pAM.Control();
-		if (stage._Get()->ReturnStartTime() < 0)
+		if (stage._Get()->ReturnStartTime() < 0 && !SceneManager::GetInstance().isFadeUpdate())
 		{
 			if (p1)
 				playerParam.vec = Control(frameTime, c);
@@ -558,8 +559,8 @@ Vector3 Player::Control(float frameTime, CAMERA_PARAMETER c){
 	}
 	//スペースが押されたかつジャンプ中じゃなかったら
 	if ((((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-		Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_R3, true) &&
-		!inputAI)
+		Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_R3, true)) &&
+		!inputAI
 		|| inputJump) &&
 		!pAM.ReturnPlayerActionPtr()->ReturnRide())
 		&& pAM.ReturnActionID() != ACTION_ID::JUMP_ACTION &&
