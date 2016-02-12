@@ -1,4 +1,5 @@
 #include "FirstAI.h"
+#include "AITargetManager.h"
 
 FirstAI::FirstAI(IWorld& wo, PlayerActionManager& action, std::weak_ptr<Player> player, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_) :
 EnemyAI(wo, action, player, cID_, parameter_, stage_)
@@ -36,10 +37,14 @@ void FirstAI::OnUpdate(float frameTime){
 void FirstAI::OnDamage(int num)
 {
 	//目標のマトリックスから計算
-	Matrix4 mat = targetMats[num];
+	int check = num % 4;
+	Matrix4 mat;
+	if (searchActor == ACTOR_ID::PLAYER_ACTOR) mat = AITargetManager::GetInstance().GetRedTeamMatList()[check];
+	else mat = AITargetManager::GetInstance().GetBlueTeamMatList()[check];
+
 	Vector3 pos = RCMatrix4::getPosition(mat);
 	Vector3 vec = RCVector3::normalize(pos - myPos);
-	float dist = targetDists[num];
+	float dist = targetDists[check];
 
 	//targetが確定
 	target.mat = mat;
@@ -105,7 +110,7 @@ void FirstAI::AIRun(float frameTime)
 		if (target.isLooking)
 		{
 			//距離がクリスタルより近い場合
-			if (targetDists[targetNum] < nearestCrystalDist)
+			if (targetDists[targetNum % 4] < nearestCrystalDist)
 			{
 				//戦闘状態へ移行
 				target.isBattle = true;
