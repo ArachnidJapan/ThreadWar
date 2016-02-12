@@ -56,6 +56,11 @@ bool ThreadAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	matStage = player._Get()->ReturnStage()._Get()->GetParameter().matrix;
 	return true;
 }
+
+void ThreadAction::Rasterize(){
+
+}
+
 void ThreadAction::Update(float frameTime){
 	change = false;
 	if (player._Get()->ReturnThread().lock() == nullptr){

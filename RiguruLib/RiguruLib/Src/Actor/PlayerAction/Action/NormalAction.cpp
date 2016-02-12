@@ -4,6 +4,7 @@
 #include "../../Player.h"
 #include "../../Thread.h"
 #include "../../ThreadWeb.h"
+#include "../../../Audio/Audio.h"
 
 NormalAction::NormalAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :PlayerAction(world, player_, padNum_, cID_, ACTION_ID::NORMAL_ACTION){
 	isDead = false;
@@ -54,7 +55,6 @@ bool NormalAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	moveVecUp = beforeUp;
 	moveVecPos = RCMatrix4::getPosition(player._Get()->GetParameter().matrix);
 	startRotate = 0;
-
 	playerControlFlag.firstFrameFlag = true;
 	playerControlFlag.startNorChangeFlag = true;
 	playerControlFlag.secondFrameFlag = false;
@@ -62,8 +62,14 @@ bool NormalAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	//cameraDrawChange = false;
 	//firstFrameFlag = true;
 	change = false;
+	sp = 0;
 	return true;
 }
+
+void NormalAction::Rasterize(){
+	Audio::GetInstance().StopSE(SE_ID::WALK_SE);
+}
+
 void NormalAction::Update(float frameTime){
 	if (playerControlFlag.startNorChangeFlag && !playerControlFlag.firstFrameFlag){
 		//徐々にupをvector3(0,1,0)に近づける
@@ -103,6 +109,13 @@ void NormalAction::Update(float frameTime){
 
 	CAMERA_PARAMETER c = *Device::GetInstance().GetCamera(cID)->CameraParam();
 	if (!(controlVec == vector3(0, 0, 0))){
+		Audio::GetInstance().PlaySE(SE_ID::WALK_SE, true);
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))sp = 1000;
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_2, true))sp = 5000;
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_3, true))sp = 10000;
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_4, true))sp = 15000;
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_5, true))sp = 30000;
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_6, true))sp = 50000;
 		player._Get()->SetAnimTime(WALKANIMSPEED * min(abs(RCVector3::length(controlVec)), 10.0f));
 		player._Get()->SetAnimBlend(WALKANIMBLEND);
 		if (controlVec.x >= 0){
@@ -123,6 +136,7 @@ void NormalAction::Update(float frameTime){
 		player._Get()->SetAnimTime(0);
 		//移動をせずに回転をしていたら(右回り)
 		if (c.InputAngle.x > 0){
+			Audio::GetInstance().PlaySE(SE_ID::WALK_SE, true);
 			if (leftRightID != ANIM_ID::NEPHILA_TURNLEFT_ANIM)
 				changeFlag = true;
 			//右回転をセット
@@ -134,6 +148,7 @@ void NormalAction::Update(float frameTime){
 		}
 		//移動をせずに回転をしていたら(右回り)
 		else if (c.InputAngle.x < 0){
+			Audio::GetInstance().PlaySE(SE_ID::WALK_SE, true);
 			if (leftRightID != ANIM_ID::NEPHILA_TURNLEFT_ANIM)
 				changeFlag = true;
 			leftRightID = ANIM_ID::NEPHILA_TURNLEFT_ANIM;
@@ -144,6 +159,7 @@ void NormalAction::Update(float frameTime){
 
 		}
 		else{
+			Audio::GetInstance().StopSE(SE_ID::WALK_SE);
 			if (leftRightID == ANIM_ID::NEPHILA_WAIT_ANIM && frontBackID == ANIM_ID::NEPHILA_WAIT_ANIM)
 				player._Get()->SetAnimBlend(WALKANIMBLEND);
 			else
@@ -152,6 +168,7 @@ void NormalAction::Update(float frameTime){
 			changeFlag = false;
 		}
 	}
+	Audio::GetInstance().SetPlaySpeedSE(SE_ID::WALK_SE, sp);
 
 	if (beforeActionCurl)player._Get()->SetAnimBlend(CURLANIMBLEND);
 	if (beforeActionCurlCount < 1.0f)

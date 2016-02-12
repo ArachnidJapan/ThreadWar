@@ -43,6 +43,11 @@ bool HoverAction::Initialize(ACTION_ID beforeId,Vector3 beforeUp){
 
 	return true;
 }
+
+void HoverAction::Rasterize(){
+
+}
+
 void HoverAction::Update(float frameTime){	
 	//’wå‚Ì‘ƒ‚Æ‚Ì”»’è
 	world.SetCollideSelect(player._Get()->shared_from_this(), friendThreadWebID, COL_ID::TRIANGLE_SPHERE_COLL);

@@ -56,6 +56,11 @@ bool JumpAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	}
 	return false;
 }
+
+void JumpAction::Rasterize(){
+
+}
+
 void JumpAction::Update(float frameTime){
 	//’wå‚Ì‘ƒ‚Æ‚Ì”»’è
 	world.SetCollideSelect(player._Get()->shared_from_this(), friendThreadWebID, COL_ID::TRIANGLE_SPHERE_COLL);

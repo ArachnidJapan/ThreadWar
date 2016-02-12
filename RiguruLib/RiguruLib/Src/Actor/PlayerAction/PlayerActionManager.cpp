@@ -59,6 +59,7 @@ void PlayerActionManager::Update(float frameTime){
 		ACTION_ID nextID = playerAction[a_id]->NextAction();
 		playerAction[nextID]->GetControl();
 		if (playerAction[nextID]->Initialize(a_id, playerAction[a_id]->ReturnUp())){
+			playerAction[a_id]->Rasterize();
 			playerAction[a_id]->GrabityReset(&grabity);
 			before_id = a_id;
 			a_id = nextID;

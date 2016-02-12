@@ -59,6 +59,11 @@ bool ThreadWebAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	change = false;
 	return true;
 }
+
+void ThreadWebAction::Rasterize(){
+
+}
+
 void ThreadWebAction::Update(float frameTime){
 	if (player._Get()->ReturnThreadWeb().lock() == nullptr){
 		ChangeAction(ACTION_ID::HOVER_ACTION);

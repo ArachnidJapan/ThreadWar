@@ -31,6 +31,11 @@ bool GroundCurlAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 
 	return true;
 }
+
+void GroundCurlAction::Rasterize(){
+
+}
+
 void GroundCurlAction::Update(float frameTime){
 	Vector3 nor = player._Get()->ReturnPlayerParameter()->nor;
 	//丸まる前の移動量とノーマルから壁擦りベクトルを求める

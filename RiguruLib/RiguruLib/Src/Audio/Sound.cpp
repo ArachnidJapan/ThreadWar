@@ -98,6 +98,11 @@ void Sound::Load(TCHAR* FileName, int bufferSize){
 	g_Buffers.resize(bufferSize,nullptr);
 	for (int i = 0; i < bufferSize;i++)
 	g_Sound->DuplicateSoundBuffer(g_Buffer, reinterpret_cast<LPDIRECTSOUNDBUFFER*>(&g_Buffers[i]));
+
+	DWORD ps;
+	g_Buffer->GetFrequency(&ps);
+	defaultPlaySpeed = ps;
+	playSpeed = 0;
 }
 
 //‰¹ŠyÄ¶
@@ -130,4 +135,11 @@ void Sound::SetVolume(LONG volume){
 	LONG v = (volume * 100) - 10000;
 	for (auto& i : g_Buffers)
 	i->SetVolume(v);
+}
+void Sound::SetPlaySpeed(float speed){
+	playSpeed = speed;
+//	playSpeed = defaultPlaySpeed * speed;
+	for (auto& i : g_Buffers){
+		i->SetFrequency(playSpeed);
+	}
 }
