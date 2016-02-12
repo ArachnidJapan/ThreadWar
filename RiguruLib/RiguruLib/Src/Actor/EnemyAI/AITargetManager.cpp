@@ -12,10 +12,10 @@ AITargetManager::~AITargetManager()
 
 void AITargetManager::Initialize(IWorld& world)
 {
-	//クリスタルの位置
-	crystalPosList[0] = iceCrystalPos;
-	crystalPosList[1] = centerCrystalPos;
-	crystalPosList[2] = caveCrystalPos;
+	////クリスタルの位置
+	//crystalPosList[0] = iceCrystalPos;
+	//crystalPosList[1] = centerCrystalPos;
+	//crystalPosList[2] = caveCrystalPos;
 }
 void AITargetManager::Update(IWorld& world)
 {
@@ -31,7 +31,8 @@ void AITargetManager::Update(IWorld& world)
 		}
 		else
 		{
-			redHaveNum = 0;
+			if (redHaveNum > 0)
+				redHaveNum--;
 		}
 	});
 
