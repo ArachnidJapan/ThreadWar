@@ -203,13 +203,13 @@ void Option::OptionSelect(float frameTime){
 
 	//€–Ú‘I‘ð
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP) &&
-		lerpTime == 1.0f){
+		lerpTime >= 0.5f){
 		select = (OPTION_SELECT)(select - 1);
 		select = select < 0 ? select = (OPTION_SELECT)5 : select;
 		Move(frameTime);
 	}
 	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN) &&
-		lerpTime == 1.0f){
+		lerpTime >= 0.5f){
 		select = (OPTION_SELECT)(select + 1);
 		select = (OPTION_SELECT)(select%OPTION_SELECT_NUM);
 		Move(frameTime);

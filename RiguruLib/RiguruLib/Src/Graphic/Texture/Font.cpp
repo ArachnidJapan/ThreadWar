@@ -81,6 +81,12 @@ Font::Font(){
 	fontVec['='] = D3DXVECTOR2(8, 6);
 	fontVec['.'] = D3DXVECTOR2(9, 6);
 	fontVec[' '] = D3DXVECTOR2(0, 7);
+	fontVec['('] = D3DXVECTOR2(1, 7);
+	fontVec[')'] = D3DXVECTOR2(2, 7);
+	fontVec['!'] = D3DXVECTOR2(3, 7);
+	fontVec['?'] = D3DXVECTOR2(4, 7);
+	fontVec['ÅZ'] = D3DXVECTOR2(5, 7);
+	fontVec['Å~'] = D3DXVECTOR2(6, 7);
 
 }
 
