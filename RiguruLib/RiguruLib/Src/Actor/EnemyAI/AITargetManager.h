@@ -56,7 +56,7 @@ private:
 	//洞窟側チーム4体のポジション
 	std::array<Vector3, 4> bluePosList;
 	//クリスタル3箇所
-	//std::array<Vector3, 3> crystalPosList;
+	std::array<Vector3, 3> crystalPosList;
 
 	//赤チーム人数
 	int redHaveNum;
