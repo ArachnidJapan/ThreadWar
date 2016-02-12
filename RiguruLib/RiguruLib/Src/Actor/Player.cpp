@@ -558,9 +558,9 @@ Vector3 Player::Control(float frameTime, CAMERA_PARAMETER c){
 		pAM.ChangeAction(ACTION_ID::CURL_ACTION);
 	}
 	//スペースが押されたかつジャンプ中じゃなかったら
-	if ((((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
+	if (((((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_R3, true)) &&
-		!inputAI
+		!inputAI)
 		|| inputJump) &&
 		!pAM.ReturnPlayerActionPtr()->ReturnRide())
 		&& pAM.ReturnActionID() != ACTION_ID::JUMP_ACTION &&
@@ -739,6 +739,10 @@ void Player::Damage(float damagePoint, int num){
 		isRespawn = true;
 		ai[currentAI]->Dead();
 	}
+}
+bool Player::IsRespawn()
+{
+	return isRespawn;
 }
 void Player::SetBindTime(float bindTime_){
 	if (!bindFlag){

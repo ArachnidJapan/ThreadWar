@@ -3,6 +3,7 @@
 #include "../Thread.h"
 #include "../CrystalCenter.h"
 #include "../Collision.h"
+#include "AITargetManager.h"
 
 EnemyAI::EnemyAI(IWorld& wo, PlayerActionManager& action_, std::weak_ptr<Player> player_, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_)
 :world(wo), action(&action_), player(player_), cID(cID_), parameter(parameter_), stage(stage_)
@@ -19,10 +20,6 @@ void EnemyAI::Initialize()
 {
 	nextAI = AI_STATE::FIRST_AI;
 	teamID = player._Get()->GetTeam();
-
-	for (int i = 0; i < 4; i++){
-		targetMats[i] = RCMatrix4::Identity();
-	}
 	target.mat = RCMatrix4::Identity();
 	target.pos = vector3(0, 0, 0);
 	target.vec = vector3(0, 0, 0);
@@ -63,7 +60,7 @@ void EnemyAI::Initialize()
 	//サーチ対象
 	if (parameter.id == ACTOR_ID::ENEMY_ACTOR) searchActor = ACTOR_ID::PLAYER_ACTOR;
 	else searchActor = ACTOR_ID::ENEMY_ACTOR;
-
+	
 	actionFunc.clear();
 	actionFunc[AI_ACTION::Curl] = std::bind(&EnemyAI::Curl, this, std::placeholders::_1);
 	actionFunc[AI_ACTION::RandomMove] = std::bind(&EnemyAI::RandomMove, this, std::placeholders::_1);
@@ -105,13 +102,14 @@ void EnemyAI::Initialize()
 }
 void EnemyAI::Update(float frameTime)
 {
-	//敵の位置を検索
-	int num = 0;
-	world.EachActor(searchActor, [&](const Actor& other){
-		targetMats[num] = static_cast<Player*>(const_cast<Actor*>(&other))->GetParameter().matrix;
-		targetDists[num] = RCVector3::distance_(myPos, RCMatrix4::getPosition(targetMats[num]));
-		num++;
-	});
+	//サーチ繰り返し回数
+	if (searchActor == ACTOR_ID::PLAYER_ACTOR) seachCount = AITargetManager::GetInstance().GetRedHaveNum();
+	else seachCount = AITargetManager::GetInstance().GetBlueHaveNum();
+
+	for (int i = 0; i < AITargetManager::GetInstance().GetHaveNum(searchActor); i++)
+	{
+		targetDists[i] = RCVector3::distance_(myPos, RCMatrix4::getPosition(AITargetManager::GetInstance().GetTeamMatListID(searchActor)[i]));
+	}
 
 	OnUpdate(frameTime);
 }
@@ -745,13 +743,13 @@ void EnemyAI::CreateThreadWeb(float frameTime)
 
 bool EnemyAI::Search()
 {
-	for (int i = 0; i < teamMemberCount; i++)
+	for (int i = 0; i < seachCount; i++)
 	{
 		//目標のマトリックスから計算
-		Matrix4 mat = targetMats[i];
+		Matrix4 mat = AITargetManager::GetInstance().GetTeamMatListID(searchActor)[i];
 		Vector3 pos = RCMatrix4::getPosition(mat);
 		Vector3 vec = RCVector3::normalize(pos - myPos);
-		float dist = targetDists[i];
+		float dist = targetDists[i] = RCVector3::distance_(myPos, RCMatrix4::getPosition(AITargetManager::GetInstance().GetTeamMatListID(searchActor)[i]));
 		//強制的に戦闘状態に入る距離に敵がいるか
 		if (dist < level[levelNum].dangerLength)
 		{

@@ -6,6 +6,7 @@ public:
 	JumpAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_);
 	~JumpAction();
 	virtual bool Initialize(ACTION_ID beforeId, Vector3 beforeUp) override;
+	virtual void Rasterize() override;
 	virtual void Update(float frameTime) override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 

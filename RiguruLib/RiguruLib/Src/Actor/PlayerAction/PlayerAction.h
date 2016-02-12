@@ -57,6 +57,7 @@ public:
 	void PlayerActionUpdate(float frameTime, Vector3* grabity);
 	void GetControl();
 	virtual bool Initialize(ACTION_ID beforeId, Vector3 beforeUp) = 0;
+	virtual void Rasterize() = 0;
 	void Control();
 	virtual void Update(float frameTime) = 0;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) = 0;

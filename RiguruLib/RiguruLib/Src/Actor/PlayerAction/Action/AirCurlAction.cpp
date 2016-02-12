@@ -32,6 +32,11 @@ bool AirCurlAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 
 	return true;
 }
+
+void AirCurlAction::Rasterize(){
+
+}
+
 void AirCurlAction::Update(float frameTime){
 	Vector3 nor = player._Get()->ReturnPlayerParameter()->nor;
 	Vector3 moveVec = curlInertiaVec * curlSpeed;

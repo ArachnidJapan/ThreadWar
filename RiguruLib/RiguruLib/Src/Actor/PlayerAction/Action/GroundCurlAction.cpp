@@ -3,6 +3,7 @@
 #include "../../../Graphic/Graphic.h"
 #include "../../Player.h"
 #include "../../Thread.h"
+#include "../../../Audio/Audio.h"
 #include "../../../Math/Quaternion.h"
 
 GroundCurlAction::GroundCurlAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :
@@ -28,9 +29,13 @@ bool GroundCurlAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	cameraMove = true;
 	playerControlFlag.firstFrameFlag = false;
 	wallVec = vector3(0, 0, 0);
-
 	return true;
 }
+
+void GroundCurlAction::Rasterize(){
+	Audio::GetInstance().StopSE(SE_ID::ROUND_SE);
+}
+
 void GroundCurlAction::Update(float frameTime){
 	Vector3 nor = player._Get()->ReturnPlayerParameter()->nor;
 	//丸まる前の移動量とノーマルから壁擦りベクトルを求める
@@ -52,6 +57,8 @@ void GroundCurlAction::Update(float frameTime){
 	world.SetCollideSelect(player._Get()->shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::RAY_MODEL_NATURAL_COLL);
 	//壁にめり込まないようにするStep用の処理
 	world.SetCollideSelect(player._Get()->shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::RAY_MODEL_STEP_COLL);
+	Audio::GetInstance().SetPlaySpeedSE(SE_ID::ROUND_SE, 100000.0f *Math::lerp(0.1f,0.99f, RCVector3::length(moveVec) * 7.0f));
+	Audio::GetInstance().PlaySE(SE_ID::ROUND_SE, true);
 }
 void GroundCurlAction::OnCollide(Actor& other, CollisionParameter colpara){
 	//もし丸が当たっていたら
@@ -65,7 +72,6 @@ void GroundCurlAction::OnCollide(Actor& other, CollisionParameter colpara){
 		if (colpara.colNormal.y < 0.0f){
 			ChangeAction(ACTION_ID::AIR_CURL_ACTION);
 		}
-
 	}
 	//もしStep中レイが壁にめり込んだら
 	else if (colpara.id == COL_ID::RAY_MODEL_STEP_COLL){

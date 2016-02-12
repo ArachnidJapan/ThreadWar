@@ -29,6 +29,10 @@ void Graphic::Release(){
 	line.Release();
 }
 void Graphic::LoadTexture(TEXTURE_ID id, const char* modelName){
+	for (auto i : texture){
+		if (i.first == id)return;
+	}
+
 	texture[id].Load(modelName);
 }
 void Graphic::DrawTexture(TEXTURE_ID id, const Matrix4* mat_){
@@ -46,6 +50,9 @@ void Graphic::DrawTexture(TEXTURE_ID id, const Vector2 pos, Vector2 size, D3DXCO
 }
 
 void Graphic::LoadMesh(MODEL_ID id, const char* modelName){
+	for (auto i : mesh){
+		if (i.first == id)return;
+	}
 	mesh[id].Load(modelName);
 }
 void Graphic::DrawMesh(MODEL_ID id, const Matrix4* mat_, CAMERA_ID cID, D3DXCOLOR* color, bool alphaFlag){
@@ -57,6 +64,9 @@ MeshUser* Graphic::ReturnMeshUser(MODEL_ID id){
 	return mesh[id].ReturnMeshUser();
 }
 void Graphic::LoadFont(FONT_ID id, const char* modelName){
+	for (auto i : font){
+		if (i.first == id)return;
+	}
 	font[id].Load(modelName);
 }
 void Graphic::DrawFont(FONT_ID id, const Matrix4* mat, std::string s, const Vector3 color, const float alpha){

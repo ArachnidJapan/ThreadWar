@@ -16,9 +16,11 @@ public:
 	//0`100‚Ü‚Å‚Å’²®‰Â”\
 	void SetVolume(LONG volume);
 
+	void SetPlaySpeed(float speed);
+
 private:
 	IDirectSound8 *g_Sound;
-
+	float defaultPlaySpeed,playSpeed;
 	WAVEFORMATEX waveFormat;
 	char* waveData; 
 	int dataSize;

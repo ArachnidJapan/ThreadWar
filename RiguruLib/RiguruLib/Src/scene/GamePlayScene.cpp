@@ -8,6 +8,7 @@
 #include "../Graphic/Graphic.h"
 #include "../Audio/Audio.h"
 #include "../Actor/CrystalCenter.h"
+#include "../Actor/EnemyAI/AITargetManager.h"
 
 
 //コンストラクタ
@@ -99,14 +100,14 @@ GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	Audio::GetInstance().LoadSE(SE_ID::SWITCH_SE, _T("Res/Sound/SE/switch_se.wav"), 10);
 	Audio::GetInstance().LoadSE(SE_ID::RESTRAINT_SE, _T("Res/Sound/SE/restraint_se.wav"), 10);
 	Audio::GetInstance().LoadSE(SE_ID::THREAD_SHOT_SE, _T("Res/Sound/SE/thread_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::CRYSTALGET_SE, _T("Res/Sound/SE/crystalget_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::CRYSTALNORMAL_SE, _T("Res/Sound/SE/crystalnormal_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::DANGLE_SE, _T("Res/Sound/SE/hanging_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::JUMP_SE, _T("Res/Sound/SE/jump_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::ROUND_SE, _T("Res/Sound/SE/round_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::STEP_SE, _T("Res/Sound/SE/step_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::WALK_SE, _T("Res/Sound/SE/walk_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::WIND_SE, _T("Res/Sound/SE/wind_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::CRYSTALGET_SE, _T("Res/Sound/SE/crystalget_se.wav"), 3);
+	Audio::GetInstance().LoadSE(SE_ID::CRYSTALNORMAL_SE, _T("Res/Sound/SE/crystalnormal_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::DANGLE_SE, _T("Res/Sound/SE/hanging_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::JUMP_SE, _T("Res/Sound/SE/jump_se.wav"), 2);
+	Audio::GetInstance().LoadSE(SE_ID::ROUND_SE, _T("Res/Sound/SE/round_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::STEP_SE, _T("Res/Sound/SE/step_se.wav"), 2);
+	Audio::GetInstance().LoadSE(SE_ID::WALK_SE, _T("Res/Sound/SE/walk_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::WIND_SE, _T("Res/Sound/SE/wind_se.wav"), 1);
 
 	Audio::GetInstance().LoadBGM(BGM_ID::TITLE_BGM, _T("Res/Sound/BGM/title_bgm.wav"));
 	Audio::GetInstance().LoadBGM(BGM_ID::GAME_BGM, _T("Res/Sound/BGM/game_bgm.wav"));
@@ -235,10 +236,14 @@ void GamePlayScene::Initialize()
 
 	/*Audio::GetInstance().SetSEVolume(svolume);
 	Audio::GetInstance().SetBGMVolume(bvolume);*/
+
+	AITargetManager::GetInstance().Initialize(wa);
 }
 
 void GamePlayScene::Update(float frameTime)
 {
+	AITargetManager::GetInstance().Update(wa);
+
 	/*if (fadeIn){
 		fadeTime = max((fadeTime + 1.0f / 60.0f) * 60.0f * frameTime, 0.0f);
 		if (fadeTime == 0.0f)

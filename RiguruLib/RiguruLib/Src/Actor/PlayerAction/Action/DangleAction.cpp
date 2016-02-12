@@ -4,6 +4,7 @@
 #include "../../Player.h"
 #include "../../Thread.h"
 #include "../../../Math/Quaternion.h"
+#include "../../../Audio/Audio.h"
 
 DangleAction::DangleAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :
 PlayerAction(world, player_, padNum_, cID_, ACTION_ID::DANGLE_ACTION){
@@ -40,7 +41,7 @@ bool DangleAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	moveVecUp = RCMatrix4::getUp(player._Get()->GetParameter().matrix);
 
 
-
+	Audio::GetInstance().PlaySE(SE_ID::DANGLE_SE, true);
 	startRotate = 0;
 
 	//startRotate = 0;
@@ -49,6 +50,11 @@ bool DangleAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 
 	return true;
 }
+
+void DangleAction::Rasterize(){
+	Audio::GetInstance().StopSE(SE_ID::DANGLE_SE);
+}
+
 void DangleAction::Update(float frameTime){
 	//ƒWƒƒƒ“ƒv’†‚ÌŽ…‚Æ‚Ì”»’è
 	world.SetCollideSelect(player._Get()->shared_from_this(), friendThreadID, COL_ID::SPHERE_LINE_COLL);

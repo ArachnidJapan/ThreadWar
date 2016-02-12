@@ -45,6 +45,10 @@ bool RewindAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	return true;
 }
 
+void RewindAction::Rasterize(){
+
+}
+
 void RewindAction::Update(float frameTime){
 	player._Get()->SetMoveVec(goingVec * REWINDSPEED * frameTime);
 	if (playerControlFlag.isGoingEnd)

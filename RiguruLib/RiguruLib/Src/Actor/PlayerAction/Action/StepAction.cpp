@@ -55,6 +55,12 @@ bool StepAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 
 	return false;
 }
+
+void StepAction::Rasterize(){
+
+	Audio::GetInstance().StopSE(SE_ID::STEP_SE);
+}
+
 void StepAction::Update(float frameTime){
 	if (!jumpStepFlag){
 		//‚ ‚½‚è”»’è‚ð‚S–{‚ÌƒŒƒC‚É

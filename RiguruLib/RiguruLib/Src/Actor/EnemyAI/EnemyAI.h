@@ -102,6 +102,7 @@ protected:
 	virtual void OnInitialize(){};
 	virtual void OnUpdate(float frameTime){};
 	virtual void OnDraw(CAMERA_ID cID) const{};
+	//ダメージを受けたときの処理　num:糸を発射した相手のプレイヤー番号
 	virtual void OnDamage(int num){};
 	virtual void OnDead(){};
 
@@ -197,16 +198,18 @@ protected:
 
 protected:
 	/*****=行動=******/
-	//1チームの人数
-	const int teamMemberCount = 4;
-	//敵4体のマトリックス
-	std::array<Matrix4, 4> targetMats;
+	////1チームの人数
+	//const int teamMemberCount = 4;
+	////敵4体のマトリックス
+	//std::array<Matrix4, 4> targetMats;
 	//敵4体までの距離
 	std::array<float, 4> targetDists;
 	//敵
 	int targetNum;
 	//サーチされる対象(敵のアクターID)
 	ACTOR_ID searchActor;
+	//サーチのときに繰り返す回数
+	int seachCount;
 
 	//目標
 	TargetParameter target;
