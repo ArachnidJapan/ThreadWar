@@ -41,6 +41,7 @@ tarentula(tarentula_){
 	animSpeed = new float(5.0f);
 	blendSpeed = new float(5.0f);
 	firstFlag = true;
+	point = 0;
 }
 
 Player::~Player(){
@@ -729,13 +730,13 @@ std::weak_ptr<ThreadWeb> Player::ReturnThreadWeb(){
 	return pAM.ReturnThreadWeb();
 }
 
-void Player::Damage(float damagePoint, int num){
+void Player::Damage(float damagePoint, int num,std::weak_ptr<Player> player){
 	playerParam.hp -= damagePoint;
 	ai[currentAI]->Damage(num);
 
 	if (playerParam.hp <= 0 && !isRespawn)
 	{
-		stage._Get()->AddPoint(parameter.id);
+		stage._Get()->AddPoint(parameter.id,player);
 		isRespawn = true;
 		ai[currentAI]->Dead();
 	}

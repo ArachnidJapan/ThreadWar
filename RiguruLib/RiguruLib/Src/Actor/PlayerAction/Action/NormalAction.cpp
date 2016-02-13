@@ -137,7 +137,7 @@ void NormalAction::Update(float frameTime){
 		player._Get()->SetAnimTime(0);
 		//ˆÚ“®‚ð‚¹‚¸‚É‰ñ“]‚ð‚µ‚Ä‚¢‚½‚ç(‰E‰ñ‚è)
 		if (c.InputAngle.x > 0){
-			sp += abs(c.InputAngle.x) / 11.0f * frameTime;
+			sp += abs(c.InputAngle.x) / 3.0f * frameTime;
 			if (leftRightID != ANIM_ID::NEPHILA_TURNLEFT_ANIM)
 				changeFlag = true;
 			//‰E‰ñ“]‚ðƒZƒbƒg
@@ -149,7 +149,7 @@ void NormalAction::Update(float frameTime){
 		}
 		//ˆÚ“®‚ð‚¹‚¸‚É‰ñ“]‚ð‚µ‚Ä‚¢‚½‚ç(‰E‰ñ‚è)
 		else if (c.InputAngle.x < 0){
-			sp += abs(c.InputAngle.x) / 11.0f * frameTime;
+			sp += abs(c.InputAngle.x) / 3.0f * frameTime;
 			if (leftRightID != ANIM_ID::NEPHILA_TURNLEFT_ANIM)
 				changeFlag = true;
 			leftRightID = ANIM_ID::NEPHILA_TURNLEFT_ANIM;

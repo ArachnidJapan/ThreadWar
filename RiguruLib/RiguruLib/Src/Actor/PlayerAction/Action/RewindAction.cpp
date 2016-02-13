@@ -4,6 +4,7 @@
 #include "../../Player.h"
 #include "../../Thread.h"
 #include "../../../Math/Quaternion.h"
+#include "../../../Audio/Audio.h"
 
 RewindAction::RewindAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :
 PlayerAction(world, player_, padNum_, cID_, ACTION_ID::REWIND_ACTION){
@@ -42,10 +43,17 @@ bool RewindAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 		(ANIM_ID)(ANIM_ID::NEPHILA_REWIND_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		(ANIM_ID)(ANIM_ID::NEPHILA_REWIND_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		WALKANIMSPEED * 1.0f, true, true, 0, WALKANIMBLEND);
+	if (player._Get()->ReturnP1()){
+		Audio::GetInstance().PlaySE(SE_ID::WIND_SE, true);
+	}
+
 	return true;
 }
 
 void RewindAction::Rasterize(){
+	if (player._Get()->ReturnP1()){
+		Audio::GetInstance().StopSE(SE_ID::WIND_SE);
+	}
 
 }
 

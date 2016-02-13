@@ -4,8 +4,8 @@
 #include "../Graphic/Graphic.h"
 #include "Stage.h"
 #include "Collision.h"
-ThreadBullet::ThreadBullet(IWorld& world_, std::weak_ptr<Stage> stage_, ACTOR_ID thread_id, Vector3& startPos_, Vector3& currentPos, Vector3 endPos, std::weak_ptr<Thread> rootThread_, CAMERA_ID cID, int playerNum_)
-:Actor(world_), pos(currentPos), rootThread(rootThread_), startPos(startPos_), stage(stage_), playerNum(playerNum_)
+ThreadBullet::ThreadBullet(IWorld& world_, std::weak_ptr<Stage> stage_, ACTOR_ID thread_id, Vector3& startPos_, Vector3& currentPos, Vector3 endPos, std::weak_ptr<Thread> rootThread_, CAMERA_ID cID, int playerNum_, std::weak_ptr<Player> player_)
+:Actor(world_), pos(currentPos), rootThread(rootThread_), startPos(startPos_), stage(stage_), playerNum(playerNum_), player(player_)
 {
 	threadParam.endPosition = endPos;
 	threadParam.startPosition = startPos;
@@ -69,7 +69,7 @@ void ThreadBullet::OnCollide(Actor& other, CollisionParameter colpara){
 		}
 	}
 	if (!beforeHit && !rootThread._Get()->ThreadHit()){
-		static_cast<Player*>(&other)->Damage(1.0f, playerNum);
+		static_cast<Player*>(&other)->Damage(1.0f, playerNum,player);
 		static_cast<Player*>(&other)->SetBindTime(0.5f);
 		hitPlayer.push_back(static_cast<Player*>(&other)->shared_from_this());
 		rootThread._Get()->SetIsDead(true);

@@ -15,6 +15,12 @@ DangleAction::~DangleAction(){
 
 }
 bool DangleAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
+	Vector3 nor = RCVector3::normalize(player._Get()->ReturnThread()._Get()->GetThreadParameter().endPosition - RCMatrix4::getPosition(player._Get()->GetParameter().matrix));
+	if (beforeId == ACTION_ID::DANGLE_ACTION){
+		beforeActionSame = true;
+		if (nor.y < 0)beforeActionSame = false;
+	}
+	else beforeActionSame = false;
 	player._Get()->SetAnimation(
 		(ANIM_ID)(ANIM_ID::NEPHILA_WALKFRONT_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
 		(ANIM_ID)(ANIM_ID::NEPHILA_WALKFRONT_ANIM + (!player._Get()->ReturnTarentula() ? 0 : ANIM_ID::CENTER)),
@@ -24,7 +30,6 @@ bool DangleAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	dangleInertiaVec = player._Get()->GetParameter().inertiaVec;
 	dangleSpeed = RCVector3::length(dangleInertiaVec);
 	dangleInertiaVec = RCVector3::normalize(dangleInertiaVec);
-	Vector3 nor = RCVector3::normalize(player._Get()->ReturnThread()._Get()->GetThreadParameter().endPosition - RCMatrix4::getPosition(player._Get()->GetParameter().matrix));
 	///if (nor.y > 0)
 	///	player._Get()->SetNor(nor);
 	//丸まる前の移動量とノーマルから壁擦りベクトルを求める
@@ -52,11 +57,12 @@ bool DangleAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 }
 
 void DangleAction::Rasterize(){
-	if (player._Get()->ReturnP1())
+	if (player._Get()->ReturnP1() && !beforeActionSame)
 	Audio::GetInstance().StopSE(SE_ID::DANGLE_SE);
 }
 
 void DangleAction::Update(float frameTime){
+	beforeActionSame = false;
 	//ジャンプ中の糸との判定
 	world.SetCollideSelect(player._Get()->shared_from_this(), friendThreadID, COL_ID::SPHERE_LINE_COLL);
 	//ジャンプ中の蜘蛛の巣との判定
