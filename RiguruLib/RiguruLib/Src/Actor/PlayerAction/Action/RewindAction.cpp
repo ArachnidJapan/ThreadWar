@@ -80,5 +80,8 @@ void RewindAction::OnCollide(Actor& other, CollisionParameter colpara){
 		player._Get()->SetNor(colpara.colNormal);
 
 		player._Get()->ReturnThread()._Get()->SetIsDead(true);
+
+		if (player._Get()->ReturnP1())
+			Audio::GetInstance().PlaySE(SE_ID::LANDING_SE);
 	}
 }

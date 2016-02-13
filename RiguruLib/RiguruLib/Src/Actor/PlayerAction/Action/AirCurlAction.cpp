@@ -4,6 +4,7 @@
 #include "../../Player.h"
 #include "../../Thread.h"
 #include "../../../Math/Quaternion.h"
+#include "../../../Audio/Audio.h"
 
 AirCurlAction::AirCurlAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :
 PlayerAction(world, player_, padNum_, cID_, ACTION_ID::AIR_CURL_ACTION){
@@ -56,6 +57,8 @@ void AirCurlAction::OnCollide(Actor& other, CollisionParameter colpara){
 		player._Get()->SetNor(colpara.colNormal);
 		if (colpara.colNormal.y >= 0)
 		ChangeAction(ACTION_ID::GROUND_CURL_ACTION);
+		if (player._Get()->ReturnP1())
+			Audio::GetInstance().PlaySE(SE_ID::LANDING_SE);
 		curlInertiaVec += curlInertiaVec - 2 * RCVector3::dot(curlInertiaVec, colpara.colNormal) * colpara.colNormal;
 		curlInertiaVec = RCVector3::normalize(curlInertiaVec);
 		//curlSpeed /= 4.0f;

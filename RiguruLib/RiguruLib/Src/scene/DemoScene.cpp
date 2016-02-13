@@ -121,7 +121,7 @@ void DemoScene::Update(float frameTime)
 	if (!effectEnd){
 		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
+			Device::GetInstance().GetInput()->GamePadAnyButton(0,true)){
 			pressStart = false;
 			effectEnd = false;
 			timer = BACK_ALPHA_TIME + BACK_BLANK_TIME + LOGO_ALPHA_TIME + START_ALPHA_TIME;
@@ -151,14 +151,14 @@ void DemoScene::Update(float frameTime)
 
 		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
+			Device::GetInstance().GetInput()->GamePadAnyButton(0,true)){
 			pressStart = true;
 			mIsEnd = true;
 		}
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
-			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
-			Initialize();
-		}
+		//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
+		//	Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
+		//	Initialize();
+		//}
 	}
 	else if (pressStart){
 		backLerp = min(backLerp + 1.0f / CHANGE_SCENE_TIME, 1.0f);

@@ -77,8 +77,10 @@ void Stage::Update(float frameTime){
 		crystalTimer += frameTime;
 		if (startTime > -1.0f)startTime -= 0.6f * frameTime;
 		if (!gameStart){
-			if (bgmPlay)
-			Audio::GetInstance().PlayBGM(BGM_ID::GAME_BGM, true);
+			if (bgmPlay){
+				Audio::GetInstance().PlayBGM(BGM_ID::GAME_BGM, true);
+				Audio::GetInstance().PlaySE(SE_ID::ANNBIENNT_SE, true);
+			}
 			gameStart = true;
 		}
 	}

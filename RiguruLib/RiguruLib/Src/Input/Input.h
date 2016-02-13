@@ -22,6 +22,7 @@ public:
 	Vector3 PovVec(int padNo_);
 	bool GamePadButtonDown(int padNo_, const UINT keyCode, bool trriger = false);
 	bool GamePadButtonUp(int padNo_, const UINT keyCode);
+	bool GamePadAnyButton(int padNo_, bool trriger = false);
 private:
 	KeyBoard k;
 	Mouse m;

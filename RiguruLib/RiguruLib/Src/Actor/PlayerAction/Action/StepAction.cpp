@@ -114,6 +114,8 @@ void StepAction::OnCollide(Actor& other, CollisionParameter colpara){
 		colpara.id == COL_ID::SPHERE_MODEL_NATURAL_COLL){
 		if (colpara.id == COL_ID::SPHERE_MODEL_NATURAL_COLL){
 			ChangeAction(ACTION_ID::NORMAL_ACTION);
+			if (player._Get()->ReturnP1())
+				Audio::GetInstance().PlaySE(SE_ID::LANDING_SE);
 		}
 		//“–‚½‚Á‚½êŠ‚ÖˆÚ“®
 		player._Get()->SetPos(colpara.colPos);

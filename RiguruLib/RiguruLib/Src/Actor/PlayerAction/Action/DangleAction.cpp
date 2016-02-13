@@ -45,13 +45,14 @@ bool DangleAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	grabity = player._Get()->GetParameter().moveVec;
 	moveVecUp = RCMatrix4::getUp(player._Get()->GetParameter().matrix);
 
-	if (player._Get()->ReturnP1() && nor.y > 0)
-	Audio::GetInstance().PlaySE(SE_ID::DANGLE_SE, true);
 	startRotate = 0;
 
 	//startRotate = 0;
 	//if (!startNorChangeFlag)
 	//ã•ûŒü‚ðƒZƒbƒg
+
+	firstNotShot = false;
+	playSE = false;
 
 	return true;
 }
@@ -92,6 +93,8 @@ void DangleAction::Update(float frameTime){
 		if (!player._Get()->ReturnThread()._Get()->IsShot()){
 			player._Get()->SetNor(RCVector3::lerp(moveVecUp, nor, startRotate));
 			startRotate += 3.0f * frameTime;
+			if (!playSE)
+			firstNotShot = true;
 		}
 	}
 
@@ -109,6 +112,13 @@ void DangleAction::Update(float frameTime){
 		Vector3 g = vector3(0, GRABITY, 0);
 		grabity += g * frameTime;
 		player._Get()->SetMoveVec(grabity);
+	}
+
+	if (firstNotShot){
+		if (player._Get()->ReturnP1() && nor.y > 0)
+			Audio::GetInstance().PlaySE(SE_ID::DANGLE_SE, true);
+		firstNotShot = false;
+		playSE = true;
 	}
 }
 void DangleAction::OnCollide(Actor& other, CollisionParameter colpara){

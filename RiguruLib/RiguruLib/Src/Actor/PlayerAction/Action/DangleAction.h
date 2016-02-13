@@ -17,4 +17,7 @@ private:
 	float startRotate;
 	Vector3 grabity;
 	bool beforeActionSame;
+
+	bool firstNotShot;
+	bool playSE;
 };
