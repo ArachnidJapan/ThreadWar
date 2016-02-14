@@ -20,8 +20,8 @@ namespace GAMEPADKEY
 	const UINT BUTTON_R2 = 5;
 	const UINT BUTTON_L1 = 6;
 	const UINT BUTTON_R1 = 7;
-	const UINT BUTTON_SELECT = 8;
-	const UINT BUTTON_START = 9;
+	const UINT BUTTON_SELECT = 9;
+	const UINT BUTTON_START = 8;
 	const UINT BUTTON_L3 = 10;
 	const UINT BUTTON_R3 = 11;
 	const UINT BUTTON_HOME = 12;
