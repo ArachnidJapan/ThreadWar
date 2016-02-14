@@ -41,7 +41,7 @@ float Math::lerp(float s, float e, float t){
 	return ((s * (1.0f - t)) + (e * t));
 }
 float Math::lerp2(float s, float e, float t){
-	t = sinf(t);
+	t = abs(sinf(t));
 	return lerp(s, e, t);
 }
 float Math::lerp3(float s, float e, float t){

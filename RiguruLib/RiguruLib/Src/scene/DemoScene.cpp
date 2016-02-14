@@ -99,6 +99,9 @@ void DemoScene::Initialize()
 	timer = 0;
 	logoLerp = 0;
 	pressLerp = 0;
+	blackLerp = 0;
+	changeFlag = false;
+	moveRes = false;
 }
 
 void DemoScene::Update(float frameTime)
@@ -114,9 +117,27 @@ void DemoScene::Update(float frameTime)
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_7P)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 	//Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(frameTime);
-	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(10.4f, 3.3f, -75.0f) + moveVec, 0, -40);
+	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(10.4f, 3.3f, -80.0f) + moveVec, 0, -40);
 
 	moveVec += vector3(0, 0, 15) * frameTime;
+
+	if (moveVec.z > 150.0f){
+		changeFlag = true;
+	}
+	if (changeFlag){
+		blackLerp += 80.0f * frameTime;
+		if (blackLerp > 180.0f){
+			blackLerp = 0;
+			changeFlag = false;
+			moveRes = false;
+		}
+		else if (blackLerp > 90.0f){
+			if (!moveRes){
+				moveRes = true;
+				moveVec = vector3(0, 0, 0);
+			}
+		}
+	}
 
 	//最初のPRESS_STARTが押されていなければ、PRESS_START文字を明滅。
 	if (!effectEnd){
@@ -167,11 +188,13 @@ void DemoScene::Draw() const
 	//現在のスクリーンサイズに拡大。
 	Vector2 screenPow = vector2(1920.0f / 1280.0f, 1080.0f / 768.0f);
 
+	Graphic::GetInstance().DrawTexture(TEXTURE_ID::BLACK_TEXTURE, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y), vector2(1920,1080), D3DXCOLOR(1, 1, 1,abs(Math::sin(blackLerp))), vector2(0.5f, 0.5f), 0, 0, 1.0f, 1.0f, 0);
+
 	float logoAlpha = Math::lerp3(0.0f, 1.0f, logoLerp);
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::TITLE_LOGO_TEXTURE, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y), screenPow, D3DXCOLOR(1, 1, 1, logoLerp), vector2(0.5f, 0.5f), 0, 0, 1.0f, 1.0f, 0);
 
 	float startAlpha = Math::lerp3(0.0f, 1.0f, pressLerp);
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - 256), vector2(0.5f, 0.5f), 0.5f, "press SPACE or Circle button", vector3(1, 1, 1), pressLerp, true);
+	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - 256), vector2(0.5f, 0.5f), 0.5f, "press any button", vector3(1, 1, 1), pressLerp, true);
 }
 
 //終了しているか？
