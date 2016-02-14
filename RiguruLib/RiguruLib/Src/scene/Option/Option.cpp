@@ -284,7 +284,7 @@ void Option::OptionSelect(float frameTime){
 		os_scale.at(i) = Math::lerp4(os_prevScale.at(i), os_nextScale.at(i), lerpTime);
 		os_alpha.at(i) = Math::lerp4(os_alpha.at(i), os_nextAlpha.at(i), lerpTime);
 	}
-	lerpTime = min(lerpTime + 1.0f / 10.0f, 1.0f);
+	lerpTime = min(lerpTime + 1.0f / 10.0f * 60.0f * frameTime, 1.0f);
 	for (int i = 0; i <= 1; i++)
 		gaugeLerpTime.at(i) = min(gaugeLerpTime.at(i) + 1.0f / 5.0f, 1.0f);
 	selectAlphaTime = min(selectAlphaTime + 5 * 60 * frameTime, 360);
