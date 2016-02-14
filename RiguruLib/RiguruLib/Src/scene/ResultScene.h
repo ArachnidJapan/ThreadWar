@@ -32,14 +32,18 @@ private:
 	World wa;
 	std::weak_ptr<SceneParameter> sp;
 	//各プレイヤーが獲得したポイント。挿入されるデータの順番はREDチームの1~4のキャラ、Blueチームの1~4のキャラの順。
-	std::vector<int> points;
+	std::vector<int> redPoints;
+	std::vector<int> bluePoints;
 	//各プレイヤーの名前(P1,CP1等)
-	std::vector<std::string> names;
+	std::vector<std::string> redNames;
+	std::vector<std::string> blueNames;
 	//画面上部のポイントゲージで使用するREDチームとBlueチームのポイントの割合。
 	float teamPoint, nextTeamPoint;
 	//RedチームとBlueチームの総合得点。
 	float playerTeamPoint, enemyTeamPoint;
 	bool mIsEnd;
+	bool redTarantula, blueTarantula;
+	int spiderNum, redNum, blueNum;
 	//各演出のタイマ。
 	float timer, pointTimer, vicTimer;
 	VICTORY_ID victory;

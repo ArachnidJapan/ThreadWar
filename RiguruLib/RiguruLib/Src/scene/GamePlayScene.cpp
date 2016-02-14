@@ -260,7 +260,7 @@ void GamePlayScene::Update(float frameTime)
 		mIsEnd = true;
 		sp._Get()->SetVictoryID(stage.get()->ReturnWinner());
 	}
-	//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))mIsEnd = true;
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))mIsEnd = true;
 	//ƒJƒƒ‰‚Ìİ’è
 	wa.Update(frameTime);
 	
