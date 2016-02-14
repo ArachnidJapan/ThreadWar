@@ -6,6 +6,7 @@
 #include "../Actor/Stage.h"
 #include "../Actor/CrystalCenter.h"
 #include "../TeamSelect/SelectPlayerParam.h"
+#include "../Audio/Audio.h"
 
 enum RESULT{
 	BLANK_TIME = 60 * 2,
@@ -136,6 +137,7 @@ void ResultScene::Update(float frameTime)
 			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)) &&
 			vicTimer == 1.0f){
 			mIsEnd = true;
+			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		}
 
 		vicTimer = min(vicTimer + (1.0f / VICTRY_TIME * 60.0f * frameTime), 1.0f);

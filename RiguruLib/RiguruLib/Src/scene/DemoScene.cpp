@@ -174,6 +174,7 @@ void DemoScene::Update(float frameTime)
 			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 			Device::GetInstance().GetInput()->GamePadAnyButton(0,true)){
 			mIsEnd = true;
+			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		}
 		//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
 		//	Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){

@@ -91,9 +91,9 @@ GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	Graphic::GetInstance().LoadShader(SHADER_ID::CRYSTAL_SHADER, "Shader/cso/CrystalShader.cso");
 
 	/**************************************************‰¹Šy*****************************************************/
-	Audio::GetInstance().LoadSE(SE_ID::ENTER_SE, _T("Res/Sound/SE/enter_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::BACK_SE, _T("Res/Sound/SE/back_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::SWITCH_SE, _T("Res/Sound/SE/switch_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::ENTER_SE, _T("Res/Sound/SE/enter_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::BACK_SE, _T("Res/Sound/SE/back_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::SWITCH_SE, _T("Res/Sound/SE/switch_se.wav"), 5);
 	Audio::GetInstance().LoadSE(SE_ID::RESTRAINT_SE, _T("Res/Sound/SE/restraint_se.wav"), 10);
 	Audio::GetInstance().LoadSE(SE_ID::THREAD_SHOT_SE, _T("Res/Sound/SE/thread_se.wav"), 10);
 	Audio::GetInstance().LoadSE(SE_ID::CRYSTALGET_SE, _T("Res/Sound/SE/crystalget_se.wav"), 3);

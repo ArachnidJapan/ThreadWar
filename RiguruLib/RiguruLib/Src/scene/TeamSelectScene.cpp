@@ -72,28 +72,42 @@ void TeamSelectScene::Initialize()
 
 void TeamSelectScene::Update(float frameTime)
 {
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true)){
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
 		mIsEnd = true;
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		return;
 	}
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true)){
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).x <= -0.5f){
 		if (count % 2 == 0){
 			count++;
 		}
 		else{
 			count--;
 		}
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
-	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT, true)){
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).x >= 0.5f){
 		if (count % 2 == 0){
 			count++;
 		}
 		else{
 			count--;
 		}
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
-	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP, true))count-=2;
-	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN, true))count+=2;
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).z <= -0.5f){
+		count -= 2;
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
+	}
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).z >= 0.5f){
+		count += 2;
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
+	}
 	int size = selectSpider.size() - 1;
 	if (count > size){
 		count = count - (size + 1);

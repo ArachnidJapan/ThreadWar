@@ -203,14 +203,14 @@ void Option::OptionSelect(float frameTime){
 
 	//€–Ú‘I‘ð
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP) || 
-		Device::GetInstance().GetInput()->LeftStick(0).z <= -0.5f &&
+		Device::GetInstance().GetInput()->LeftStick(0, true).z <= -0.5f &&
 		lerpTime >= 0.5f){
 		select = (OPTION_SELECT)(select - 1);
 		select = select < 0 ? select = (OPTION_SELECT)5 : select;
 		Move(frameTime);
 	}
 	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN) ||
-		Device::GetInstance().GetInput()->LeftStick(0).z >= 0.5f &&
+		Device::GetInstance().GetInput()->LeftStick(0, true).z >= 0.5f &&
 		lerpTime >= 0.5f){
 		select = (OPTION_SELECT)(select + 1);
 		select = (OPTION_SELECT)(select%OPTION_SELECT_NUM);
@@ -219,7 +219,7 @@ void Option::OptionSelect(float frameTime){
 
 	//‰¹—Ê’²®
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT, true) ||
-		Device::GetInstance().GetInput()->LeftStick(0).x >= 0.5f){
+		Device::GetInstance().GetInput()->LeftStick(0, true).x <= -0.5f){
 		if (select != OPTION_SELECT::BGM_SELECT && select != OPTION_SELECT::SE_SELECT)
 			return;
 
@@ -234,7 +234,7 @@ void Option::OptionSelect(float frameTime){
 		Audio::GetInstance().SetAllSEVolume(config[CONFIG_DATA::SE_VOL] * 10);
 }
 	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true) ||
-		Device::GetInstance().GetInput()->LeftStick(0).x <= -0.5f){
+		Device::GetInstance().GetInput()->LeftStick(0, true).x >= 0.5f){
 		if (select != OPTION_SELECT::BGM_SELECT && select != OPTION_SELECT::SE_SELECT)
 			return;
 
