@@ -27,6 +27,9 @@ public:
 	void Initialize();
 	//ポジションとビューをセット
 	void SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime);
+	//キルされたとき（リスポーン中）のキルした相手をガン見する
+	void SetCameraRespawn(Matrix4 playerMat, Vector3 enemyPos, float frameTime);
+
 	//ポジションとビューをセット
 	void GotCamera(Vector3 cameraPos, float frameTime,float yawAngle = 150.0f);
 	//ビューのマトリックスを取得
@@ -51,11 +54,15 @@ public:
 
 	void SetDokusai(){ dokusai = true; }
 	void SetPlayerAI(){ playerAI = true; }
-	void SetIsRespawn(bool flag){ isRespawn = flag; }
-	//カメラを向けたい地点を入れると向く　playerMat:プレイヤーのマトリックス lookPos:カメラを向けたい地点
-	void PointLook(Matrix4 playerMat,Vector3 lookPos);
+	void SetIsRespawn(bool flag){ 
+		isRespawn = flag;
+	}
+	void ResetRespawnTimer(){ respawnTimer = 0.0f; }
 private:
 	bool isRespawn;
+	//リスポーン中のズームタイマー
+	float respawnTimer;
+
 	std::weak_ptr<Stage> stage;
 	D3DXMATRIX matView, matProj;
 	CAMERA_PARAMETER mCameraParam;

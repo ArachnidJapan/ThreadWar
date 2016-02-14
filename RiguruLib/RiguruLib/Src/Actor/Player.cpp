@@ -189,9 +189,9 @@ void Player::Update(float frameTime){
 			isNodamage = true;
 		}
 
-		//ƒLƒ‹‚µ‚½“G‚ÉƒJƒƒ‰‚ðŒü‚¯‚é
-		Device::GetInstance().GetCamera(cID)->PointLook(
-			GetParameter().matrix, AITargetManager::GetInstance().GetAllPosList()[killedNum]);
+		////ƒLƒ‹‚µ‚½“G‚ÉƒJƒƒ‰‚ðŒü‚¯‚é
+		Device::GetInstance().GetCamera(cID)->SetCameraRespawn(
+			GetParameter().matrix, AITargetManager::GetInstance().GetAllPosList()[killedNum], frameTime);
 	}
 
 	if (RCMatrix4::getPosition(parameter.matrix).y < -9.0f ||
@@ -748,6 +748,7 @@ void Player::Damage(float damagePoint, int num,std::weak_ptr<Player> player){
 	{
 		stage._Get()->AddPoint(parameter.id,player);
 		isRespawn = true;
+		Device::GetInstance().GetCamera(cID)->ResetRespawnTimer();
 		killedNum = num;
 		ai[currentAI]->Dead();
 	}
