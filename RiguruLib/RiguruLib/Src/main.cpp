@@ -127,7 +127,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	::ShowWindow(hwnd_, SW_SHOW);
 	::UpdateWindow(hwnd_);
-	
+
 	sm.Add(Scene::Demo, std::make_shared<DemoScene>(sp));
 	sm.Add(Scene::Title, std::make_shared<TitleScene>(sp, option));
 	sm.Add(Scene::TeamSelect, std::make_shared<TeamSelectScene>(sp));
