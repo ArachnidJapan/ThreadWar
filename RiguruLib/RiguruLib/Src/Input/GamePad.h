@@ -33,7 +33,7 @@ public:
 	~GamePad();
 	void Initialize(D3D11USER* d3d11User, HINSTANCE hInst, LPDIRECTINPUT8 dInput);
 	void WindowActiveCheck();
-	Vector3 LeftStick(int padNo_);
+	Vector3 LeftStick(int padNo_,bool trigger = false);
 	Vector3 RightStick(int padNo_);
 	Vector3 PovVec(int padNo_);
 	bool KeyDown(int padNo_,const UINT KeyCode, bool trigger = false)const;
