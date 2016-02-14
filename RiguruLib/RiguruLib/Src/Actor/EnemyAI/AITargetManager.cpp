@@ -12,10 +12,7 @@ AITargetManager::~AITargetManager()
 
 void AITargetManager::Initialize(IWorld& world)
 {
-	////クリスタルの位置
-	//crystalPosList[0] = iceCrystalPos;
-	//crystalPosList[1] = centerCrystalPos;
-	//crystalPosList[2] = caveCrystalPos;
+
 }
 void AITargetManager::Update(IWorld& world)
 {
@@ -29,11 +26,6 @@ void AITargetManager::Update(IWorld& world)
 			redPosList[redHaveNum] = RCMatrix4::getPosition(blueMatList[redHaveNum]);
 			redHaveNum++;
 		}
-		else
-		{
-			if (redHaveNum > 0)
-				redHaveNum--;
-		}
 	});
 
 	//青チーム(氷側)
@@ -45,10 +37,6 @@ void AITargetManager::Update(IWorld& world)
 			blueMatList[blueHaveNum] = p->GetParameter().matrix;
 			bluePosList[blueHaveNum] = RCMatrix4::getPosition(blueMatList[blueHaveNum]);
 			blueHaveNum++;
-		}
-		else
-		{
-			blueHaveNum = 0;
 		}
 	});
 }
@@ -69,10 +57,6 @@ std::array<Vector3, 4> AITargetManager::GetRedTeamPosList()
 std::array<Vector3, 4> AITargetManager::GetBlueTeamPosList()
 {
 	return bluePosList;
-}
-std::array<Vector3, 3> AITargetManager::GetCrystalPosList()
-{
-	return crystalPosList;
 }
 
 std::array<Matrix4, 4> AITargetManager::GetTeamMatListID(ACTOR_ID id)
@@ -99,4 +83,13 @@ int AITargetManager::GetRedHaveNum()
 int AITargetManager::GetBlueHaveNum()
 {
 	return blueHaveNum;
+}
+
+void AITargetManager::SetAllPosList(int playerNum, Vector3 pos)
+{
+	allPosList[playerNum] = pos;
+}
+std::array<Vector3, 8> AITargetManager::GetAllPosList()
+{
+	return allPosList;
 }

@@ -132,6 +132,8 @@ private:
 	float nodamageTimer;//リスポーン直後の無敵時間
 	bool isNodamage;//無敵時間か？
 
+	int killedNum;//キルされたときの敵のプレイヤー番号
+
 
 	/**************糸****************/
 	bool bindFlag;

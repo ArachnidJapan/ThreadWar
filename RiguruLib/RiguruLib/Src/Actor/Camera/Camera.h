@@ -52,6 +52,8 @@ public:
 	void SetDokusai(){ dokusai = true; }
 	void SetPlayerAI(){ playerAI = true; }
 	void SetIsRespawn(bool flag){ isRespawn = flag; }
+	//カメラを向けたい地点を入れると向く　playerMat:プレイヤーのマトリックス lookPos:カメラを向けたい地点
+	void PointLook(Matrix4 playerMat,Vector3 lookPos);
 private:
 	bool isRespawn;
 	std::weak_ptr<Stage> stage;

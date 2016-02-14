@@ -4,6 +4,7 @@
 #include ".././Collision.h"
 #include "../../Graphic/Graphic.h"
 #include "../Stage.h"
+#include "../../Math/V3Calculation.h"
 const float CAMERA_ANGLE_SPEED = 0.003f * 60.0f;		// 旋回速度
 const float CAMERA_PLAYER_TARGET_HEIGHT = 0.75f;	// プレイヤー座標からどれだけ高い位置を注視点とするか
 const float CAMERA_PLAYER_LENGTH = 2.5f;	// プレイヤーとの距離
@@ -76,11 +77,14 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 		}
 	}
 	D3DXMatrixPerspectiveFovLH(&matProj, 3.1415926f / siya, 16.0f / 9.0f /*4.0f / 3.0f*/, 0.1f, 10000.0f);
-	//if (cID != CAMERA_ID::PLAYER_CAMERA){
-	//	Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 485), vector2(0.20f, 0.25f), 0.5f, "AngleH:" + std::to_string(Math::angle(mCameraParam.AngleH)) + "f");
-	//	Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.20f, 0.25f), 0.5f, "AngleV:" + std::to_string(Math::angle(mCameraParam.AngleV)) + "f");
+	////if (cID != CAMERA_ID::PLAYER_CAMERA){
+	////	Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 485), vector2(0.20f, 0.25f), 0.5f, "AngleH:" + std::to_string(Math::angle(mCameraParam.AngleH)) + "f");
+	////	Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.20f, 0.25f), 0.5f, "AngleV:" + std::to_string(Math::angle(mCameraParam.AngleV)) + "f");
+	////}
+	//if (!cameraMove || isRespawn){
+	//	mCameraParam.InputAngle = vector3(0, 0, 0);
 	//}
-	if (!cameraMove || isRespawn){
+	if (!cameraMove){
 		mCameraParam.InputAngle = vector3(0, 0, 0);
 	}
 	//入力値をもとに計算
@@ -241,11 +245,13 @@ void Camera::GotCamera(Vector3 cameraPos, float frameTime){
 	mCameraParam.AngleV += mCameraParam.InputAngle.y * CAMERA_ANGLE_SPEED *  frameTime;
 	mCameraParam.AngleH = Math::radian(150.0f);
 	//クランプ
-	if (mCameraParam.AngleH > Math::radian(180))mCameraParam.AngleH = Math::radian(-180);
-	else if (mCameraParam.AngleH < Math::radian(-180))mCameraParam.AngleH = Math::radian(180);
-	if (mCameraParam.AngleV > Math::radian(180))mCameraParam.AngleV = Math::radian(-180);
-	else if (mCameraParam.AngleV < Math::radian(-180))mCameraParam.AngleV = Math::radian(180);
-
+	if (!isRespawn)
+	{
+		if (mCameraParam.AngleH > Math::radian(180))mCameraParam.AngleH = Math::radian(-180);
+		else if (mCameraParam.AngleH < Math::radian(-180))mCameraParam.AngleH = Math::radian(180);
+		if (mCameraParam.AngleV > Math::radian(180))mCameraParam.AngleV = Math::radian(-180);
+		else if (mCameraParam.AngleV < Math::radian(-180))mCameraParam.AngleV = Math::radian(180);
+	}
 	//テストフォント
 	//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 485), vector2(0.20f, 0.25f), 0.5f, "AngleH:" + std::to_string(Math::angle(mCameraParam.AngleH)) + "f");
 	//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.20f, 0.25f), 0.5f, "AngleV:" + std::to_string(Math::angle(mCameraParam.AngleV)) + "f");
@@ -335,4 +341,61 @@ void Camera::AddInputAngleHV(float h, float v)
 Matrix4 Camera::GetCameraRotMatrix()
 {
 	return matrix;
+}
+
+void Camera::PointLook(Matrix4 playerMat, Vector3 lookPos)
+{
+	//最終的な入力
+	Vector2 input = vector2(0, 0);
+	//プレイヤーの座標
+	Vector3 playerPos = RCMatrix4::getPosition(playerMat);
+	//向けたい方向
+	Vector3 lookVec = RCVector3::normalize(lookPos - playerPos);
+	//前
+	Vector3 cFront = -RCVector3::normalize(RCMatrix4::getFront(matrix));
+	//天井に張り付いているか？
+	bool isCeiling = RCV3Calc::InnerAngle(RCVector3::normalize(RCMatrix4::getUp(matrix)), vector3(0, 1, 0)) > 90;
+
+
+	//左右判定
+	float asin = Math::asin(RCVector2::cross(
+		RCVector2::normalize(vector2(cFront.x, cFront.z)),
+		RCVector2::normalize(vector2(lookVec.x, lookVec.z))));
+	//なす角
+	float acos = RCV3Calc::InnerAngle(
+		vector3(cFront.x, 0, cFront.z),
+		vector3(lookVec.x, 0, lookVec.z));
+
+	//なす角を基に入力量を計算
+	float add = fabsf(acos) / 6.0f;
+	add = Math::clamp(add, 0.0f, 20.0f);
+	//入力により向きを変える
+	if (asin > 0) input.x = -add;
+	else input.x = add;
+
+	//上下判定
+	//向きたい方向
+	Vector3 vec = lookVec;
+	if (vec.z > 0)
+		vec = -vec;//+の値に制限して計算
+	asin = Math::asin(RCVector2::cross(
+		RCVector2::normalize(vector2(cFront.y, cFront.z)),
+		RCVector2::normalize(vector2(vec.y, vec.z))));
+	//なす角
+	acos = RCV3Calc::InnerAngle(
+		vector3(0, cFront.y, cFront.z),
+		vector3(0, vec.y, vec.z));
+
+	//なす角を基に入力量を計算
+	add = fabsf(acos) / 6.0;
+	add = Math::clamp(add, 0.0f, 20.0f);
+
+	//入力により向きを変える
+	if (asin < 0) input.y = -add;
+	else input.y = add;
+
+	//天井にいる場合は入力反転
+	if (isCeiling) input *= -1;
+	//入力
+	AddInputAngleHV(input.x, input.y);
 }

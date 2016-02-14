@@ -71,3 +71,7 @@ void Audio::SetBGMVolume(BGM_ID id, int volume){
 void Audio::SetSEVolume(SE_ID id, int volume){
 	se[id].SetVolume(volume);
 }
+
+float Audio::ReturnVolume(SE_ID id){
+	return (se[id].ReturnVolume() + 10000.0f) / 100.0f;
+}

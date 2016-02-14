@@ -143,3 +143,9 @@ void Sound::SetPlaySpeed(float speed){
 		i->SetFrequency(playSpeed);
 	}
 }
+
+float Sound::ReturnVolume(){
+	LONG vo;
+	g_Buffers[0]->GetVolume(&vo);
+	return vo;
+}
