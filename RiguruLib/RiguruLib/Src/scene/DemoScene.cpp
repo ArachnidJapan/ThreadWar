@@ -193,9 +193,9 @@ void DemoScene::Update(float frameTime)
 		timer = fmodf(timer, 360.0f);
 		pressLerp = Math::sin(timer) + 1.0f;
 
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
+		if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-			Device::GetInstance().GetInput()->GamePadAnyButton(0,true)){
+			Device::GetInstance().GetInput()->GamePadAnyButton(0,true)) && !mIsEnd){
 			mIsEnd = true;
 			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		}
