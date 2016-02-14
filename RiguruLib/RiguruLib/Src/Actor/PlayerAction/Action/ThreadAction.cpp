@@ -7,7 +7,7 @@
 #include "../../ThreadWeb.h"
 #include "../../Stage.h"
 
-const float FRONTROTATESPEED = 60.0f;
+const float FRONTROTATESPEED = 120.0f;
 
 ThreadAction::ThreadAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :
 PlayerAction(world, player_, padNum_, cID_, ACTION_ID::THREAD_ACTION){

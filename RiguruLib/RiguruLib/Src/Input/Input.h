@@ -17,7 +17,7 @@ public:
 	bool MouseButtonDownTrigger(INPUTMOUSEBUTTON id);
 	bool MouseButtonUp(INPUTMOUSEBUTTON id);
 	Vector3 MouseVec();
-	Vector3 LeftStick(int padNo_);
+	Vector3 LeftStick(int padNo_, bool trigger = false);
 	Vector3 RightStick(int padNo_);
 	Vector3 PovVec(int padNo_);
 	bool GamePadButtonDown(int padNo_, const UINT keyCode, bool trriger = false);

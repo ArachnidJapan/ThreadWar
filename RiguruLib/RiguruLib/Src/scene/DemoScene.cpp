@@ -103,6 +103,8 @@ void DemoScene::Initialize()
 	blackLerp = 0;
 	changeFlag = false;
 	moveRes = false;
+	cameraWork = 0;
+	changeTime = 0;
 }
 
 void DemoScene::Update(float frameTime)
@@ -118,25 +120,46 @@ void DemoScene::Update(float frameTime)
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_7P)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 	//Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(frameTime);
-	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(10.4f, 3.3f, -80.0f) + moveVec, 0, -40);
+	if (cameraWork == 0){
+		Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(10.4f, 3.3f, -80.0f) + moveVec, 0, -40);
+		changeTime += 15 * frameTime;
+		moveVec += vector3(0, 0, 15) * frameTime;
 
-	moveVec += vector3(0, 0, 15) * frameTime;
-
-	if (moveVec.z > 150.0f){
-		changeFlag = true;
+		if (changeTime > 150.0f){
+			changeFlag = true;
+			changeTime = 0;
+		}
+		if (blackLerp > 90.0f){
+			if (!moveRes){
+				cameraWork++;
+				moveRes = true;
+			}
+		}
 	}
+	else if (cameraWork == 1){
+		Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-3.5f, 3, 2.0f), 0, 0.3f * frameTime,false);
+		changeTime += 15 * frameTime;
+
+		if (changeTime > 360.0f){
+			changeFlag = true;
+			changeTime = 0;
+		}
+		if (blackLerp > 90.0f){
+			if (!moveRes){
+				cameraWork = 0;
+				moveRes = true;
+			}
+			moveVec = vector3(0, 0, 0);
+		}
+	}
+
+
 	if (changeFlag){
 		blackLerp += 80.0f * frameTime;
 		if (blackLerp > 180.0f){
 			blackLerp = 0;
 			changeFlag = false;
 			moveRes = false;
-		}
-		else if (blackLerp > 90.0f){
-			if (!moveRes){
-				moveRes = true;
-				moveVec = vector3(0, 0, 0);
-			}
 		}
 	}
 
@@ -174,6 +197,7 @@ void DemoScene::Update(float frameTime)
 			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 			Device::GetInstance().GetInput()->GamePadAnyButton(0,true)){
 			mIsEnd = true;
+			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		}
 		//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
 		//	Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){

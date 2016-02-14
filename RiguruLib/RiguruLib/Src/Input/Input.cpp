@@ -44,8 +44,8 @@ bool Input::MouseButtonUp(INPUTMOUSEBUTTON id){
 Vector3 Input::MouseVec(){
 	return m.MouseVec();
 }
-Vector3 Input::LeftStick(int padNo_){
-	return g.LeftStick(padNo_);
+Vector3 Input::LeftStick(int padNo_, bool trigger){
+	return g.LeftStick(padNo_, trigger);
 }
 Vector3 Input::RightStick(int padNo_){
 	return g.RightStick(padNo_);

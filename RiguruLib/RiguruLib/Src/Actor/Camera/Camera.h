@@ -31,7 +31,7 @@ public:
 	void SetCameraRespawn(Matrix4 playerMat, Vector3 enemyPos, float frameTime);
 
 	//ポジションとビューをセット
-	void GotCamera(Vector3 cameraPos, float frameTime,float yawAngle = 150.0f);
+	void GotCamera(Vector3 cameraPos, float frameTime, float yawAngle = 150.0f, bool teamSelect = true);
 	//ビューのマトリックスを取得
 	D3DXMATRIX returnView();
 	//プロジェクションのマトリックスを取得

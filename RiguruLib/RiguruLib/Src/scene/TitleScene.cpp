@@ -31,6 +31,15 @@ option(option_)
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MANUAL_TEXTURE, "Res/Texture/gamepad.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::LINE_WHITE_TEXTURE, "Res/Texture/line_white.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, "Res/Texture/line_black.png");
+
+	//2つの選択肢のパラメータを初期化。
+	for (int i = 0; i <= 1; i++){
+		ts_scale.push_back(0.6f);
+		ts_alpha.push_back(0.5f);
+		ts_nextScale.push_back(ts_scale.at(i));
+		ts_prevScale.push_back(ts_scale.at(i));
+		ts_nextAlpha.push_back(ts_alpha.at(i));
+	}
 }
 
 //デストラクタ
@@ -55,8 +64,6 @@ void TitleScene::Initialize()
 	wa.Add(ACTOR_ID::CRYSTAL_ENEMYSIDE_ACTOR, crystalEnemySide);
 	std::shared_ptr<Stage> stage = std::make_shared<Stage>(wa, crystalCenter, crystalPlayerSide, crystalEnemySide,false);
 	wa.Add(ACTOR_ID::STAGE_ACTOR, stage);
-	//Device::GetInstance().CameraInit(CAMERA_ID::PLAYER_CAMERA_1P, stage);
-	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetCamera(vector3(0, 0, 0.3f), vector3(0, 0, 0), 1.0f / 60.0f);
 	Device::GetInstance().CameraInit(CAMERA_ID::GOD_CAMERA, stage);
 
 	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-3.5f, 3, 2.0f), 0);/***********/
@@ -70,17 +77,17 @@ void TitleScene::Initialize()
 	teamID = TEAM_ID::FIRST_TEAM;
 	threadBackPos = vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2.0f + (selects * -MOVE_AMOUNT));
 
-	//3つの選択肢のパラメータを初期化。
+	//2つの選択肢のパラメータを初期化。
 	for (int i = 0; i <= 1; i++){
-		ts_scale.push_back(0.6f);
-		ts_alpha.push_back(0.5f);
+		ts_scale.at(i) = 0.6f;
+		ts_alpha.at(i) = 0.5f;
 		if (selects == (TITLE_SELECT)i){
 			ts_scale.at(i) = 1.0f;
 			ts_alpha.at(i) = 1.0f;
 		}
-		ts_nextScale.push_back(ts_scale.at(i));
-		ts_prevScale.push_back(ts_scale.at(i));
-		ts_nextAlpha.push_back(ts_alpha.at(i));
+		ts_nextScale.at(i) = ts_scale.at(i);
+		ts_prevScale.at(i) = ts_scale.at(i);
+		ts_nextAlpha.at(i) = ts_alpha.at(i);
 	}
 	option._Get()->Initialize();
 }
@@ -94,6 +101,20 @@ void TitleScene::Update(float frameTime)
 		if (option._Get()->ReturnMenu()){
 			mIsEnd = true;
 			selects == TITLE_SELECT::SELECT_RETURN;
+		}
+		if (!option._Get()->IsOption()){
+			//2つの選択肢のパラメータを初期化。
+			for (int i = 0; i <= 1; i++){
+				ts_scale.push_back(0.6f);
+				ts_alpha.push_back(0.5f);
+				if (selects == (TITLE_SELECT)i){
+					ts_scale.at(i) = 1.0f;
+					ts_alpha.at(i) = 1.0f;
+				}
+				ts_nextScale.push_back(ts_scale.at(i));
+				ts_prevScale.push_back(ts_scale.at(i));
+				ts_nextAlpha.push_back(ts_alpha.at(i));
+			}
 		}
 		return;
 	}
@@ -134,9 +155,6 @@ void TitleScene::Draw() const
 		//文字
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale.at(0), 0.5f, "START GAME", vector3(1, 1, 1), ts_alpha.at(0) * allAlpha, true);
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale.at(1), 0.5f, "OPTIONS", vector3(1, 1, 1), ts_alpha.at(1) * allAlpha, true);
-		//デバッグ用。
-		/*Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.5f, 0.5f), 0.5f, "timer:" + std::to_string(timer), vector3(1, 1, 1));
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 475), vector2(0.5f, 0.5f), 0.5f, "select:" + std::to_string(selects), vector3(1, 1, 1));*/
 	}
 }
 
@@ -153,49 +171,37 @@ Scene TitleScene::Next() const
 		return Scene::TeamSelect;
 	else
 		return Scene::Demo;
-	
-	/*switch (selects)
-	{
-	case SELECT_GAMESTART_SINGLE:
-	return Scene::GamePlay;
-	break;
-	case SELECT_GAMESTART_TWOPLAYER:
-	return Scene::GamePlay;
-	break;
-	case SELECT_OPTION:
-	return Scene::OPTION;
-	break;
-	default:
-	return Scene::GamePlay;
-	break;
-	}*/
 }
 
 void TitleScene::TitleSelect(float frameTime){
 	if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP) ||
-		Device::GetInstance().GetInput()->LeftStick(0).z >= 0.5f) &&
+		Device::GetInstance().GetInput()->LeftStick(0, true).z >= 0.5f) &&
 		lerpTime == 1.0f){
 		selects = (TITLE_SELECT)(selects - 1);
 		selects = (TITLE_SELECT)(selects < 0 ? 1 : selects);
 		Move();
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
 	if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN) ||
-		Device::GetInstance().GetInput()->LeftStick(0).z <= -0.5f) &&
+		Device::GetInstance().GetInput()->LeftStick(0, true).z <= -0.5f) &&
 		lerpTime == 1.0f){
 		selects = (TITLE_SELECT)(selects + 1);
 		selects = (TITLE_SELECT)(selects % TITLE_SELECT_NUM);
 		Move();
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
 		isSelect = true;
 		timer = 0;
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 	}
 	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
 		mIsEnd = true;
 		selects = TITLE_SELECT::SELECT_RETURN;
+		Audio::GetInstance().PlaySE(SE_ID::BACK_SE);
 	}
 
 	for (int i = 0; i <= TITLE_SELECT_NUM - 1; i++){
