@@ -28,7 +28,7 @@ public:
 	//ポジションとビューをセット
 	void SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime);
 	//ポジションとビューをセット
-	void GotCamera(Vector3 cameraPos, float frameTime,float yawAngle = 150.0f);
+	void GotCamera(Vector3 cameraPos, float frameTime, float yawAngle = 150.0f, bool teamSelect = true);
 	//ビューのマトリックスを取得
 	D3DXMATRIX returnView();
 	//プロジェクションのマトリックスを取得

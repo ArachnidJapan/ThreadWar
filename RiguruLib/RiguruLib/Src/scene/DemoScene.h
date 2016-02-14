@@ -39,4 +39,6 @@ private:
 	Vector3 moveVec;
 
 	bool changeFlag,moveRes;
+	int cameraWork;
+	float changeTime;
 };
