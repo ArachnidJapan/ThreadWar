@@ -97,7 +97,6 @@ void DemoScene::Initialize()
 	pressStart = false;
 	effectEnd = false;
 	timer = 0;
-	backLerp = 1;
 	logoLerp = 0;
 	pressLerp = 0;
 }
@@ -127,12 +126,10 @@ void DemoScene::Update(float frameTime)
 			pressStart = false;
 			effectEnd = false;
 			timer = BACK_ALPHA_TIME + BACK_BLANK_TIME + LOGO_ALPHA_TIME + START_ALPHA_TIME;
-			backLerp = 0.0f;
 			logoLerp = 1.0f;
 			pressLerp = 1.0f;
 		}
 
-		backLerp = max(backLerp - ((1.0f / 20.0f) * 60.0f*frameTime), 0.0f);
 		if (timer >= BACK_ALPHA_TIME + BACK_BLANK_TIME){
 			logoLerp = min(logoLerp + (1.0f / (60.0f*4.0f) * 60.0f*frameTime), 1.0f);
 		}
@@ -154,20 +151,12 @@ void DemoScene::Update(float frameTime)
 		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 			Device::GetInstance().GetInput()->GamePadAnyButton(0,true)){
-			pressStart = true;
 			mIsEnd = true;
 		}
 		//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
 		//	Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
 		//	Initialize();
 		//}
-	}
-	else if (pressStart){
-		backLerp = min(backLerp + 1.0f / CHANGE_SCENE_TIME, 1.0f);
-		timer+= 60.0f * frameTime;
-		if (timer > CHANGE_SCENE_TIME){
-			mIsEnd = true;
-		}
 	}
 }
 
@@ -183,9 +172,6 @@ void DemoScene::Draw() const
 
 	float startAlpha = Math::lerp3(0.0f, 1.0f, pressLerp);
 	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - 256), vector2(0.5f, 0.5f), 0.5f, "press SPACE or Circle button", vector3(1, 1, 1), pressLerp, true);
-
-	float backAlpha = Math::lerp3(0.0f, 1.0f, backLerp);
-	Graphic::GetInstance().DrawTexture(TEXTURE_ID::BLACK_TEXTURE, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y), vector2(1920, 1080), D3DXCOLOR(1, 1, 1, backLerp), vector2(0.5f, 0.5f), 0, 0, 1.0f, 1.0f, 0);
 }
 
 //èIóπÇµÇƒÇ¢ÇÈÇ©ÅH

@@ -34,7 +34,7 @@ private:
 	//演出のブランクタイムに使用。
 	float timer;
 	//演出のアルファ値用lerp。
-	float backLerp, logoLerp, pressLerp;
+	float logoLerp, pressLerp;
 	std::vector<int> configData;
 	Vector3 moveVec;
 };

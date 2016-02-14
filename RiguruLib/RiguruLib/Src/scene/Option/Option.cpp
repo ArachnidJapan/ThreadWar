@@ -202,7 +202,9 @@ void Option::Move(float frameTime){
 void Option::OptionSelect(float frameTime){
 
 	//€–Ú‘I‘ð
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP) &&
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP) || 
+		Device::GetInstance().GetInput()->LeftStick(0).y <= -0.5f ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true) &&
 		lerpTime >= 0.5f){
 		select = (OPTION_SELECT)(select - 1);
 		select = select < 0 ? select = (OPTION_SELECT)5 : select;

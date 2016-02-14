@@ -241,19 +241,7 @@ void GamePlayScene::Initialize()
 void GamePlayScene::Update(float frameTime)
 {
 	AITargetManager::GetInstance().Update(wa);
-
-	/*if (fadeIn){
-		fadeTime = max((fadeTime + 1.0f / 60.0f) * 60.0f * frameTime, 0.0f);
-		if (fadeTime == 0.0f)
-			fadeIn = false;
-		return;
-	}
-	if (fadeOut){
-		fadeTime = min((fadeTime - 1.0f / 60.0f) * 60.0f * frameTime, 1.0f);
-		if (fadeTime == 1.0f)
-			mIsEnd = true;
-		return;
-	}*/
+	
 	if (stage.get()->ReturnGameTime() <= 0){
 		mIsEnd = true;
 		sp._Get()->SetVictoryID(stage.get()->ReturnWinner());

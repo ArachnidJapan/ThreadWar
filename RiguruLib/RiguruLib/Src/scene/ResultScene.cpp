@@ -32,7 +32,7 @@ void ResultScene::Initialize()
 	timer = 0;
 	pointTimer = 0;
 	vicTimer = 0;
-
+	
 	wa.Initialize();
 
 	/*ƒ}ƒbƒvŠÖŒW*/
