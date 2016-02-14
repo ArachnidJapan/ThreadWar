@@ -48,8 +48,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, UINT wParam, LONG lParam)
 	{
 	case WM_KEYUP:
 		// アプリ終了
-		if (/*wParam == VK_ESCAPE || */option->ReturnExitGame())
-			::DestroyWindow(hWnd);
+
 		//// F2キーを押すと、ウィンドウモードを切り替える。
 		//// 自動的にウィンドウモードを切り替える機能もあるが、ウィンドウスタイルを自由に変更するために自分で実装することにした。
 		if (wParam == VK_F2)
@@ -203,6 +202,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 				//Graphic::GetInstance().DrawAllFont();
 				// レンダリングされたイメージをユーザーに表示。
 				Device::GetInstance().Getd3d11User()->Present();
+
+				if (option->ReturnExitGame())
+					break;
 			}
 			if (FAILED(hr))
 				::DestroyWindow(Device::GetInstance().Getd3d11User()->m_hWnd);
