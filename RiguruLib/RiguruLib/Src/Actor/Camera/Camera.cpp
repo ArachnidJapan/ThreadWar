@@ -202,7 +202,7 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 }
 
 
-void Camera::GotCamera(Vector3 cameraPos, float frameTime, float yawAngle){
+void Camera::GotCamera(Vector3 cameraPos, float frameTime, float yawAngle,bool teamSelect){
 
 	godPos = cameraPos;
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))
@@ -243,7 +243,10 @@ void Camera::GotCamera(Vector3 cameraPos, float frameTime, float yawAngle){
 	//入力値をもとに計算
 	mCameraParam.AngleH += mCameraParam.InputAngle.x * CAMERA_ANGLE_SPEED *  frameTime;
 	mCameraParam.AngleV += mCameraParam.InputAngle.y * CAMERA_ANGLE_SPEED *  frameTime;
-	mCameraParam.AngleH = Math::radian(yawAngle);
+	if (teamSelect)
+		mCameraParam.AngleH = Math::radian(yawAngle);
+	else
+		mCameraParam.AngleH += yawAngle;
 	//クランプ
 	if (!isRespawn)
 	{
