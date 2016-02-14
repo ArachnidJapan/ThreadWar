@@ -102,20 +102,6 @@ void TitleScene::Update(float frameTime)
 			mIsEnd = true;
 			selects == TITLE_SELECT::SELECT_RETURN;
 		}
-		if (!option._Get()->IsOption()){
-			//2つの選択肢のパラメータを初期化。
-			for (int i = 0; i <= 1; i++){
-				ts_scale.push_back(0.6f);
-				ts_alpha.push_back(0.5f);
-				if (selects == (TITLE_SELECT)i){
-					ts_scale.at(i) = 1.0f;
-					ts_alpha.at(i) = 1.0f;
-				}
-				ts_nextScale.push_back(ts_scale.at(i));
-				ts_prevScale.push_back(ts_scale.at(i));
-				ts_nextAlpha.push_back(ts_alpha.at(i));
-			}
-		}
 		return;
 	}
 	//PRESS_STARTが押されたら、"ゲームプレイ"、"オプション"の2つの選択肢。

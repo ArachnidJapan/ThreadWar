@@ -12,7 +12,9 @@
 
 
 //コンストラクタ
-GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
+GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_, std::weak_ptr<Option> option_) :
+sp(sp_),
+option(option_)
 {
 	//mIsEnd = false;
 	/*svolume = 80;
@@ -120,10 +122,7 @@ GamePlayScene::~GamePlayScene()
 void GamePlayScene::Initialize()
 {
 	mIsEnd = false;
-	fadeIn = true; 
-	fadeOut = false;
 	sp._Get()->SetVictoryID(VICTORY_ID::PLAYER_WIN);
-	fadeTime = 1;
 
 	wa.Initialize();
 
@@ -236,10 +235,27 @@ void GamePlayScene::Initialize()
 	Audio::GetInstance().SetBGMVolume(bvolume);*/
 
 	AITargetManager::GetInstance().Initialize(wa);
+
+	option._Get()->Initialize();
+	returnMenu = false;
+	blackAlpha = 0;
 }
 
 void GamePlayScene::Update(float frameTime)
 {
+	if (option._Get()->IsOption()){
+		option._Get()->Update(frameTime);
+		if (option._Get()->ReturnMenu()){
+			mIsEnd = true;
+			returnMenu = true;
+		}
+		frameTime = 0;
+	}
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_ESC, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_START, true)){
+		option._Get()->Pop(frameTime);
+	}
+
 	AITargetManager::GetInstance().Update(wa);
 	
 	if (stage.get()->ReturnGameTime() <= 0){
@@ -271,31 +287,6 @@ void GamePlayScene::Update(float frameTime)
 	//Audio::GetInstance().PlaySE(SE_ID::THREAD_SHOT_SE);
 
 	Device::GetInstance().SetCamera(frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_2P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_3P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_4P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_5P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_6P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_7P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
-
-	//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_C, true))
-	//{
-	//	drawNum++;
-	//	if (drawNum >= 8 || drawNum <= -1) drawNum = 0;
-	//	if (drawNum == 0)drawCamera = CAMERA_ID::PLAYER_CAMERA_1P;
-	//	if (drawNum == 1)drawCamera = CAMERA_ID::PLAYER_CAMERA_2P;
-	//	if (drawNum == 2)drawCamera = CAMERA_ID::PLAYER_CAMERA_3P;
-	//	if (drawNum == 3)drawCamera = CAMERA_ID::PLAYER_CAMERA_4P;
-	//	if (drawNum == 4)drawCamera = CAMERA_ID::ENEMY_CAMERA_5P;
-	//	if (drawNum == 5)drawCamera = CAMERA_ID::ENEMY_CAMERA_6P;
-	//	if (drawNum == 6)drawCamera = CAMERA_ID::ENEMY_CAMERA_7P;
-	//	if (drawNum == 7)drawCamera = CAMERA_ID::ENEMY_CAMERA_8P;
-	//	//if (drawNum == 8)drawCamera = CAMERA_ID::GOD_CAMERA;
-	//}
 }
 
 //描画
@@ -311,6 +302,10 @@ void GamePlayScene::Draw() const
 	//wa.Draw(CAMERA_ID::ENEMY_CAMERA);
 	Device::GetInstance().Getd3d11User()->ChangeViewport(0, 1, 0, 1);
 	wa.Draw(drawCamera);
+
+	if (option._Get()->IsOption()){
+		option._Get()->Draw();
+	}
 	//Graphic::GetInstance().DrawSphere(RCVector3::lerp(vector3(-2.4f, -1.3f, -1.5f), vector3(0.5f, 5.5f, 1.5f), 0.5), 4.0f, drawCamera);//中央
 	//Graphic::GetInstance().DrawSphere(RCVector3::lerp(vector3(-2.4f, -1.3f, 62.0f), vector3(0.5f, 5.5f, 65.3f), 0.5), 4.0f, drawCamera);//氷
 	//Graphic::GetInstance().DrawSphere(RCVector3::lerp(vector3(-2.4f, -1.3f, -67.0f), vector3(0.5f, 5.5f, -64.0f), 0.5), 4.0f, drawCamera);//洞窟
@@ -322,7 +317,6 @@ void GamePlayScene::Draw() const
 //終了しているか？
 bool GamePlayScene::IsEnd() const
 {
-	
 	return mIsEnd;
 }
 
@@ -331,7 +325,10 @@ Scene GamePlayScene::Next() const
 {
 	Audio::GetInstance().StopBGM(BGM_ID::GAME_BGM);
 	Audio::GetInstance().StopAllSE();
-	return Scene::Ending;
+	if (!returnMenu)
+		return Scene::Ending;
+	else
+		return Scene::Demo;
 }
 
 void GamePlayScene::End(){

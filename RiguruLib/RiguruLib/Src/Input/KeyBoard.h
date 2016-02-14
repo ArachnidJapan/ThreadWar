@@ -48,6 +48,7 @@ namespace INPUTKEY
 	const UINT KEY_5 = DIK_5;
 	const UINT KEY_6 = DIK_6;
 	const UINT KEY_TAB = DIK_TAB;
+	const UINT KEY_ESC = DIK_ESCAPE;
 }
 
 class KeyBoard{

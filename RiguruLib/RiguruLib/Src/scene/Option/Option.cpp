@@ -182,8 +182,8 @@ void Option::ConfigSave(){
 	CSVReader::GetInstance().WriteData(FILE_ID::CONFIG_FILE, strmap);
 	CSVReader::GetInstance().save(FILE_ID::CONFIG_FILE);
 
-	Audio::GetInstance().SetAllBGMVolume(config[CONFIG_DATA::MUSIC_VOL] * 10);
-	Audio::GetInstance().SetAllSEVolume(config[CONFIG_DATA::SE_VOL] * 10); 
+	Audio::GetInstance().SetAllBGMVolume((config[CONFIG_DATA::MUSIC_VOL] * 7) + 30);
+	Audio::GetInstance().SetAllSEVolume((config[CONFIG_DATA::SE_VOL] * 7) + 30);
 }
 
 bool Option::IsOption(){
@@ -238,8 +238,8 @@ void Option::OptionSelect(float frameTime){
 		if (config[(CONFIG_DATA)select] > 0)
 			nextGaugeLength.at(select) = config[(CONFIG_DATA)select] / 10.0f;
 
-		Audio::GetInstance().SetAllBGMVolume(config[CONFIG_DATA::MUSIC_VOL] * 10);
-		Audio::GetInstance().SetAllSEVolume(config[CONFIG_DATA::SE_VOL] * 10);
+		Audio::GetInstance().SetAllBGMVolume((config[CONFIG_DATA::MUSIC_VOL] * 7) + 30);
+		Audio::GetInstance().SetAllSEVolume((config[CONFIG_DATA::SE_VOL] * 7) + 30);
 		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 }
 	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true) ||
@@ -254,8 +254,8 @@ void Option::OptionSelect(float frameTime){
 		if (config.at((CONFIG_DATA)select) > 0)
 			nextGaugeLength.at(select) = config.at((CONFIG_DATA)select) / 10.0f;
 
-		Audio::GetInstance().SetAllBGMVolume(config[CONFIG_DATA::MUSIC_VOL] * 10);
-		Audio::GetInstance().SetAllSEVolume(config[CONFIG_DATA::SE_VOL] * 10);
+		Audio::GetInstance().SetAllBGMVolume((config[CONFIG_DATA::MUSIC_VOL] * 7) + 30);
+		Audio::GetInstance().SetAllSEVolume((config[CONFIG_DATA::SE_VOL] * 7) + 30);
 		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
 	//Œˆ’è

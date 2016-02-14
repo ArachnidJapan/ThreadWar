@@ -68,6 +68,7 @@ void TeamSelectScene::Initialize()
 	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 900),3, enemySpiderSelect));
 
 	count = 0;
+	isBackScene = false;
 }
 
 void TeamSelectScene::Update(float frameTime)
@@ -75,6 +76,13 @@ void TeamSelectScene::Update(float frameTime)
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
 		mIsEnd = true;
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
+		return;
+	}
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
+		mIsEnd = true;
+		isBackScene = true;
 		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		return;
 	}
@@ -185,11 +193,15 @@ bool TeamSelectScene::IsEnd() const
 //ŽŸ‚ÌƒV[ƒ“‚ð•Ô‚·
 Scene TeamSelectScene::Next() const
 {
-	return Scene::GamePlay;
+	if (!isBackScene)
+		return Scene::GamePlay;
+	else
+		return Scene::Title;
 }
 
 void TeamSelectScene::End(){
-	Audio::GetInstance().StopBGM(BGM_ID::TITLE_BGM);
+	if (!isBackScene)
+		Audio::GetInstance().StopBGM(BGM_ID::TITLE_BGM);
 	TeamSelectResult tsr;
 	tsr.redTarantula = selectSpider[0]->ReturnTarantula();
 	tsr.blueTarantula = selectSpider[1]->ReturnTarantula();
