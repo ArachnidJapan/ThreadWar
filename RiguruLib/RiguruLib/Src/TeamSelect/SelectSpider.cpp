@@ -35,14 +35,16 @@ SelectSpider::~SelectSpider(){
 
 void SelectSpider::Update(){
 	if (select){
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_A, true)){
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_A, true) ||
+			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_L1, true)){
 			if (!spider)
 				tarantula = !tarantula;
 			else{
 				spiderSelect->SetPlayerParam(playerNum, false);
 			}
 		}
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_S, true)){
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_S, true) ||
+			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_R1, true)){
 			if (!spider)
 				tarantula = !tarantula;
 			else{

@@ -31,6 +31,15 @@ option(option_)
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MANUAL_TEXTURE, "Res/Texture/gamepad.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::LINE_WHITE_TEXTURE, "Res/Texture/line_white.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, "Res/Texture/line_black.png");
+
+	//2つの選択肢のパラメータを初期化。
+	for (int i = 0; i <= 1; i++){
+		ts_scale.push_back(0.6f);
+		ts_alpha.push_back(0.5f);
+		ts_nextScale.push_back(ts_scale.at(i));
+		ts_prevScale.push_back(ts_scale.at(i));
+		ts_nextAlpha.push_back(ts_alpha.at(i));
+	}
 }
 
 //デストラクタ
@@ -68,17 +77,17 @@ void TitleScene::Initialize()
 	teamID = TEAM_ID::FIRST_TEAM;
 	threadBackPos = vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2.0f + (selects * -MOVE_AMOUNT));
 
-	//3つの選択肢のパラメータを初期化。
+	//2つの選択肢のパラメータを初期化。
 	for (int i = 0; i <= 1; i++){
-		ts_scale.push_back(0.6f);
-		ts_alpha.push_back(0.5f);
+		ts_scale.at(i) = 0.6f;
+		ts_alpha.at(i) = 0.5f;
 		if (selects == (TITLE_SELECT)i){
 			ts_scale.at(i) = 1.0f;
 			ts_alpha.at(i) = 1.0f;
 		}
-		ts_nextScale.push_back(ts_scale.at(i));
-		ts_prevScale.push_back(ts_scale.at(i));
-		ts_nextAlpha.push_back(ts_alpha.at(i));
+		ts_nextScale.at(i) = ts_scale.at(i);
+		ts_prevScale.at(i) = ts_scale.at(i);
+		ts_nextAlpha.at(i) = ts_alpha.at(i);
 	}
 	option._Get()->Initialize();
 }
@@ -92,6 +101,20 @@ void TitleScene::Update(float frameTime)
 		if (option._Get()->ReturnMenu()){
 			mIsEnd = true;
 			selects == TITLE_SELECT::SELECT_RETURN;
+		}
+		if (!option._Get()->IsOption()){
+			//2つの選択肢のパラメータを初期化。
+			for (int i = 0; i <= 1; i++){
+				ts_scale.push_back(0.6f);
+				ts_alpha.push_back(0.5f);
+				if (selects == (TITLE_SELECT)i){
+					ts_scale.at(i) = 1.0f;
+					ts_alpha.at(i) = 1.0f;
+				}
+				ts_nextScale.push_back(ts_scale.at(i));
+				ts_prevScale.push_back(ts_scale.at(i));
+				ts_nextAlpha.push_back(ts_alpha.at(i));
+			}
 		}
 		return;
 	}

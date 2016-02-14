@@ -108,6 +108,14 @@ void TeamSelectScene::Update(float frameTime)
 		count += 2;
 		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_S, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_R1, true)){
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
+	}
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_A, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_L1, true)){
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
+	}
 	int size = selectSpider.size() - 1;
 	if (count > size){
 		count = count - (size + 1);
