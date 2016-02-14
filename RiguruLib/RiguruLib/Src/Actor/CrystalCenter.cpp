@@ -30,7 +30,7 @@ CrystalCenter::CrystalCenter(IWorld& world_, ACTOR_ID crystalID , bool gamePlay_
 	scaleStart = vector3(0, 0, 0);
 	startFlag = false;
 	crystalAngle = 0;
-	if (gamePlay)Audio::GetInstance().PlaySE(SE_ID::CRYSTALNORMAL_SE, true);
+	
 	Audio::GetInstance().SetSEVolume(SE_ID::CRYSTALNORMAL_SE, 0);
 }
 
@@ -41,6 +41,7 @@ void CrystalCenter::Initialize(){
 
 }
 void CrystalCenter::Update(float frameTime){
+	if (gamePlay)Audio::GetInstance().PlaySE(SE_ID::CRYSTALNORMAL_SE, true);
 	crystalAngle += 30.0f * frameTime;
 	if (crystalAngle > 360)crystalAngle = 0;
 	Vector3 pos = vector3(0, 0, 0);

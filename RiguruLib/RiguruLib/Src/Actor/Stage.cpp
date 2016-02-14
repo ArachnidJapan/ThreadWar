@@ -79,7 +79,6 @@ void Stage::Update(float frameTime){
 		if (!gameStart){
 			if (bgmPlay){
 				Audio::GetInstance().PlayBGM(BGM_ID::GAME_BGM, true);
-				Audio::GetInstance().PlaySE(SE_ID::ANNBIENNT_SE, true);
 			}
 			gameStart = true;
 		}
@@ -87,7 +86,7 @@ void Stage::Update(float frameTime){
 	else{
 		startTime -= frameTime;
 	}
-
+	if (gameStart && bgmPlay)Audio::GetInstance().PlaySE(SE_ID::ANNBIENNT_SE, true);
 	//クリスタルの状態をリセット
 	if (crystalTimer >= 90.0f)
 	{
