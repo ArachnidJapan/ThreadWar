@@ -36,4 +36,5 @@ private:
 	//演出のアルファ値用lerp。
 	float backLerp, logoLerp, pressLerp;
 	std::vector<int> configData;
+	Vector3 moveVec;
 };

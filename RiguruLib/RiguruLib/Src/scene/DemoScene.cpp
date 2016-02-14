@@ -77,7 +77,7 @@ void DemoScene::Initialize()
 	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_7P, 6, 6,false,true));
 	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_8P, 7, 7,false,true));
 
-	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->SetCamera(vector3(0, 2.0f, -5.0f), vector3(0, 0, 0), 1.0f / 60.0f);
+	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-2.4f, 3.3f, -75.0f), 0,0);
 	/***********/
 	/*コンフィグファイル読み込み。*/
 	CSVReader::GetInstance().FileSet(FILE_ID::CONFIG_FILE, "Res/Config/config.ini");
@@ -92,7 +92,7 @@ void DemoScene::Initialize()
 	Audio::GetInstance().SetAllSEVolume(configData.at(1) * 10);
 
 	Audio::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, true);
-
+	moveVec = vector3(0, 0, 0);
 	mIsEnd = false;
 	pressStart = false;
 	effectEnd = false;
@@ -115,7 +115,9 @@ void DemoScene::Update(float frameTime)
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_7P)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 	//Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(frameTime);
+	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(10.4f, 3.3f, -75.0f) + moveVec, 0, -40);
 
+	moveVec += vector3(0, 0, 15) * frameTime;
 
 	//最初のPRESS_STARTが押されていなければ、PRESS_START文字を明滅。
 	if (!effectEnd){
