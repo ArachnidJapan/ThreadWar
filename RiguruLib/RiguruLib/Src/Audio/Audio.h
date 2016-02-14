@@ -41,6 +41,8 @@ public:
 	//ＳＥボリュームセット
 	void SetSEVolume(SE_ID id,int volume);
 
+	float ReturnVolume(SE_ID id);
+
 private:
 	std::map<BGM_ID, Sound> bgm;
 	std::map<SE_ID, Sound> se;

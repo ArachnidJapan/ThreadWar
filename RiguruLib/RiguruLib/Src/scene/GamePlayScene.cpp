@@ -28,8 +28,6 @@ GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	Graphic::GetInstance().LoadMesh(MODEL_ID::THREAD_EFFECT_MODEL, "Res/Rgr/thread/threadEffect.rgr");
 	Graphic::GetInstance().LoadMesh(MODEL_ID::STAGE_MODEL, "Res/Rgr/stage/map01/stageDraw.rgr");
 	Graphic::GetInstance().LoadMesh(MODEL_ID::CRYSTAL_CENTER_MODEL, "Res/Rgr/stage/crystal1.rgr");
-	Graphic::GetInstance().LoadMesh(MODEL_ID::CRYSTAL_ENEMYSIDE_MODEL, "Res/Rgr/stage/crystal2.rgr");
-	Graphic::GetInstance().LoadMesh(MODEL_ID::CRYSTAL_PLAYERSIDE_MODEL, "Res/Rgr/stage/crystal3.rgr");
 
 	/***********************************************オクツリー**************************************************/
 	Graphic::GetInstance().LoadOctree(OCT_ID::STAGE_OCT, "Res/Rgr/Octree/stageOct.oct");
