@@ -89,8 +89,8 @@ void DemoScene::Initialize()
 		configData.push_back(CSVReader::GetInstance().geti(FILE_ID::CONFIG_FILE, row, 1));
 	}
 	//âπó ÇÃê›íËÅB
-	Audio::GetInstance().SetAllBGMVolume(configData.at(0) * 10);
-	Audio::GetInstance().SetAllSEVolume(configData.at(1) * 10);
+	Audio::GetInstance().SetAllBGMVolume((configData.at(0) * 7) + 30);
+	Audio::GetInstance().SetAllSEVolume((configData.at(1) * 7) + 30);
 
 	Audio::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, true);
 	moveVec = vector3(0, 0, 0);

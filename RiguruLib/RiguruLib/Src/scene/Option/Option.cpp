@@ -31,15 +31,15 @@ Option::~Option(){
 	nextGaugeLength.clear();
 }
 
-void Option::Initialize(){
+void Option::Initialize(bool isGamePlay_){
 	isOption = false;
 	isPop = false;
 	isShut = false;
 	isManual = false;
 	isReturnMenu = false;
-	isExitGame = false;
 	manualEnd = false;
 	decision = false;
+	isGamePlay = isGamePlay_;
 	select = OPTION_SELECT::BGM_SELECT;
 	allAlpha = 0.0f;
 	manualAlpha = 0.0f;
@@ -98,9 +98,8 @@ void Option::Update(float frameTime){
 
 	if (isManual)
 		Manual(frameTime);
-	else{
+	else
 		OptionSelect(frameTime);
-	}
 
 }
 void Option::Draw(){
@@ -133,12 +132,6 @@ void Option::Draw(){
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::MANUAL_TEXTURE, vector2(1920 / 2, 1080), vector2(1.7f, 1.7f), D3DXCOLOR(1, 1, 1, manualAlpha), vector2(0.5, 1.0f));
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(scrCenter.x - 512 - 128, scrCenter.y + space *-3), vector2(0.4f, 0.4f)*manualBack, 0.5f, "BACK", vector3(1, 1, 1), manualAlpha, false);
 	}
-
-	/*Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 256), vector2(0.3f, 0.3f), 0.5f, "select:" + std::to_string(select), vector3(1, 1, 1), 1.0f);
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 256+32), vector2(0.3f, 0.3f), 0.5f, "bgm:" + std::to_string(config.at((CONFIG_DATA)0)), vector3(1, 1, 1), 1.0f);
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 256+64), vector2(0.3f, 0.3f), 0.5f, "se:" + std::to_string(config.at((CONFIG_DATA)1)), vector3(1, 1, 1), 1.0f);
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 256 + 64+32), vector2(0.3f, 0.3f), 0.5f, "allalpha:" + std::to_string(allAlpha), vector3(1, 1, 1), 1.0f);*/
-
 }
 
 void Option::Pop(float frameTime){
@@ -147,7 +140,6 @@ void Option::Pop(float frameTime){
 	int max = 120;
 	timer = min(timer++, max);
 	allAlpha = Math::lerp3(0.0f, 1.0f, (float)(timer / 120.0f));
-	//allAlpha = 1.0f;
 	if (timer >= max){
 		isPop = false;
 		timer = 0;
@@ -161,7 +153,7 @@ void Option::Shut(float frameTime){
 	os_scale[5] = Math::lerp(os_scale[5], 1.1f, selectScaleTime);
 
 	if (timer >= max)
-		Initialize();
+		Initialize(isGamePlay);
 }
 bool Option::ReturnMenu(){
 	return isReturnMenu;
@@ -262,31 +254,13 @@ void Option::OptionSelect(float frameTime){
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
-		selectAlphaTime = 0.0f;
-		switch (select)
-		{
-		case MANUAL_SELECT:
-			decision = true;
-			isManual = true;
-			break;
-		case RETURN_MENU_SELECT:
-			decision = true;
-			isReturnMenu = true;
-			ConfigSave();
-			break;
-		case EXIT_GAME_SELECT:
-			decision = true;
-			isExitGame = true;
-			ConfigSave();
-			break;
-		case BACK_SELECT:
-			isShut = true;
-			ConfigSave();
-			break;
-		default:
-			break;
+		Decision();
+	}
+	if (isGamePlay){
+		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_ESC, true) ||
+			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_START, true)){
+			Decision();
 		}
-		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 	}
 	//ƒLƒƒƒ“ƒZƒ‹
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
@@ -341,4 +315,33 @@ void Option::Manual(float frameTime){
 		manualBack = 1.0f;
 		Pop(frameTime);
 	}
+}
+
+
+void Option::Decision(){
+	selectAlphaTime = 0.0f;
+	switch (select)
+	{
+	case MANUAL_SELECT:
+		decision = true;
+		isManual = true;
+		break;
+	case RETURN_MENU_SELECT:
+		decision = true;
+		isReturnMenu = true;
+		ConfigSave();
+		break;
+	case EXIT_GAME_SELECT:
+		decision = true;
+		isExitGame = true;
+		ConfigSave();
+		break;
+	case BACK_SELECT:
+		isShut = true;
+		ConfigSave();
+		break;
+	default:
+		break;
+	}
+	Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 }
