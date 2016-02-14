@@ -48,7 +48,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, UINT wParam, LONG lParam)
 	{
 	case WM_KEYUP:
 		// アプリ終了
-		if (wParam == VK_ESCAPE || option->ReturnExitGame())
+		if (/*wParam == VK_ESCAPE || */option->ReturnExitGame())
 			::DestroyWindow(hWnd);
 		//// F2キーを押すと、ウィンドウモードを切り替える。
 		//// 自動的にウィンドウモードを切り替える機能もあるが、ウィンドウスタイルを自由に変更するために自分で実装することにした。

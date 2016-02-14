@@ -20,7 +20,7 @@ public:
 	Option();
 	~Option();
 
-	void Initialize();
+	void Initialize(bool isGamePlay_ = false);
 	void Update(float frameTime);
 	void Draw();
 
@@ -29,6 +29,7 @@ public:
 	bool ReturnMenu();
 	bool ReturnExitGame();
 	void ConfigSave();
+	void Decision();
 
 	//画面フェードイン。
 	void Pop(float frameTime);
@@ -51,6 +52,7 @@ private:
 	bool manualEnd;
 	OPTION_SELECT select;//現在どれが選択されているか。
 	std::map<CONFIG_DATA, int> config;
+	bool isGamePlay;
 
 	//選択肢のパラメータ。
 	std::vector<float> os_scale, os_nextScale, os_prevScale;
