@@ -80,15 +80,13 @@ GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::DAMAGE_TEXTURE, "Res/Texture/damage.png");
 
 
-	/**********************************************フォントテクスチャ*******************************************/
-	Graphic::GetInstance().LoadFont(FONT_ID::TEST_FONT, "Res/Texture/font/font.png");
+
 
 	/************************************************シェーダー*************************************************/
 	Graphic::GetInstance().LoadShader(SHADER_ID::PLAYER_SHADER, "Shader/cso/fbxModelShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::THREAD_EFFECT_SHADER, "Shader/cso/ThreadEffectShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::STAGE_SHADER, "Shader/cso/StageShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::TEXTURE_SHADER, "Shader/cso/TextureShader.cso", false);
-	Graphic::GetInstance().LoadShader(SHADER_ID::FONT_SHADER, "Shader/cso/FontShader.cso", false);
 	Graphic::GetInstance().LoadShader(SHADER_ID::SPHERE_SHADER, "Shader/cso/SphereShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::CUBE_SHADER, "Shader/cso/CubeShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::LINE_SHADER, "Shader/cso/LineShader.cso");
@@ -108,6 +106,8 @@ GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	Audio::GetInstance().LoadSE(SE_ID::STEP_SE, _T("Res/Sound/SE/step_se.wav"), 2);
 	Audio::GetInstance().LoadSE(SE_ID::WALK_SE, _T("Res/Sound/SE/walk_se.wav"), 10);
 	Audio::GetInstance().LoadSE(SE_ID::WIND_SE, _T("Res/Sound/SE/wind_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::LANDING_SE, _T("Res/Sound/SE/landing_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::ANNBIENNT_SE, _T("Res/Sound/SE/ambience_se.wav"), 1);
 
 	Audio::GetInstance().LoadBGM(BGM_ID::TITLE_BGM, _T("Res/Sound/BGM/title_bgm.wav"));
 	Audio::GetInstance().LoadBGM(BGM_ID::GAME_BGM, _T("Res/Sound/BGM/game_bgm.wav"));
@@ -336,6 +336,7 @@ void GamePlayScene::Draw() const
 //終了しているか？
 bool GamePlayScene::IsEnd() const
 {
+	
 	return mIsEnd;
 }
 
@@ -343,9 +344,23 @@ bool GamePlayScene::IsEnd() const
 Scene GamePlayScene::Next() const
 {
 	Audio::GetInstance().StopBGM(BGM_ID::GAME_BGM);
+	Audio::GetInstance().StopAllSE();
 	return Scene::Ending;
 }
 
 void GamePlayScene::End(){
+	TeamSelectResult tsr = *sp._Get()->ReturnTeamSelectResult();
+	wa.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		Player* p = static_cast<Player*>(const_cast<Actor*>(&other));
+		tsr.redTeamPoint.push_back(p->ReturnPoint());
+	});
+
+	wa.EachActor(ACTOR_ID::ENEMY_ACTOR, [&](const Actor& other){
+		Player* p = static_cast<Player*>(const_cast<Actor*>(&other));
+		tsr.blueTeamPoint.push_back(p->ReturnPoint());
+	});
+
+	sp._Get()->SetTeamSelectResult(tsr);
+
 	wa.Clear();
 }

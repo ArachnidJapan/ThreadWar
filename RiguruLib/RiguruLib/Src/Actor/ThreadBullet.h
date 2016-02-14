@@ -12,7 +12,7 @@ class Player;
 class Stage;
 class ThreadBullet :public Actor, public std::enable_shared_from_this<ThreadBullet>{
 public:
-	ThreadBullet(IWorld& world_, std::weak_ptr<Stage> stage_, ACTOR_ID thread_id, Vector3& startPos, Vector3& currentPos, Vector3 endPos, std::weak_ptr<Thread> rootThread_, CAMERA_ID cID, int playerNum_);
+	ThreadBullet(IWorld& world_, std::weak_ptr<Stage> stage_, ACTOR_ID thread_id, Vector3& startPos, Vector3& currentPos, Vector3 endPos, std::weak_ptr<Thread> rootThread_, CAMERA_ID cID, int playerNum_,std::weak_ptr<Player> player_);
 	~ThreadBullet();
 	virtual void Initialize() override;
 	virtual void Update(float frameTime) override;
@@ -20,6 +20,7 @@ public:
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 	ThreadParameter GetThreadParameter(){ return threadParam; }
 private:
+	std::weak_ptr<Player> player;
 	Vector3& pos,startPos;
 	std::weak_ptr<Stage> stage;
 	std::list<std::weak_ptr<Player>> hitPlayer;

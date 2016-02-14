@@ -125,24 +125,10 @@ void saiki(std::list<AnimParameter*>& list, std::list<AnimParameter*>::iterator&
 
 void Graphic::BindAnimation(ActorPtr actor, SHADER_ID id, float frameTime){
 	Matrix4 animMat[BONEMAXCOUNT];
-	auto ite = animParameter[actor].begin();
-	auto i = (*ite);
-	animation.AnimBlend(animMat, i->animMat, i->animTime, i->animMat2, i->animTime2, i->animBlend, i->roopFlag);
-	i->animTime += (*i->updateAnimTime)  * frameTime;
-	if (i->updateAnimTime2 != NULL)
-		i->animTime2 += (*i->updateAnimTime2) * frameTime;
-
-	if (i->beforeAnimBlend < 1.0f)
-		i->beforeAnimBlend += (*i->beforeAnimBlendTime) * frameTime;
-	else i->beforeAnimBlend = 1.0f;
-
-
-	for (ite++; ite != animParameter[actor].end(); ++ite){
-		i = (*ite);
-		Matrix4 animMat2[BONEMAXCOUNT];
-		animation.AnimBlend(animMat2, i->animMat, i->animTime, i->animMat2, i->animTime2, i->animBlend, i->roopFlag);
-		animation.AnimBlend(animMat, animMat2, i->beforeAnimBlend, i->animMat);
-
+	if (animParameter.size() > 0){
+		auto ite = animParameter[actor].begin();
+		auto i = (*ite);
+		animation.AnimBlend(animMat, i->animMat, i->animTime, i->animMat2, i->animTime2, i->animBlend, i->roopFlag);
 		i->animTime += (*i->updateAnimTime)  * frameTime;
 		if (i->updateAnimTime2 != NULL)
 			i->animTime2 += (*i->updateAnimTime2) * frameTime;
@@ -151,11 +137,27 @@ void Graphic::BindAnimation(ActorPtr actor, SHADER_ID id, float frameTime){
 			i->beforeAnimBlend += (*i->beforeAnimBlendTime) * frameTime;
 		else i->beforeAnimBlend = 1.0f;
 
+
+		for (ite++; ite != animParameter[actor].end(); ++ite){
+			i = (*ite);
+			Matrix4 animMat2[BONEMAXCOUNT];
+			animation.AnimBlend(animMat2, i->animMat, i->animTime, i->animMat2, i->animTime2, i->animBlend, i->roopFlag);
+			animation.AnimBlend(animMat, animMat2, i->beforeAnimBlend, i->animMat);
+
+			i->animTime += (*i->updateAnimTime)  * frameTime;
+			if (i->updateAnimTime2 != NULL)
+				i->animTime2 += (*i->updateAnimTime2) * frameTime;
+
+			if (i->beforeAnimBlend < 1.0f)
+				i->beforeAnimBlend += (*i->beforeAnimBlendTime) * frameTime;
+			else i->beforeAnimBlend = 1.0f;
+
+		}
+
+		saiki(animParameter[actor], --animParameter[actor].end());
+
+		animation.BindAnim(&shader[id], animMat);
 	}
-
-	saiki(animParameter[actor], --animParameter[actor].end());
-
-	animation.BindAnim(&shader[id], animMat);
 
 	animBind = true;
 }

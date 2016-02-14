@@ -172,6 +172,9 @@ void JumpAction::OnCollide(Actor& other, CollisionParameter colpara){
 		player._Get()->SetPos(colpara.colPos);
 		//Up‚ðƒZƒbƒg
 		player._Get()->SetNor(colpara.colNormal);
+
+		if (player._Get()->ReturnP1())
+			Audio::GetInstance().PlaySE(SE_ID::LANDING_SE);
 		//	startNor = colpara.colNormal;
 	}
 	else if (colpara.id == COL_ID::SPHERE_LINE_COLL && jumpSpeed < JUMPSPEED - 1.0f && !static_cast<Thread*>(&other)->IsShot()){

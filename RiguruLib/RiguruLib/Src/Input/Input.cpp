@@ -59,3 +59,13 @@ bool Input::GamePadButtonDown(int padNo_,const UINT keyCode, bool trriger){
 bool Input::GamePadButtonUp(int padNo_, const UINT keyCode){
 	return g.KeyUp(padNo_, keyCode);
 }
+
+bool Input::GamePadAnyButton(int padNo_, bool trriger){
+	for (int i = 0; i < 13; i++){
+		if (g.KeyDown(padNo_, i, trriger)){
+			return true;
+		}
+	}
+
+	return false;
+}

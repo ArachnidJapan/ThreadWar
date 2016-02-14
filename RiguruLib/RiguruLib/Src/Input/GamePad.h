@@ -13,13 +13,13 @@
 namespace GAMEPADKEY
 {
 	const UINT BUTTON_SQUARE = 0;
-	const UINT BUTTON_CROSS = 1;
-	const UINT BUTTON_CURCLE = 2;
+	const UINT BUTTON_CURCLE = 1;
+	const UINT BUTTON_CROSS = 2;
 	const UINT BUTTON_TRIANGLE = 3;
-	const UINT BUTTON_L1 = 4;
-	const UINT BUTTON_R1 = 5;
-	const UINT BUTTON_L2 = 6;
-	const UINT BUTTON_R2 = 7;
+	const UINT BUTTON_L2 = 4;
+	const UINT BUTTON_R2 = 5;
+	const UINT BUTTON_L1 = 6;
+	const UINT BUTTON_R1 = 7;
 	const UINT BUTTON_SELECT = 8;
 	const UINT BUTTON_START = 9;
 	const UINT BUTTON_L3 = 10;

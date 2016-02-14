@@ -36,6 +36,12 @@ void Audio::StopSE(SE_ID id){
 	se[id].Stop();
 }
 
+void Audio::StopAllSE(){
+	for (auto& i : se){
+		i.second.Stop();
+	}
+}
+
 void Audio::SetPlaySpeedBGM(BGM_ID id, float speed){
 	bgm[id].SetPlaySpeed(speed);
 }

@@ -198,9 +198,6 @@ void ThreadAction::OnCollide(Actor& other, CollisionParameter colpara){
 				//if (!startNorChangeFlag)
 				//上方向をセット
 			}
-			//std::string s = "うんこ.png";
-			//auto a = s.find_last_of(".");
-			//s = s.substr(0, a);
 			player._Get()->SetNor(RCVector3::normalize(startNor * RCQuaternion::rotate(front, frontRotate)));
 
 			//ボタン入力で巻取りを開始

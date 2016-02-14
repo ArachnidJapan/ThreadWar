@@ -16,4 +16,8 @@ private:
 	Vector3 wallVec;
 	float startRotate;
 	Vector3 grabity;
+	bool beforeActionSame;
+
+	bool firstNotShot;
+	bool playSE;
 };

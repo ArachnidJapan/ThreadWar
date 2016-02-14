@@ -5,6 +5,7 @@
 #include "../../Thread.h"
 #include "../../ThreadWeb.h"
 #include "../../../Math/Quaternion.h"
+#include "../../../Audio/Audio.h"
 
 HoverAction::HoverAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :PlayerAction(world, player_, padNum_, cID_, ACTION_ID::HOVER_ACTION){
 	isDead = false;
@@ -138,6 +139,9 @@ void HoverAction::OnCollide(Actor& other, CollisionParameter colpara){
 		player._Get()->SetPos(colpara.colPos);
 		//Up‚ðƒZƒbƒg
 		player._Get()->SetNor(colpara.colNormal);
+
+		if (player._Get()->ReturnP1())
+			Audio::GetInstance().PlaySE(SE_ID::LANDING_SE);
 	}
 	else if (colpara.id == COL_ID::SPHERE_LINE_COLL&& !static_cast<Thread*>(&other)->IsShot()){
 		if (static_cast<Thread*>(&other)->GetParameter().id == ACTOR_ID::PLAYER_THREAD_ACTOR && player._Get()->GetParameter().id == ACTOR_ID::PLAYER_ACTOR ||

@@ -68,7 +68,7 @@ Thread::~Thread(){
 
 void Thread::Initialize(){
 	world.Add(parameter.id == ACTOR_ID::PLAYER_THREAD_ACTOR ? ACTOR_ID::PLAYER_THREADBULLET_ACTOR : ACTOR_ID::ENEMY_THREADBULLET_ACTOR,
-		std::make_shared<ThreadBullet>(world, stage, parameter.id, threadParam.startPosition, threadParam.currentEndPosition, threadParam.endPosition, shared_from_this(), cID, playerNum));
+		std::make_shared<ThreadBullet>(world, stage, parameter.id, threadParam.startPosition, threadParam.currentEndPosition, threadParam.endPosition, shared_from_this(), cID, playerNum,player));
 }
 
 void Thread::Update(float frameTime){

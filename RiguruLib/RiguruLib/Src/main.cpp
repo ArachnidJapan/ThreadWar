@@ -127,6 +127,15 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	::ShowWindow(hwnd_, SW_SHOW);
 	::UpdateWindow(hwnd_);
+	/**********************************************フォントテクスチャ*******************************************/
+	Graphic::GetInstance().LoadFont(FONT_ID::TEST_FONT, "Res/Texture/font/font.png");
+	Graphic::GetInstance().LoadShader(SHADER_ID::FONT_SHADER, "Shader/cso/FontShader.cso", false);
+	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 1080 - 60.0f * 0.5f), vector2(0.20f, 0.25f), 0.5f, "Now Loading...", vector3(1, 1, 1));
+
+	//Graphic::GetInstance().DrawAllFont();
+	// レンダリングされたイメージをユーザーに表示。
+	Device::GetInstance().Getd3d11User()->Present();
+	Device::GetInstance().GetInput()->Initialize(Device::GetInstance().Getd3d11User(), hInstance, dInput);
 	
 	sm.Add(Scene::Demo, std::make_shared<DemoScene>(sp));
 	sm.Add(Scene::Title, std::make_shared<TitleScene>(sp, option));
@@ -138,7 +147,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	if (QueryPerformanceFrequency(&timerFreq) == false)
 		::MessageBox(NULL, _T("Error initializing high resolution timer"), _T("Error initializing high resolution timer"), MB_OK);
 	QueryPerformanceCounter(&timeStart);
-	Device::GetInstance().GetInput()->Initialize(Device::GetInstance().Getd3d11User(), hInstance, dInput);
 	setlocale(LC_ALL, "japanese");
 	// メッセージループ
 	do
