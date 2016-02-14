@@ -43,8 +43,8 @@ void AirCurlAction::Update(float frameTime){
 	Vector3 moveVec = curlInertiaVec * curlSpeed;
 	curlSpeed -= (curlSpeed * 1.25f) * frameTime;
 	if (curlSpeed < 0) curlSpeed = 0;
-	player._Get()->SetMoveVec(moveVec);
-	player._Get()->SetMoveVec(nor * 0.01f);
+	player._Get()->SetMoveVec(frameTime == 0 ? vector3(0, 0, 0) : moveVec);
+	player._Get()->SetMoveVec(frameTime == 0 ? vector3(0, 0, 0) : nor * 0.01f);
 	//’n–Ê‚Æ‚Ì‚ ‚½‚è”»’è
 	world.SetCollideSelect(player._Get()->shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::SPHERE_MODEL_NATURAL_COLL);
 }

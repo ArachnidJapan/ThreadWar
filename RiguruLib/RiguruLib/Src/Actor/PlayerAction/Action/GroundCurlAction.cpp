@@ -56,7 +56,7 @@ void GroundCurlAction::Update(float frameTime){
 	moveVec += wallVec * frameTime;
 
 	//if (!startNorChangeFlag)
-	player._Get()->SetMoveVec(moveVec);
+	player._Get()->SetMoveVec(frameTime == 0 ? vector3(0, 0, 0) : moveVec);
 	//’n–Ê‚Æ‚Ì‚ ‚½‚è”»’è
 	world.SetCollideSelect(player._Get()->shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::RAY_MODEL_NATURAL_COLL);
 	//•Ç‚É‚ß‚èž‚Ü‚È‚¢‚æ‚¤‚É‚·‚éStep—p‚Ìˆ—

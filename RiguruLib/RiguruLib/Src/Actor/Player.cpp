@@ -638,6 +638,7 @@ void Player::SetPos(Vector3 position){
 //移動ベクトルをセット
 void Player::SetMoveVec(Vector3 moveVec){
 	parameter.moveVec += moveVec;
+
 }
 
 //ノーマルからRotateを計算

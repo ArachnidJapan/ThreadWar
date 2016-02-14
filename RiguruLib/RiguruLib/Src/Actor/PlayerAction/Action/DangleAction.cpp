@@ -88,7 +88,7 @@ void DangleAction::Update(float frameTime){
 		moveVec += wallVec;
 
 		//if (!startNorChangeFlag)
-		player._Get()->SetMoveVec(moveVec);
+		player._Get()->SetMoveVec(frameTime == 0 ? vector3(0, 0, 0) : moveVec);
 
 		if (!player._Get()->ReturnThread()._Get()->IsShot()){
 			player._Get()->SetNor(RCVector3::lerp(moveVecUp, nor, startRotate));
@@ -111,7 +111,7 @@ void DangleAction::Update(float frameTime){
 	{
 		Vector3 g = vector3(0, GRABITY, 0);
 		grabity += g * frameTime;
-		player._Get()->SetMoveVec(grabity);
+		player._Get()->SetMoveVec(frameTime == 0 ? vector3(0, 0, 0) : grabity);
 	}
 
 	if (firstNotShot){
