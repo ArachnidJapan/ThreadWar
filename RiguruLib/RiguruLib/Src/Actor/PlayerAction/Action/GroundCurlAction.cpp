@@ -29,6 +29,9 @@ bool GroundCurlAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 	cameraMove = true;
 	playerControlFlag.firstFrameFlag = false;
 	wallVec = vector3(0, 0, 0);
+	if (player._Get()->ReturnP1()){
+		Audio::GetInstance().PlaySE(SE_ID::ROUND_SE, true);
+	}
 	return true;
 }
 
@@ -60,7 +63,6 @@ void GroundCurlAction::Update(float frameTime){
 	world.SetCollideSelect(player._Get()->shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::RAY_MODEL_STEP_COLL);
 	if (player._Get()->ReturnP1()){
 		Audio::GetInstance().SetPlaySpeedSE(SE_ID::ROUND_SE, 100000.0f *Math::lerp(0.1f, 0.85f, RCVector3::length(moveVec) * 7.0f));
-		Audio::GetInstance().PlaySE(SE_ID::ROUND_SE, true);
 	}
 }
 void GroundCurlAction::OnCollide(Actor& other, CollisionParameter colpara){

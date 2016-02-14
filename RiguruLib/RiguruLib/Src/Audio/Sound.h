@@ -12,7 +12,7 @@ public:
 	//‰¹ŠyÄ¶
 	void Play(bool loop = false);
 	//‰¹Šy’â~
-	void Stop();
+	void Stop(bool reset = true);
 	//0`100‚Ü‚Å‚Å’²®‰Â”\
 	void SetVolume(LONG volume);
 

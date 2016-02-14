@@ -255,6 +255,7 @@ void GamePlayScene::Update(float frameTime)
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_START, true)) &&
 		!option._Get()->IsOption()){
 		option._Get()->Pop(frameTime);
+		Audio::GetInstance().StopAllSE(false);
 	}
 
 	AITargetManager::GetInstance().Update(wa);

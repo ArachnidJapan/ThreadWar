@@ -124,9 +124,10 @@ void Sound::Play(bool loop){
 }
 
 //‰¹Šy’âŽ~
-void Sound::Stop(){
+void Sound::Stop(bool reset){
 	for (auto& i : g_Buffers){
 		i->Stop();
+		if (reset)
 		i->SetCurrentPosition(0);
 	}
 }

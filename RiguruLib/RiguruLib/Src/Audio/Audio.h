@@ -25,7 +25,7 @@ public:
 	//‚r‚d’âŽ~
 	void StopSE(SE_ID id);
 
-	void StopAllSE();
+	void StopAllSE(bool reset = true);
 
 	void SetPlaySpeedBGM(BGM_ID id, float speed);
 

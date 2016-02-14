@@ -224,7 +224,7 @@ void Player::Update(float frameTime){
 	//else
 	if (!isRespawn){
 		pAM.Control();
-		if (stage._Get()->ReturnStartTime() < 0 && !SceneManager::GetInstance().isFadeUpdate())
+		if (stage._Get()->ReturnStartTime() < 0 && !SceneManager::GetInstance().isFadeUpdate() && frameTime != 0)
 		{
 			if (p1)
 				playerParam.vec = Control(frameTime, c);
@@ -637,7 +637,7 @@ void Player::SetPos(Vector3 position){
 
 //移動ベクトルをセット
 void Player::SetMoveVec(Vector3 moveVec){
-	parameter.moveVec += moveVec;
+	parameter.moveVec += moveVec * 60.0f * frameTime_;
 }
 
 //ノーマルからRotateを計算

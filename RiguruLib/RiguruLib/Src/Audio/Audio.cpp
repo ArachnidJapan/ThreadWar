@@ -36,9 +36,9 @@ void Audio::StopSE(SE_ID id){
 	se[id].Stop();
 }
 
-void Audio::StopAllSE(){
+void Audio::StopAllSE(bool reset){
 	for (auto& i : se){
-		i.second.Stop();
+		i.second.Stop(reset);
 	}
 }
 

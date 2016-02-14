@@ -118,7 +118,7 @@ void PlayerAction::PlayerActionUpdate(float frameTime, Vector3* grabity){
 		//ŒvŽZ—pd—Í
 		Vector3 g = vector3(0, GRABITY, 0);
 		*grabity += g * frameTime;
-		player._Get()->SetMoveVec(*grabity);
+		player._Get()->SetMoveVec(frameTime == 0 ? vector3(0,0,0):*grabity);
 	}
 	else{
 		*grabity = vector3(0, 0, 0);
