@@ -251,8 +251,8 @@ void GamePlayScene::Update(float frameTime)
 		}
 		frameTime = 0;
 	}
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_ESC, true) ||
-		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_START, true) &&
+	if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_ESC, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_START, true)) &&
 		!option._Get()->IsOption()){
 		option._Get()->Pop(frameTime);
 	}
