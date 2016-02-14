@@ -470,9 +470,12 @@ void EnemyAI::TargetPointLookV(float frameTime)
 		RCVector2::normalize(vector2(vec.y, vec.z))));
 
 	//‚È‚·Šp
+	//float acos = RCV3Calc::InnerAngle(
+	//	vector3(0, cameraFront.y, cameraFront.z),
+	//	vector3(0, vec.y, target.vec.z));
 	float acos = RCV3Calc::InnerAngle(
 		vector3(0, cameraFront.y, cameraFront.z),
-		vector3(0, vec.y, target.vec.z));
+		vector3(0, vec.y, vec.z));
 
 	//‚È‚·Šp‚ðŠî‚É“ü—Í—Ê‚ðŒvŽZ
 	float add = fabsf(acos) / 2;

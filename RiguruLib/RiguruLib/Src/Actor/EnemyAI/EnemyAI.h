@@ -12,6 +12,13 @@
 #include "../ID.h"
 #include "../PlayerAction/PlayerActionManager.h"
 
+//クリスタルの位置　中央
+static const Vector3 centerCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, -1.5f), vector3(0.5f, 5.5f, 1.5f), 0.5);
+//氷側(PlayerSide)
+static const Vector3 iceCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, 62.0f), vector3(0.5f, 5.5f, 65.3f), 0.5);
+//洞窟側(EnemySide)
+static const Vector3 caveCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, -67.0f), vector3(0.5f, 5.5f, -64.0f), 0.5);
+
 enum AI_STATE{
 	FIRST_AI,
 	SECOND_AI,
@@ -214,12 +221,6 @@ protected:
 	//目標
 	TargetParameter target;
 
-	//クリスタルの位置　中央
-	const Vector3 centerCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, -1.5f), vector3(0.5f, 5.5f, 1.5f), 0.5);
-	//氷側(PlayerSide)
-	const Vector3 iceCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, 62.0f), vector3(0.5f, 5.5f, 65.3f), 0.5);
-	//洞窟側(EnemySide)
-	const Vector3 caveCrystalPos = RCVector3::lerp(vector3(-2.4f, -1.3f, -67.0f), vector3(0.5f, 5.5f, -64.0f), 0.5);
 	//各クリスタルまでの距離
 	float centerCrystalDist, iceCrystalDist, caveCrystalDist;
 	//一番近い攻撃対象クリスタル

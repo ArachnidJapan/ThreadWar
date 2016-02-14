@@ -18,6 +18,7 @@
 #include "ThreadEffect.h"
 #include "EnemyAI\EnemyAI.h"
 #include "../scene/SceneManager.h"
+#include "EnemyAI\AITargetManager.h"
 
 //プレイヤーの半径
 const float RADIUS = 0.5f;
@@ -161,6 +162,9 @@ void Player::Update(float frameTime){
 	//	}
 	Device::GetInstance().GetCamera(cID)->SetIsRespawn(isRespawn);
 
+	//カメラのパラメータを取得
+	CAMERA_PARAMETER c = *Device::GetInstance().GetCamera(cID)->CameraParam();
+
 	//リスポーン中は以降の処理を行わない
 	if (isRespawn)
 	{
@@ -184,6 +188,10 @@ void Player::Update(float frameTime){
 			//無敵化
 			isNodamage = true;
 		}
+
+		//キルした敵にカメラを向ける
+		Device::GetInstance().GetCamera(cID)->PointLook(
+			GetParameter().matrix, AITargetManager::GetInstance().GetAllPosList()[killedNum]);
 	}
 
 	if (RCMatrix4::getPosition(parameter.matrix).y < -9.0f ||
@@ -196,8 +204,7 @@ void Player::Update(float frameTime){
 		stageOut = false;
 	}
 
-	//カメラのパラメータを取得
-	CAMERA_PARAMETER c = *Device::GetInstance().GetCamera(cID)->CameraParam();
+
 
 
 
@@ -398,6 +405,9 @@ void Player::Update(float frameTime){
 	playerParam.hp += 0.2f * frameTime;
 	playerParam.hp = min(playerParam.hp, 2.0f);
 	frameTime_ = frameTime;
+
+	//キルされた時のカメラ用 ポジション登録
+	AITargetManager::GetInstance().SetAllPosList(playerNum, RCMatrix4::getPosition(GetParameter().matrix));
 }
 
 //描画
@@ -738,6 +748,7 @@ void Player::Damage(float damagePoint, int num,std::weak_ptr<Player> player){
 	{
 		stage._Get()->AddPoint(parameter.id,player);
 		isRespawn = true;
+		killedNum = num;
 		ai[currentAI]->Dead();
 	}
 }
