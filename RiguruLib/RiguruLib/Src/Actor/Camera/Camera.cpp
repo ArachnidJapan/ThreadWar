@@ -4,6 +4,7 @@
 #include ".././Collision.h"
 #include "../../Graphic/Graphic.h"
 #include "../Stage.h"
+#include "../../Math/V3Calculation.h"
 const float CAMERA_ANGLE_SPEED = 0.003f * 60.0f;		// 旋回速度
 const float CAMERA_PLAYER_TARGET_HEIGHT = 0.75f;	// プレイヤー座標からどれだけ高い位置を注視点とするか
 const float CAMERA_PLAYER_LENGTH = 2.5f;	// プレイヤーとの距離
@@ -19,6 +20,7 @@ Camera::~Camera(){
 
 void Camera::Initialize(){
 	isRespawn = false;
+	respawnTimer = 0.0f;
 	mCameraParam.AngleH = 0;
 	mCameraParam.AngleV = Math::radian(-0);
 	mCameraParam.Eye = vector3(0, 0, 0);
@@ -44,10 +46,12 @@ void Camera::Initialize(){
 }
 //ポジションとビューをセット
 void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
+	if (isRespawn) return;
+
 	// 射影行列
 	float siya = 4.0f;
 	float sp = CAMERA_ANGLE_SPEED;
-	if (stage._Get()->ReturnStartTime() < 0){
+	if (stage._Get()->ReturnStartTime() < 0 && !isRespawn){
 		if (Device::GetInstance().GetInput()->GamePadButtonDown(padNum, GAMEPADKEY::BUTTON_L1) || Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_TAB)){
 			sp = CAMERA_ANGLE_SPEED / 5.0f;
 			siyaChange += 24.0f * frameTime;
@@ -76,11 +80,11 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 		}
 	}
 	D3DXMatrixPerspectiveFovLH(&matProj, 3.1415926f / siya, 16.0f / 9.0f /*4.0f / 3.0f*/, 0.1f, 10000.0f);
-	//if (cID != CAMERA_ID::PLAYER_CAMERA){
-	//	Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 485), vector2(0.20f, 0.25f), 0.5f, "AngleH:" + std::to_string(Math::angle(mCameraParam.AngleH)) + "f");
-	//	Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.20f, 0.25f), 0.5f, "AngleV:" + std::to_string(Math::angle(mCameraParam.AngleV)) + "f");
+
+	//if (!cameraMove || isRespawn){
+	//	mCameraParam.InputAngle = vector3(0, 0, 0);
 	//}
-	if (!cameraMove || isRespawn){
+	if (!cameraMove){
 		mCameraParam.InputAngle = vector3(0, 0, 0);
 	}
 	//入力値をもとに計算
@@ -95,6 +99,9 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 	//テストフォント
 	//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 485), vector2(0.20f, 0.25f), 0.5f, "AngleH:" + std::to_string(Math::angle(mCameraParam.AngleH)) + "f");
 	//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 500), vector2(0.20f, 0.25f), 0.5f, "AngleV:" + std::to_string(Math::angle(mCameraParam.AngleV)) + "f");
+
+
+	
 	//ターゲットをプレイヤーより少し上にセット
 	mCameraParam.Target = RCMatrix4::getPosition(mat) + cameraPos + RCVector3::normalize(RCMatrix4::getUp(mat)) * CAMERA_PLAYER_TARGET_HEIGHT;//* Time::DeltaTime;
 
@@ -196,9 +203,34 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 		&RConvert(&mCameraParam.Target),
 		&RConvert(&mCameraParam.Up));
 }
+void Camera::SetCameraRespawn(Matrix4 playerMat, Vector3 enemyPos, float frameTime)
+{
+	respawnTimer += frameTime;
+	if (respawnTimer > 1.0f)
+	{	
+		// 射影行列
+		float siya = 4.0f;
+		D3DXMatrixPerspectiveFovLH(&matProj, 3.1415926f / siya, 16.0f / 9.0f, 0.1f, 10000.0f);
 
+		Vector3 playerPos = RCMatrix4::getPosition(playerMat);
+		Vector3 v = enemyPos - playerPos;
+		float l = RCVector3::length(v) * 0.7f;
+		v = RCVector3::normalize(v);
+		Vector3 eye = RCVector3::lerp(mCameraParam.Eye - v * 2.0f, playerPos + v * l, respawnTimer - 1.0f);
 
-void Camera::GotCamera(Vector3 cameraPos, float frameTime){
+		mCameraParam.Eye = eye;
+		mCameraParam.Target = enemyPos;
+		mCameraParam.Up = RCVector3::normalize(RCMatrix4::getUp(playerMat));
+	}
+
+	// ビュー行列
+	D3DXMatrixLookAtLH(&matView,
+		&RConvert(&mCameraParam.Eye),
+		&RConvert(&mCameraParam.Target),
+		&RConvert(&mCameraParam.Up));
+}
+
+void Camera::GotCamera(Vector3 cameraPos, float frameTime, float yawAngle,bool teamSelect){
 
 	godPos = cameraPos;
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))
@@ -239,7 +271,10 @@ void Camera::GotCamera(Vector3 cameraPos, float frameTime){
 	//入力値をもとに計算
 	mCameraParam.AngleH += mCameraParam.InputAngle.x * CAMERA_ANGLE_SPEED *  frameTime;
 	mCameraParam.AngleV += mCameraParam.InputAngle.y * CAMERA_ANGLE_SPEED *  frameTime;
-	mCameraParam.AngleH = Math::radian(150.0f);
+	if (teamSelect)
+		mCameraParam.AngleH = Math::radian(yawAngle);
+	else
+		mCameraParam.AngleH += yawAngle;
 	//クランプ
 	if (mCameraParam.AngleH > Math::radian(180))mCameraParam.AngleH = Math::radian(-180);
 	else if (mCameraParam.AngleH < Math::radian(-180))mCameraParam.AngleH = Math::radian(180);

@@ -88,8 +88,36 @@ void GamePad::WindowActiveCheck(){
 	}
 }
 
-Vector3 GamePad::LeftStick(int padNo_){
+Vector3 GamePad::LeftStick(int padNo_, bool trigger){
+	if (!trigger)
 	return vector3(abs(js[padNo_].lX) < 1000 ? 0 : (float)js[padNo_].lX, 0, abs(js[padNo_].lY) < 1000 ? 0 : (float)js[padNo_].lY);
+	bool right, left, up, down;
+	right = false;
+	left = false;
+	up = false;
+	down = false;
+
+	if (oldJs[padNo_].lX < 5000 && js[padNo_].lX > 5000){
+		right = true;
+	}
+	else if (oldJs[padNo_].lX > -5000 && js[padNo_].lX < -5000){
+		left = true;
+	}
+
+	if (oldJs[padNo_].lY < 5000 && js[padNo_].lY > 5000){
+		up = true;
+	}
+	else if (oldJs[padNo_].lY > -5000 && js[padNo_].lY < -5000){
+		down = true;
+	}
+
+	Vector3 returnVec = vector3(0, 0, 0);
+	if (right)returnVec += vector3(1, 0, 0);
+	else if (left)returnVec += vector3(-1, 0, 0);
+	if (up)returnVec += vector3(0, 0, 1);
+	else if (down)returnVec += vector3(0, 0, -1);
+
+	return returnVec;
 }
 
 Vector3 GamePad::RightStick(int padNo_){

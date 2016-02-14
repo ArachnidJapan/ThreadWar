@@ -7,7 +7,7 @@
 #include "../../ThreadWeb.h"
 #include "../../Stage.h"
 
-const float FRONTROTATESPEED = 60.0f;
+const float FRONTROTATESPEED = 120.0f;
 
 ThreadAction::ThreadAction(IWorld& world, std::weak_ptr<Player> player_, int padNum_, CAMERA_ID cID_) :
 PlayerAction(world, player_, padNum_, cID_, ACTION_ID::THREAD_ACTION){
@@ -198,9 +198,6 @@ void ThreadAction::OnCollide(Actor& other, CollisionParameter colpara){
 				//if (!startNorChangeFlag)
 				//上方向をセット
 			}
-			//std::string s = "うんこ.png";
-			//auto a = s.find_last_of(".");
-			//s = s.substr(0, a);
 			player._Get()->SetNor(RCVector3::normalize(startNor * RCQuaternion::rotate(front, frontRotate)));
 
 			//ボタン入力で巻取りを開始

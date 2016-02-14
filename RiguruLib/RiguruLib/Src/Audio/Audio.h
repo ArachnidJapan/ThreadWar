@@ -25,6 +25,8 @@ public:
 	//‚r‚d’â~
 	void StopSE(SE_ID id);
 
+	void StopAllSE();
+
 	void SetPlaySpeedBGM(BGM_ID id, float speed);
 
 	void SetPlaySpeedSE(SE_ID id, float speed);
@@ -38,6 +40,8 @@ public:
 	void SetBGMVolume(BGM_ID id,int volume);
 	//‚r‚dƒ{ƒŠƒ…[ƒ€ƒZƒbƒg
 	void SetSEVolume(SE_ID id,int volume);
+
+	float ReturnVolume(SE_ID id);
 
 private:
 	std::map<BGM_ID, Sound> bgm;

@@ -28,6 +28,7 @@ DemoScene::DemoScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	/************************************************テクスチャー*************************************************/
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TITLE_LOGO_TEXTURE, "Res/Texture/title.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::BLACK_TEXTURE, "Res/Texture/black.png");
+	//Audio::GetInstance().LoadSE(SE_ID::)
 }
 
 //デストラクタ
@@ -39,9 +40,9 @@ DemoScene::~DemoScene()
 void DemoScene::Initialize()
 {
 	/*マップ関係*/
-	std::shared_ptr<CrystalCenter> crystalCenter = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_CENTER_ACTOR);
-	std::shared_ptr<CrystalCenter> crystalPlayerSide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_PLAYERSIDE_ACTOR);
-	std::shared_ptr<CrystalCenter> crystalEnemySide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_ENEMYSIDE_ACTOR);
+	std::shared_ptr<CrystalCenter> crystalCenter = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_CENTER_ACTOR, false);
+	std::shared_ptr<CrystalCenter> crystalPlayerSide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_PLAYERSIDE_ACTOR, false);
+	std::shared_ptr<CrystalCenter> crystalEnemySide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_ENEMYSIDE_ACTOR, false);
 	wa.Add(ACTOR_ID::CRYSTAL_CENTER_ACTOR, crystalCenter);
 	wa.Add(ACTOR_ID::CRYSTAL_PLAYERSIDE_ACTOR, crystalPlayerSide);
 	wa.Add(ACTOR_ID::CRYSTAL_ENEMYSIDE_ACTOR, crystalEnemySide);
@@ -77,7 +78,7 @@ void DemoScene::Initialize()
 	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_7P, 6, 6,false,true));
 	wa.Add(ACTOR_ID::ENEMY_ACTOR, std::make_shared<Player>(wa, stage, CAMERA_ID::ENEMY_CAMERA_8P, 7, 7,false,true));
 
-	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->SetCamera(vector3(0, 2.0f, -5.0f), vector3(0, 0, 0), 1.0f / 60.0f);
+	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-2.4f, 3.3f, -75.0f), 0,0);
 	/***********/
 	/*コンフィグファイル読み込み。*/
 	CSVReader::GetInstance().FileSet(FILE_ID::CONFIG_FILE, "Res/Config/config.ini");
@@ -92,14 +93,18 @@ void DemoScene::Initialize()
 	Audio::GetInstance().SetAllSEVolume(configData.at(1) * 10);
 
 	Audio::GetInstance().PlayBGM(BGM_ID::TITLE_BGM, true);
-
+	moveVec = vector3(0, 0, 0);
 	mIsEnd = false;
 	pressStart = false;
 	effectEnd = false;
 	timer = 0;
-	backLerp = 1;
 	logoLerp = 0;
 	pressLerp = 0;
+	blackLerp = 0;
+	changeFlag = false;
+	moveRes = false;
+	cameraWork = 0;
+	changeTime = 0;
 }
 
 void DemoScene::Update(float frameTime)
@@ -115,22 +120,61 @@ void DemoScene::Update(float frameTime)
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_7P)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 	Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
 	//Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(frameTime);
+	if (cameraWork == 0){
+		Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(10.4f, 3.3f, -80.0f) + moveVec, 0, -40);
+		changeTime += 15 * frameTime;
+		moveVec += vector3(0, 0, 15) * frameTime;
 
+		if (changeTime > 150.0f){
+			changeFlag = true;
+			changeTime = 0;
+		}
+		if (blackLerp > 90.0f){
+			if (!moveRes){
+				cameraWork++;
+				moveRes = true;
+			}
+		}
+	}
+	else if (cameraWork == 1){
+		Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-3.5f, 3, 2.0f), 0, 0.3f * frameTime,false);
+		changeTime += 15 * frameTime;
+
+		if (changeTime > 360.0f){
+			changeFlag = true;
+			changeTime = 0;
+		}
+		if (blackLerp > 90.0f){
+			if (!moveRes){
+				cameraWork = 0;
+				moveRes = true;
+			}
+			moveVec = vector3(0, 0, 0);
+		}
+	}
+
+
+	if (changeFlag){
+		blackLerp += 80.0f * frameTime;
+		if (blackLerp > 180.0f){
+			blackLerp = 0;
+			changeFlag = false;
+			moveRes = false;
+		}
+	}
 
 	//最初のPRESS_STARTが押されていなければ、PRESS_START文字を明滅。
 	if (!effectEnd){
 		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
+			Device::GetInstance().GetInput()->GamePadAnyButton(0,true)){
 			pressStart = false;
 			effectEnd = false;
 			timer = BACK_ALPHA_TIME + BACK_BLANK_TIME + LOGO_ALPHA_TIME + START_ALPHA_TIME;
-			backLerp = 0.0f;
 			logoLerp = 1.0f;
 			pressLerp = 1.0f;
 		}
 
-		backLerp = max(backLerp - ((1.0f / 20.0f) * 60.0f*frameTime), 0.0f);
 		if (timer >= BACK_ALPHA_TIME + BACK_BLANK_TIME){
 			logoLerp = min(logoLerp + (1.0f / (60.0f*4.0f) * 60.0f*frameTime), 1.0f);
 		}
@@ -151,21 +195,14 @@ void DemoScene::Update(float frameTime)
 
 		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
-			pressStart = true;
+			Device::GetInstance().GetInput()->GamePadAnyButton(0,true)){
 			mIsEnd = true;
+			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		}
-		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
-			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
-			Initialize();
-		}
-	}
-	else if (pressStart){
-		backLerp = min(backLerp + 1.0f / CHANGE_SCENE_TIME, 1.0f);
-		timer+= 60.0f * frameTime;
-		if (timer > CHANGE_SCENE_TIME){
-			mIsEnd = true;
-		}
+		//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
+		//	Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
+		//	Initialize();
+		//}
 	}
 }
 
@@ -176,14 +213,13 @@ void DemoScene::Draw() const
 	//現在のスクリーンサイズに拡大。
 	Vector2 screenPow = vector2(1920.0f / 1280.0f, 1080.0f / 768.0f);
 
+	Graphic::GetInstance().DrawTexture(TEXTURE_ID::BLACK_TEXTURE, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y), vector2(1920,1080), D3DXCOLOR(1, 1, 1,abs(Math::sin(blackLerp))), vector2(0.5f, 0.5f), 0, 0, 1.0f, 1.0f, 0);
+
 	float logoAlpha = Math::lerp3(0.0f, 1.0f, logoLerp);
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::TITLE_LOGO_TEXTURE, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y), screenPow, D3DXCOLOR(1, 1, 1, logoLerp), vector2(0.5f, 0.5f), 0, 0, 1.0f, 1.0f, 0);
 
 	float startAlpha = Math::lerp3(0.0f, 1.0f, pressLerp);
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - 256), vector2(0.5f, 0.5f), 0.5f, "press SPACE or Circle button", vector3(1, 1, 1), pressLerp, true);
-
-	float backAlpha = Math::lerp3(0.0f, 1.0f, backLerp);
-	Graphic::GetInstance().DrawTexture(TEXTURE_ID::BLACK_TEXTURE, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y), vector2(1920, 1080), D3DXCOLOR(1, 1, 1, backLerp), vector2(0.5f, 0.5f), 0, 0, 1.0f, 1.0f, 0);
+	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - 256), vector2(0.5f, 0.5f), 0.5f, "press any button", vector3(1, 1, 1), pressLerp, true);
 }
 
 //終了しているか？

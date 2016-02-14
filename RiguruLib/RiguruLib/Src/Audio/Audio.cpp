@@ -36,6 +36,12 @@ void Audio::StopSE(SE_ID id){
 	se[id].Stop();
 }
 
+void Audio::StopAllSE(){
+	for (auto& i : se){
+		i.second.Stop();
+	}
+}
+
 void Audio::SetPlaySpeedBGM(BGM_ID id, float speed){
 	bgm[id].SetPlaySpeed(speed);
 }
@@ -64,4 +70,8 @@ void Audio::SetBGMVolume(BGM_ID id, int volume){
 //ＳＥボリュームセット
 void Audio::SetSEVolume(SE_ID id, int volume){
 	se[id].SetVolume(volume);
+}
+
+float Audio::ReturnVolume(SE_ID id){
+	return (se[id].ReturnVolume() + 10000.0f) / 100.0f;
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 
 enum SelectPlayerParam{
 	P0,
@@ -17,4 +18,7 @@ struct TeamSelectResult{
 	bool blueHavePlayer = false;
 	int redHaveCPU = 3;
 	int blueHaveCPU = 4;
+
+	std::vector<int> redTeamPoint;
+	std::vector<int> blueTeamPoint;
 };

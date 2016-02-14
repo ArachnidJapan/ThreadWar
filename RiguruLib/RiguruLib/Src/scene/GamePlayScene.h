@@ -7,11 +7,12 @@
 #include "../Actor/ID.h"
 #include "../Actor/Stage.h"
 #include "SceneParameter.h"
+#include "../scene/Option/Option.h"
 
 class  GamePlayScene :public IScene{
 public:
 	//コンストラクタ 
-	GamePlayScene(std::weak_ptr<SceneParameter> sp_);
+	GamePlayScene(std::weak_ptr<SceneParameter> sp_, std::weak_ptr<Option> option_);
 	//デストラクタ
 	~GamePlayScene();
 
@@ -30,8 +31,9 @@ public:
 
 private:
 	std::weak_ptr<SceneParameter> sp;
+	std::weak_ptr<Option> option;
 	std::shared_ptr<Stage> stage;
-	bool mIsEnd;
+	bool mIsEnd, returnMenu;
 	World wa;
 	int bvolume;
 	int svolume;
@@ -40,7 +42,6 @@ private:
 	//１チームの人数
 	const float teamMemberCount = 4;
 	CAMERA_ID drawCamera = CAMERA_ID::PLAYER_CAMERA_1P;
+	float blackAlpha;
 	float drawNum = 0;
-	bool fadeIn, fadeOut;
-	float fadeTime;
 };

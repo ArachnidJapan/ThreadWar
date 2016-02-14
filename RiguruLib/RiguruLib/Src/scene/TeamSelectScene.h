@@ -32,4 +32,5 @@ private:
 	World wa;
 	std::vector<std::shared_ptr<SelectSpider>> selectSpider;
 	int count;
+	bool isBackScene;
 };

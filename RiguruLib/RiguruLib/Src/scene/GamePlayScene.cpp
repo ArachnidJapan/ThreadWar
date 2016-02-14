@@ -12,7 +12,9 @@
 
 
 //コンストラクタ
-GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
+GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_, std::weak_ptr<Option> option_) :
+sp(sp_),
+option(option_)
 {
 	//mIsEnd = false;
 	/*svolume = 80;
@@ -28,8 +30,6 @@ GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	Graphic::GetInstance().LoadMesh(MODEL_ID::THREAD_EFFECT_MODEL, "Res/Rgr/thread/threadEffect.rgr");
 	Graphic::GetInstance().LoadMesh(MODEL_ID::STAGE_MODEL, "Res/Rgr/stage/map01/stageDraw.rgr");
 	Graphic::GetInstance().LoadMesh(MODEL_ID::CRYSTAL_CENTER_MODEL, "Res/Rgr/stage/crystal1.rgr");
-	Graphic::GetInstance().LoadMesh(MODEL_ID::CRYSTAL_ENEMYSIDE_MODEL, "Res/Rgr/stage/crystal2.rgr");
-	Graphic::GetInstance().LoadMesh(MODEL_ID::CRYSTAL_PLAYERSIDE_MODEL, "Res/Rgr/stage/crystal3.rgr");
 
 	/***********************************************オクツリー**************************************************/
 	Graphic::GetInstance().LoadOctree(OCT_ID::STAGE_OCT, "Res/Rgr/Octree/stageOct.oct");
@@ -80,24 +80,22 @@ GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::DAMAGE_TEXTURE, "Res/Texture/damage.png");
 
 
-	/**********************************************フォントテクスチャ*******************************************/
-	Graphic::GetInstance().LoadFont(FONT_ID::TEST_FONT, "Res/Texture/font/font.png");
+
 
 	/************************************************シェーダー*************************************************/
 	Graphic::GetInstance().LoadShader(SHADER_ID::PLAYER_SHADER, "Shader/cso/fbxModelShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::THREAD_EFFECT_SHADER, "Shader/cso/ThreadEffectShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::STAGE_SHADER, "Shader/cso/StageShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::TEXTURE_SHADER, "Shader/cso/TextureShader.cso", false);
-	Graphic::GetInstance().LoadShader(SHADER_ID::FONT_SHADER, "Shader/cso/FontShader.cso", false);
 	Graphic::GetInstance().LoadShader(SHADER_ID::SPHERE_SHADER, "Shader/cso/SphereShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::CUBE_SHADER, "Shader/cso/CubeShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::LINE_SHADER, "Shader/cso/LineShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::CRYSTAL_SHADER, "Shader/cso/CrystalShader.cso");
 
 	/**************************************************音楽*****************************************************/
-	Audio::GetInstance().LoadSE(SE_ID::ENTER_SE, _T("Res/Sound/SE/enter_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::BACK_SE, _T("Res/Sound/SE/back_se.wav"), 10);
-	Audio::GetInstance().LoadSE(SE_ID::SWITCH_SE, _T("Res/Sound/SE/switch_se.wav"), 10);
+	Audio::GetInstance().LoadSE(SE_ID::ENTER_SE, _T("Res/Sound/SE/enter_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::BACK_SE, _T("Res/Sound/SE/back_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::SWITCH_SE, _T("Res/Sound/SE/switch_se.wav"), 5);
 	Audio::GetInstance().LoadSE(SE_ID::RESTRAINT_SE, _T("Res/Sound/SE/restraint_se.wav"), 10);
 	Audio::GetInstance().LoadSE(SE_ID::THREAD_SHOT_SE, _T("Res/Sound/SE/thread_se.wav"), 10);
 	Audio::GetInstance().LoadSE(SE_ID::CRYSTALGET_SE, _T("Res/Sound/SE/crystalget_se.wav"), 3);
@@ -108,6 +106,8 @@ GamePlayScene::GamePlayScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	Audio::GetInstance().LoadSE(SE_ID::STEP_SE, _T("Res/Sound/SE/step_se.wav"), 2);
 	Audio::GetInstance().LoadSE(SE_ID::WALK_SE, _T("Res/Sound/SE/walk_se.wav"), 10);
 	Audio::GetInstance().LoadSE(SE_ID::WIND_SE, _T("Res/Sound/SE/wind_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::LANDING_SE, _T("Res/Sound/SE/landing_se.wav"), 1);
+	Audio::GetInstance().LoadSE(SE_ID::ANNBIENNT_SE, _T("Res/Sound/SE/ambience_se.wav"), 1);
 
 	Audio::GetInstance().LoadBGM(BGM_ID::TITLE_BGM, _T("Res/Sound/BGM/title_bgm.wav"));
 	Audio::GetInstance().LoadBGM(BGM_ID::GAME_BGM, _T("Res/Sound/BGM/game_bgm.wav"));
@@ -122,10 +122,7 @@ GamePlayScene::~GamePlayScene()
 void GamePlayScene::Initialize()
 {
 	mIsEnd = false;
-	fadeIn = true; 
-	fadeOut = false;
 	sp._Get()->SetVictoryID(VICTORY_ID::PLAYER_WIN);
-	fadeTime = 1;
 
 	wa.Initialize();
 
@@ -238,29 +235,34 @@ void GamePlayScene::Initialize()
 	Audio::GetInstance().SetBGMVolume(bvolume);*/
 
 	AITargetManager::GetInstance().Initialize(wa);
+
+	option._Get()->Initialize();
+	returnMenu = false;
+	blackAlpha = 0;
 }
 
 void GamePlayScene::Update(float frameTime)
 {
-	AITargetManager::GetInstance().Update(wa);
-
-	/*if (fadeIn){
-		fadeTime = max((fadeTime + 1.0f / 60.0f) * 60.0f * frameTime, 0.0f);
-		if (fadeTime == 0.0f)
-			fadeIn = false;
-		return;
-	}
-	if (fadeOut){
-		fadeTime = min((fadeTime - 1.0f / 60.0f) * 60.0f * frameTime, 1.0f);
-		if (fadeTime == 1.0f)
+	if (option._Get()->IsOption()){
+		option._Get()->Update(frameTime);
+		if (option._Get()->ReturnMenu()){
 			mIsEnd = true;
-		return;
-	}*/
+			returnMenu = true;
+		}
+		frameTime = 0;
+	}
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_ESC, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_START, true)){
+		option._Get()->Pop(frameTime);
+	}
+
+	AITargetManager::GetInstance().Update(wa);
+	
 	if (stage.get()->ReturnGameTime() <= 0){
 		mIsEnd = true;
 		sp._Get()->SetVictoryID(stage.get()->ReturnWinner());
 	}
-	//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))mIsEnd = true;
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))mIsEnd = true;
 	//カメラの設定
 	wa.Update(frameTime);
 	
@@ -285,31 +287,6 @@ void GamePlayScene::Update(float frameTime)
 	//Audio::GetInstance().PlaySE(SE_ID::THREAD_SHOT_SE);
 
 	Device::GetInstance().SetCamera(frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_2P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_3P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_4P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_5P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_6P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_7P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA_8P)->SetCamera(vector3(0, 0.0f, 0.0f), vector3(0, 0, 0), frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(frameTime);
-	//Device::GetInstance().GetCamera(CAMERA_ID::ENEMY_CAMERA)->SetCamera(vector3(0, 0.0f, -3.0f), vector3(0, 0, 0), frameTime);
-
-	//if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_C, true))
-	//{
-	//	drawNum++;
-	//	if (drawNum >= 8 || drawNum <= -1) drawNum = 0;
-	//	if (drawNum == 0)drawCamera = CAMERA_ID::PLAYER_CAMERA_1P;
-	//	if (drawNum == 1)drawCamera = CAMERA_ID::PLAYER_CAMERA_2P;
-	//	if (drawNum == 2)drawCamera = CAMERA_ID::PLAYER_CAMERA_3P;
-	//	if (drawNum == 3)drawCamera = CAMERA_ID::PLAYER_CAMERA_4P;
-	//	if (drawNum == 4)drawCamera = CAMERA_ID::ENEMY_CAMERA_5P;
-	//	if (drawNum == 5)drawCamera = CAMERA_ID::ENEMY_CAMERA_6P;
-	//	if (drawNum == 6)drawCamera = CAMERA_ID::ENEMY_CAMERA_7P;
-	//	if (drawNum == 7)drawCamera = CAMERA_ID::ENEMY_CAMERA_8P;
-	//	//if (drawNum == 8)drawCamera = CAMERA_ID::GOD_CAMERA;
-	//}
 }
 
 //描画
@@ -325,6 +302,10 @@ void GamePlayScene::Draw() const
 	//wa.Draw(CAMERA_ID::ENEMY_CAMERA);
 	Device::GetInstance().Getd3d11User()->ChangeViewport(0, 1, 0, 1);
 	wa.Draw(drawCamera);
+
+	if (option._Get()->IsOption()){
+		option._Get()->Draw();
+	}
 	//Graphic::GetInstance().DrawSphere(RCVector3::lerp(vector3(-2.4f, -1.3f, -1.5f), vector3(0.5f, 5.5f, 1.5f), 0.5), 4.0f, drawCamera);//中央
 	//Graphic::GetInstance().DrawSphere(RCVector3::lerp(vector3(-2.4f, -1.3f, 62.0f), vector3(0.5f, 5.5f, 65.3f), 0.5), 4.0f, drawCamera);//氷
 	//Graphic::GetInstance().DrawSphere(RCVector3::lerp(vector3(-2.4f, -1.3f, -67.0f), vector3(0.5f, 5.5f, -64.0f), 0.5), 4.0f, drawCamera);//洞窟
@@ -343,9 +324,26 @@ bool GamePlayScene::IsEnd() const
 Scene GamePlayScene::Next() const
 {
 	Audio::GetInstance().StopBGM(BGM_ID::GAME_BGM);
-	return Scene::Ending;
+	Audio::GetInstance().StopAllSE();
+	if (!returnMenu)
+		return Scene::Ending;
+	else
+		return Scene::Demo;
 }
 
 void GamePlayScene::End(){
+	TeamSelectResult tsr = *sp._Get()->ReturnTeamSelectResult();
+	wa.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
+		Player* p = static_cast<Player*>(const_cast<Actor*>(&other));
+		tsr.redTeamPoint.push_back(p->ReturnPoint());
+	});
+
+	wa.EachActor(ACTOR_ID::ENEMY_ACTOR, [&](const Actor& other){
+		Player* p = static_cast<Player*>(const_cast<Actor*>(&other));
+		tsr.blueTeamPoint.push_back(p->ReturnPoint());
+	});
+
+	sp._Get()->SetTeamSelectResult(tsr);
+
 	wa.Clear();
 }

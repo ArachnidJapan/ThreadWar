@@ -8,6 +8,7 @@
 #include "../Graphic/Rgr/MeshUser.h"
 #include "Actor.h"
 class CrystalCenter;
+class Player;
 static float GameOverCount = 300.0f;
 static int pointMax = 200;
 
@@ -22,7 +23,7 @@ public:
 	Matrix4* ReturnMat();
 	void CrystalDamage(ACTOR_ID threadID, ACTOR_ID crystalID);
 	std::weak_ptr<CrystalCenter> ReturnCrystal(ACTOR_ID crystalID);
-	void AddPoint(ACTOR_ID id);//id:死んだプレイヤーのもっているparameter.id
+	void AddPoint(ACTOR_ID id, std::weak_ptr<Player> player);//id:死んだプレイヤーのもっているparameter.id
 	float ReturnGameTime(){ return GameOverCount - gameTimer; }
 	int ReturnTeamPoint(){ return teamPoint; }
 	int ReturnPlayerTeamPoint(){ return playerPoint; };

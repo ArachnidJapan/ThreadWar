@@ -38,9 +38,9 @@ void TeamSelectScene::Initialize()
 	wa.Initialize();
 
 	/*マップ関係*/
-	std::shared_ptr<CrystalCenter> crystalCenter = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_CENTER_ACTOR,true);
-	std::shared_ptr<CrystalCenter> crystalPlayerSide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_PLAYERSIDE_ACTOR);
-	std::shared_ptr<CrystalCenter> crystalEnemySide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_ENEMYSIDE_ACTOR);
+	std::shared_ptr<CrystalCenter> crystalCenter = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_CENTER_ACTOR, false, true);
+	std::shared_ptr<CrystalCenter> crystalPlayerSide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_PLAYERSIDE_ACTOR, false);
+	std::shared_ptr<CrystalCenter> crystalEnemySide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_ENEMYSIDE_ACTOR, false);
 	wa.Add(ACTOR_ID::CRYSTAL_CENTER_ACTOR, crystalCenter);
 	wa.Add(ACTOR_ID::CRYSTAL_PLAYERSIDE_ACTOR, crystalPlayerSide);
 	wa.Add(ACTOR_ID::CRYSTAL_ENEMYSIDE_ACTOR, crystalEnemySide);
@@ -59,41 +59,71 @@ void TeamSelectScene::Initialize()
 	selectSpider.push_back(enemySpiderSelect);
 
 	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 - 100, 1080 - 300),0, playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 300),0, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 300),0, enemySpiderSelect));
 	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 + 100, 1080 - 500),1, playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 500),1, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 500),1, enemySpiderSelect));
 	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 - 100, 1080 - 700),2, playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 700),2, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 700),2, enemySpiderSelect));
 	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 + 100, 1080 - 900),3, playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 900),3, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 900),3, enemySpiderSelect));
 
 	count = 0;
+	isBackScene = false;
 }
 
 void TeamSelectScene::Update(float frameTime)
 {
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true)){
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
 		mIsEnd = true;
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		return;
 	}
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true)){
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
+		mIsEnd = true;
+		isBackScene = true;
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
+		return;
+	}
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).x <= -0.5f){
 		if (count % 2 == 0){
 			count++;
 		}
 		else{
 			count--;
 		}
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
-	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT, true)){
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).x >= 0.5f){
 		if (count % 2 == 0){
 			count++;
 		}
 		else{
 			count--;
 		}
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
-	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP, true))count-=2;
-	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN, true))count+=2;
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).z <= -0.5f){
+		count -= 2;
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
+	}
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).z >= 0.5f){
+		count += 2;
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
+	}
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_S, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_R1, true)){
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
+	}
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_A, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_L1, true)){
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
+	}
 	int size = selectSpider.size() - 1;
 	if (count > size){
 		count = count - (size + 1);
@@ -163,11 +193,15 @@ bool TeamSelectScene::IsEnd() const
 //次のシーンを返す
 Scene TeamSelectScene::Next() const
 {
-	return Scene::GamePlay;
+	if (!isBackScene)
+		return Scene::GamePlay;
+	else
+		return Scene::Title;
 }
 
 void TeamSelectScene::End(){
-	Audio::GetInstance().StopBGM(BGM_ID::TITLE_BGM);
+	if (!isBackScene)
+		Audio::GetInstance().StopBGM(BGM_ID::TITLE_BGM);
 	TeamSelectResult tsr;
 	tsr.redTarantula = selectSpider[0]->ReturnTarantula();
 	tsr.blueTarantula = selectSpider[1]->ReturnTarantula();

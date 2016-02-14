@@ -11,7 +11,13 @@
 
 Option::Option(){
 	isExitGame = false;
-
+	for (int i = 0; i <= OPTION_SELECT_NUM - 1; i++){
+		os_scale.push_back(OPTION_SCALE);
+		os_nextScale.push_back(os_scale.at(i));
+		os_prevScale.push_back(os_scale.at(i));
+		os_alpha.push_back(OPTION_ALPHA);
+		os_nextAlpha.push_back(os_alpha.at(i));
+	}
 }
 Option::~Option(){
 	os_scale.clear();
@@ -43,11 +49,11 @@ void Option::Initialize(){
 	timer = 0;
 	lerpTime = 0;
 	for (int i = 0; i <= OPTION_SELECT_NUM - 1; i++){
-		os_scale.push_back(OPTION_SCALE);
-		os_nextScale.push_back(os_scale.at(i));
-		os_prevScale.push_back(os_scale.at(i));
-		os_alpha.push_back(OPTION_ALPHA);
-		os_nextAlpha.push_back(os_alpha.at(i));
+		os_scale.at(i) = OPTION_SCALE;
+		os_nextScale.at(i) = os_scale.at(i);
+		os_prevScale.at(i) = os_scale.at(i);
+		os_alpha.at(i) = OPTION_ALPHA;
+		os_nextAlpha.at(i) = os_alpha.at(i);
 		if (select == i){
 			os_nextScale.at(i) = 1.0f;
 			os_nextAlpha.at(i) = 1.0f;
@@ -176,8 +182,8 @@ void Option::ConfigSave(){
 	CSVReader::GetInstance().WriteData(FILE_ID::CONFIG_FILE, strmap);
 	CSVReader::GetInstance().save(FILE_ID::CONFIG_FILE);
 
-	Audio::GetInstance().SetAllBGMVolume(config[CONFIG_DATA::MUSIC_VOL] * 10);
-	Audio::GetInstance().SetAllSEVolume(config[CONFIG_DATA::SE_VOL] * 10); 
+	Audio::GetInstance().SetAllBGMVolume((config[CONFIG_DATA::MUSIC_VOL] * 7) + 30);
+	Audio::GetInstance().SetAllSEVolume((config[CONFIG_DATA::SE_VOL] * 7) + 30);
 }
 
 bool Option::IsOption(){
@@ -202,21 +208,26 @@ void Option::Move(float frameTime){
 void Option::OptionSelect(float frameTime){
 
 	//項目選択
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP) &&
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP) || 
+		Device::GetInstance().GetInput()->LeftStick(0, true).z <= -0.5f &&
 		lerpTime >= 0.5f){
 		select = (OPTION_SELECT)(select - 1);
 		select = select < 0 ? select = (OPTION_SELECT)5 : select;
 		Move(frameTime);
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
-	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN) &&
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).z >= 0.5f &&
 		lerpTime >= 0.5f){
 		select = (OPTION_SELECT)(select + 1);
 		select = (OPTION_SELECT)(select%OPTION_SELECT_NUM);
 		Move(frameTime);
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
 
 	//音量調整
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT, true)){
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).x <= -0.5f){
 		if (select != OPTION_SELECT::BGM_SELECT && select != OPTION_SELECT::SE_SELECT)
 			return;
 
@@ -227,10 +238,12 @@ void Option::OptionSelect(float frameTime){
 		if (config[(CONFIG_DATA)select] > 0)
 			nextGaugeLength.at(select) = config[(CONFIG_DATA)select] / 10.0f;
 
-		Audio::GetInstance().SetAllBGMVolume(config[CONFIG_DATA::MUSIC_VOL] * 10);
-		Audio::GetInstance().SetAllSEVolume(config[CONFIG_DATA::SE_VOL] * 10);
+		Audio::GetInstance().SetAllBGMVolume((config[CONFIG_DATA::MUSIC_VOL] * 7) + 30);
+		Audio::GetInstance().SetAllSEVolume((config[CONFIG_DATA::SE_VOL] * 7) + 30);
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 }
-	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true)){
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).x >= 0.5f){
 		if (select != OPTION_SELECT::BGM_SELECT && select != OPTION_SELECT::SE_SELECT)
 			return;
 
@@ -241,12 +254,14 @@ void Option::OptionSelect(float frameTime){
 		if (config.at((CONFIG_DATA)select) > 0)
 			nextGaugeLength.at(select) = config.at((CONFIG_DATA)select) / 10.0f;
 
-		Audio::GetInstance().SetAllBGMVolume(config[CONFIG_DATA::MUSIC_VOL] * 10);
-		Audio::GetInstance().SetAllSEVolume(config[CONFIG_DATA::SE_VOL] * 10);
+		Audio::GetInstance().SetAllBGMVolume((config[CONFIG_DATA::MUSIC_VOL] * 7) + 30);
+		Audio::GetInstance().SetAllSEVolume((config[CONFIG_DATA::SE_VOL] * 7) + 30);
+		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
 	//決定
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
-		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true)){
+		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
 		selectAlphaTime = 0.0f;
 		switch (select)
 		{
@@ -271,9 +286,11 @@ void Option::OptionSelect(float frameTime){
 		default:
 			break;
 		}
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 	}
 	//キャンセル
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true)){
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
 		switch (select)
 		{
 		case BGM_SELECT:
@@ -285,6 +302,7 @@ void Option::OptionSelect(float frameTime){
 		}
 		isShut = true;
 		ConfigSave();
+		Audio::GetInstance().PlaySE(SE_ID::BACK_SE);
 	}
 	//各演出のLerp
 	for (int i = 0; i <= OPTION_SELECT_NUM - 1; i++){
@@ -301,10 +319,12 @@ void Option::OptionSelect(float frameTime){
 void Option::Manual(float frameTime){
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
 		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
-		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true)){
+		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
 		manualEnd = true;
 		os_scale.at(select) = 1.0f;
 		os_alpha.at(select) = 1.0f;
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 	}
 
 	if (!manualEnd)

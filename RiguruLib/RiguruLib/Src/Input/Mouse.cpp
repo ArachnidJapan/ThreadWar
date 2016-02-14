@@ -38,6 +38,7 @@ void Mouse::Initialize(D3D11USER* d3d11User, HINSTANCE hInst, LPDIRECTINPUT8 dIn
 	}
 
 	dInputDevice->Acquire();
+	ShowCursor(false);
 }
 
 void Mouse::WindowActiveCheck(RECT rc){

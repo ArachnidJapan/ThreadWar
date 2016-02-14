@@ -113,7 +113,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	// とりあえず最初に見つかったディスプレイモードを選択する
 	int gasitu = (Device::GetInstance().Getd3d11User()->displayModeSize - 1) ;// = 28;
 	if (gasitu < 0)gasitu = 0;
-	CopyMemory(&sd, &Device::GetInstance().Getd3d11User()->m_DisplayModeDesc[27], sizeof(DXGI_MODE_DESC));
+	CopyMemory(&sd, &Device::GetInstance().Getd3d11User()->m_DisplayModeDesc[gasitu], sizeof(DXGI_MODE_DESC));
 
 	// ウィンドウの作成およびDirect3D の初期化
 	hr = Device::GetInstance().Getd3d11User()->InitD3D11(AppName, hInstance, WndProc, &sd, TRUE, false, TRUE, TRUE);
@@ -127,18 +127,26 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	::ShowWindow(hwnd_, SW_SHOW);
 	::UpdateWindow(hwnd_);
+	/**********************************************フォントテクスチャ*******************************************/
+	Graphic::GetInstance().LoadFont(FONT_ID::TEST_FONT, "Res/Texture/font/font.png");
+	Graphic::GetInstance().LoadShader(SHADER_ID::FONT_SHADER, "Shader/cso/FontShader.cso", false);
+	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 1080 - 60.0f * 0.5f), vector2(0.20f, 0.25f), 0.5f, "Now Loading...", vector3(1, 1, 1));
 
+	//Graphic::GetInstance().DrawAllFont();
+	// レンダリングされたイメージをユーザーに表示。
+	Device::GetInstance().Getd3d11User()->Present();
+	Device::GetInstance().GetInput()->Initialize(Device::GetInstance().Getd3d11User(), hInstance, dInput);
+	
 	sm.Add(Scene::Demo, std::make_shared<DemoScene>(sp));
 	sm.Add(Scene::Title, std::make_shared<TitleScene>(sp, option));
 	sm.Add(Scene::TeamSelect, std::make_shared<TeamSelectScene>(sp));
-	sm.Add(Scene::GamePlay, std::make_shared<GamePlayScene>(sp));
+	sm.Add(Scene::GamePlay, std::make_shared<GamePlayScene>(sp, option));
 	sm.Add(Scene::Ending, std::make_shared<ResultScene>(sp));
 	sm.SetScene(Scene::Demo);
 	//高分解能タイマーの準備を試みる
 	if (QueryPerformanceFrequency(&timerFreq) == false)
 		::MessageBox(NULL, _T("Error initializing high resolution timer"), _T("Error initializing high resolution timer"), MB_OK);
 	QueryPerformanceCounter(&timeStart);
-	Device::GetInstance().GetInput()->Initialize(Device::GetInstance().Getd3d11User(), hInstance, dInput);
 	setlocale(LC_ALL, "japanese");
 	// メッセージループ
 	do

@@ -73,9 +73,11 @@ public:
 	bool ReturnTarentula(){ return tarentula; }
 	bool ReturnP1(){ return p1; }
 	std::weak_ptr<Stage> ReturnStage(){ return stage; }
+	void PlusPoint(int point_){ point += point_; }
+	int ReturnPoint(){ return point; }
 
 	//食らったダメージ量, 食らった糸を生成してきた敵の番号
-	void Damage(float damagePoint, int num);
+	void Damage(float damagePoint, int num,std::weak_ptr<Player> player);
 	//リスポーン中か？
 	bool IsRespawn();
 private:
@@ -89,6 +91,7 @@ private:
 	//bool dokusai,playerAI;
 
 private:
+	int point;
 	Player* thisCopy;
 	bool p1;
 	bool tarentula;
@@ -128,6 +131,8 @@ private:
 
 	float nodamageTimer;//リスポーン直後の無敵時間
 	bool isNodamage;//無敵時間か？
+
+	int killedNum;//キルされたときの敵のプレイヤー番号
 
 
 	/**************糸****************/

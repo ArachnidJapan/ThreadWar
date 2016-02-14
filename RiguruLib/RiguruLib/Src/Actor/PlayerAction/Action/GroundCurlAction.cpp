@@ -33,6 +33,7 @@ bool GroundCurlAction::Initialize(ACTION_ID beforeId, Vector3 beforeUp){
 }
 
 void GroundCurlAction::Rasterize(){
+	if (player._Get()->ReturnP1())
 	Audio::GetInstance().StopSE(SE_ID::ROUND_SE);
 }
 
@@ -57,8 +58,10 @@ void GroundCurlAction::Update(float frameTime){
 	world.SetCollideSelect(player._Get()->shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::RAY_MODEL_NATURAL_COLL);
 	//•Ç‚É‚ß‚èž‚Ü‚È‚¢‚æ‚¤‚É‚·‚éStep—p‚Ìˆ—
 	world.SetCollideSelect(player._Get()->shared_from_this(), ACTOR_ID::STAGE_ACTOR, COL_ID::RAY_MODEL_STEP_COLL);
-	Audio::GetInstance().SetPlaySpeedSE(SE_ID::ROUND_SE, 100000.0f *Math::lerp(0.1f,0.85f, RCVector3::length(moveVec) * 7.0f));
-	Audio::GetInstance().PlaySE(SE_ID::ROUND_SE, true);
+	if (player._Get()->ReturnP1()){
+		Audio::GetInstance().SetPlaySpeedSE(SE_ID::ROUND_SE, 100000.0f *Math::lerp(0.1f, 0.85f, RCVector3::length(moveVec) * 7.0f));
+		Audio::GetInstance().PlaySE(SE_ID::ROUND_SE, true);
+	}
 }
 void GroundCurlAction::OnCollide(Actor& other, CollisionParameter colpara){
 	//‚à‚µŠÛ‚ª“–‚½‚Á‚Ä‚¢‚½‚ç

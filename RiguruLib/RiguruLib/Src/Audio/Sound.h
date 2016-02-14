@@ -18,6 +18,8 @@ public:
 
 	void SetPlaySpeed(float speed);
 
+	float ReturnVolume();
+
 private:
 	IDirectSound8 *g_Sound;
 	float defaultPlaySpeed,playSpeed;

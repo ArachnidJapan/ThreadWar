@@ -8,6 +8,7 @@
 #include "Collision.h"
 #include "CrystalCenter.h"
 #include "../Audio/Audio.h"
+#include "Player.h"
 
 Stage::Stage(IWorld& world_, std::weak_ptr<CrystalCenter> crystalCenter_, std::weak_ptr<CrystalCenter> crystalPlayerSide_, std::weak_ptr<CrystalCenter> crystalEnemySide_, bool bgmPlay_)
 :Actor(world_), crystalCenter(crystalCenter_), crystalPlayerSide(crystalPlayerSide_), crystalEnemySide(crystalEnemySide_),bgmPlay(bgmPlay_){
@@ -76,8 +77,10 @@ void Stage::Update(float frameTime){
 		crystalTimer += frameTime;
 		if (startTime > -1.0f)startTime -= 0.6f * frameTime;
 		if (!gameStart){
-			if (bgmPlay)
-			Audio::GetInstance().PlayBGM(BGM_ID::GAME_BGM, true);
+			if (bgmPlay){
+				Audio::GetInstance().PlayBGM(BGM_ID::GAME_BGM, true);
+				Audio::GetInstance().PlaySE(SE_ID::ANNBIENNT_SE, true);
+			}
 			gameStart = true;
 		}
 	}
@@ -141,7 +144,7 @@ std::weak_ptr<CrystalCenter> Stage::ReturnCrystal(ACTOR_ID crystalID)
 	}
 }
 
-void Stage::AddPoint(ACTOR_ID id)
+void Stage::AddPoint(ACTOR_ID id, std::weak_ptr<Player> player)
 {
 	addPoint = 0;
 	//死んだのがプレイヤーなら
@@ -155,6 +158,8 @@ void Stage::AddPoint(ACTOR_ID id)
 			addPoint++;
 		addPoint = 1 + addPoint;
 		enemyPoint += addPoint;
+
+		player._Get()->PlusPoint(addPoint);
 	}
 	//死んだのがエネミーなら
 	else
@@ -167,6 +172,7 @@ void Stage::AddPoint(ACTOR_ID id)
 			addPoint++;
 		addPoint = 1 + addPoint;
 		playerPoint += addPoint;
+		player._Get()->PlusPoint(addPoint);
 	}
 
 	totalPoint = playerPoint + enemyPoint;
