@@ -180,7 +180,7 @@ void Player::Update(float frameTime){
 		respawnTimer += frameTime;
 		//とりあえず丸まり
 		//3秒経過でリスポーン
-		if (respawnTimer >= 3.0f)
+		if (respawnTimer >= 5.0f)
 		{
 			Initialize();
 			Graphic::GetInstance().DeleteBackAnimation(shared_from_this());
