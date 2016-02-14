@@ -17,7 +17,6 @@ enum RESULT{
 ResultScene::ResultScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 {
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::WHITE_TEXTURE, "Res/Texture/white.png");
-
 }
 
 //デストラクタ
@@ -92,7 +91,6 @@ void ResultScene::Initialize()
 	if (sum != 0)
 		nextTeamPoint = playerTeamPoint / sum;
 	teamPoint = 0.5f;
-	prevTeamPoint = teamPoint;
 
 	victory = *sp._Get()->ReturnVictoryID();
 }
@@ -116,7 +114,8 @@ void ResultScene::Update(float frameTime)
 	}
 	wa.Update(frameTime);
 
-	teamPoint = Math::lerp(prevTeamPoint, nextTeamPoint, pointTimer);
+	//ゲージの中央である0.5から目標割合へ向かう。
+	teamPoint = Math::lerp(0.5f, nextTeamPoint, pointTimer);
 }
 
 //描画
@@ -235,29 +234,19 @@ void ResultScene::Draw() const
 	}
 	if (pointTimer == 1.0f){
 		sp._Get()->SetVictoryID(VICTORY_ID::DRAW_WIN);
-		if (*sp._Get()->ReturnVictoryID() == VICTORY_ID::PLAYER_WIN){
+		if (victory == VICTORY_ID::PLAYER_WIN){
 			Graphic::GetInstance().DrawTexture(TEXTURE_ID::WHITE_TEXTURE, vector2(0, 0), vector2(1920, 1080), D3DXCOLOR(1, 0, 0, vicTimer * 0.5f), vector2(0.0f, 0.0f), 0, 0, 1.0f, 1.0f, 0);
 			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "RED TEAM WINS !!", vector3(1, 0, 0), vicTimer, true);
 		}
-		else if (*sp._Get()->ReturnVictoryID() == VICTORY_ID::ENEMY_WIN){
+		else if (victory == VICTORY_ID::ENEMY_WIN){
 			Graphic::GetInstance().DrawTexture(TEXTURE_ID::WHITE_TEXTURE, vector2(0, 0), vector2(1920, 1080), D3DXCOLOR(0, 0, 1, vicTimer * 0.5f), vector2(0.0f, 0.0f), 0, 0, 1.0f, 1.0f, 0);
 			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "BLUE TEAM WINS !!", vector3(0, 0, 1), vicTimer, true);
 		}
-		else if (*sp._Get()->ReturnVictoryID() == VICTORY_ID::DRAW_WIN){
+		else if (victory == VICTORY_ID::DRAW_WIN){
 			Graphic::GetInstance().DrawTexture(TEXTURE_ID::WHITE_TEXTURE, vector2(0, 0), vector2(1920, 1080), D3DXCOLOR(1, 1, 1, vicTimer * 0.5f), vector2(0.0f, 0.0f), 0, 0, 1.0f, 1.0f, 0);
 			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "DRAW", vector3(1, 1, 1), vicTimer, true);
 		}
 	}
-	/*Graphic::GetInstance().DrawTexture(TEXTURE_ID::DAMAGE_TEXTURE, vector2(0, 0), screenPow, D3DXCOLOR(1, 1, 1, 1), vector2(0.0f, 0.0f), 0, 0, 1.0f, 1.0f, 0);
-	if (*sp._Get()->ReturnVictoryID() == VICTORY_ID::PLAYER_WIN)
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "PLAYER TEAM WINS", vector3(1, 0, 0), 1.0f, true);
-	else if (*sp._Get()->ReturnVictoryID() == VICTORY_ID::ENEMY_WIN)
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "ENEMY TEAM WINS", vector3(0, 0, 1), 1.0f, true);
-	else if (*sp._Get()->ReturnVictoryID() == VICTORY_ID::DRAW_WIN)
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "DRAW", vector3(0, 1, 0), 1.0f, true);
-
-	float backAlpha = Math::lerp3(1.0f, 0.0f, pointTimer);
-	Graphic::GetInstance().DrawTexture(TEXTURE_ID::BLACK_TEXTURE, vector2(0, 0), vector2(1920, 1080), D3DXCOLOR(1, 1, 1, backAlpha), vector2(0.0f, 0.0f), 0, 0, 1.0f, 1.0f, 0);*/
 }
 
 //終了しているか？
