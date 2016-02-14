@@ -28,6 +28,7 @@ DemoScene::DemoScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 	/************************************************テクスチャー*************************************************/
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TITLE_LOGO_TEXTURE, "Res/Texture/title.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::BLACK_TEXTURE, "Res/Texture/black.png");
+	//Audio::GetInstance().LoadSE(SE_ID::)
 }
 
 //デストラクタ
