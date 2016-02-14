@@ -236,7 +236,7 @@ void GamePlayScene::Initialize()
 
 	AITargetManager::GetInstance().Initialize(wa);
 
-	option._Get()->Initialize();
+	option._Get()->Initialize(true);
 	returnMenu = false;
 	blackAlpha = 0;
 }

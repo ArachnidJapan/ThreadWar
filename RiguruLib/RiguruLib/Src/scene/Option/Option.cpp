@@ -200,7 +200,7 @@ void Option::Move(float frameTime){
 void Option::OptionSelect(float frameTime){
 
 	//€–Ú‘I‘ð
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP) || 
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_UP, true) || 
 		Device::GetInstance().GetInput()->LeftStick(0, true).z <= -0.5f &&
 		lerpTime >= 0.5f){
 		select = (OPTION_SELECT)(select - 1);
@@ -208,7 +208,7 @@ void Option::OptionSelect(float frameTime){
 		Move(frameTime);
 		Audio::GetInstance().PlaySE(SE_ID::SWITCH_SE);
 	}
-	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN) ||
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_DOWN, true) ||
 		Device::GetInstance().GetInput()->LeftStick(0, true).z >= 0.5f &&
 		lerpTime >= 0.5f){
 		select = (OPTION_SELECT)(select + 1);
@@ -259,6 +259,7 @@ void Option::OptionSelect(float frameTime){
 	if (isGamePlay){
 		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_ESC, true) ||
 			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_START, true)){
+			select = OPTION_SELECT::BACK_SELECT;
 			Decision();
 		}
 	}
