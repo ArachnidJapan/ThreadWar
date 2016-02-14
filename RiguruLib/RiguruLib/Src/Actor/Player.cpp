@@ -180,7 +180,7 @@ void Player::Update(float frameTime){
 		respawnTimer += frameTime;
 		//とりあえず丸まり
 		//3秒経過でリスポーン
-		if (respawnTimer >= 3.0f)
+		if (respawnTimer >= 5.0f)
 		{
 			Initialize();
 			Graphic::GetInstance().DeleteBackAnimation(shared_from_this());
@@ -189,9 +189,9 @@ void Player::Update(float frameTime){
 			isNodamage = true;
 		}
 
-		//キルした敵にカメラを向ける
-		Device::GetInstance().GetCamera(cID)->PointLook(
-			GetParameter().matrix, AITargetManager::GetInstance().GetAllPosList()[killedNum]);
+		////キルした敵にカメラを向ける
+		Device::GetInstance().GetCamera(cID)->SetCameraRespawn(
+			GetParameter().matrix, AITargetManager::GetInstance().GetAllPosList()[killedNum], frameTime);
 	}
 
 	if (RCMatrix4::getPosition(parameter.matrix).y < -9.0f ||
@@ -748,6 +748,7 @@ void Player::Damage(float damagePoint, int num,std::weak_ptr<Player> player){
 	{
 		stage._Get()->AddPoint(parameter.id,player);
 		isRespawn = true;
+		Device::GetInstance().GetCamera(cID)->ResetRespawnTimer();
 		killedNum = num;
 		ai[currentAI]->Dead();
 	}
