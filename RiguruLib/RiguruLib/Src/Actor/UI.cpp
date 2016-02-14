@@ -74,6 +74,7 @@ void UI::Update(float frameTime){
 void UI::Draw(CAMERA_ID cID) const{
 	//if (drawFlag){
 	std::vector<Vector3> pointPos;
+	std::vector<bool> isRespown;
 		Vector3 playerPos, playerFront, playerUp;
 	world.EachActor(playerTeam, [&](const Actor& other){
 		if (static_cast<Player*>(const_cast<Actor*>(&other))->ReturnP1()){
@@ -83,6 +84,7 @@ void UI::Draw(CAMERA_ID cID) const{
 		}
 		else{
 			pointPos.push_back(RCMatrix4::getPosition(const_cast<Actor*>(&other)->GetParameter().matrix));
+			isRespown.push_back(static_cast<Player*>(const_cast<Actor*>(&other))->IsRespawn());
 		}
 	});
 	
@@ -150,13 +152,16 @@ void UI::Draw(CAMERA_ID cID) const{
 		if (c.crystalISEnemy)color = vector3(0, 0, 1);
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::POINT_TEXTURE, vector2(1920.0f - 320.0f + crystalPos.x + 150, 320.0f + crystalPos.z * 2.0f / 3.0f), vector2(2, 2), D3DXCOLOR(color.x, color.y, color.z, 1), vector2(0.5f, 0.5f), 0.0f, 0.0f, 1.0f, 1.0f);
 	});
-
+	int resCount = 0;
 	for (auto ia : pointPos){
 		Vector3 i = ia * 4.55f;
-		Graphic::GetInstance().DrawTexture(TEXTURE_ID::POINT_TEXTURE, vector2(1920.0f - 320.0f + i.x + 150, 320.0f + i.z * 2.0f / 3.0f), vector2(1.0f, 1.0f), D3DXCOLOR(0, 1, 0, 1), vector2(0.5f, 0.5f), 0.0f, 0.0f, 1.0f, 1.0f);
+		D3DXCOLOR resColor = D3DXCOLOR(0, 1, 0, 1);
+		if (isRespown[resCount])resColor = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1);
+			resCount++;
+			Graphic::GetInstance().DrawTexture(TEXTURE_ID::POINT_TEXTURE, vector2(1920.0f - 320.0f + i.x + 150, 320.0f + i.z * 2.0f / 3.0f), vector2(1.0f, 1.0f), resColor, vector2(0.5f, 0.5f), 0.0f, 0.0f, 1.0f, 1.0f);
 	}
 	playerPos *= 4.55f;
-	Graphic::GetInstance().DrawTexture(TEXTURE_ID::POINT_TEXTURE, vector2(1920.0f - 320.0f + playerPos.x + 150, 320.0f + playerPos.z * 2.0f / 3.0f), vector2(1.0f, 1.0f), D3DXCOLOR(1, 0, 0, 1), vector2(0.5f, 0.5f), 0.0f, 0.0f, 1.0f, 1.0f);
+	Graphic::GetInstance().DrawTexture(TEXTURE_ID::POINT_TEXTURE, vector2(1920.0f - 320.0f + playerPos.x + 150, 320.0f + playerPos.z * 2.0f / 3.0f), vector2(1.0f, 1.0f), playerTeam == ACTOR_ID::PLAYER_ACTOR ? D3DXCOLOR(1, 0, 0, 1) : D3DXCOLOR(0, 0, 1, 1), vector2(0.5f, 0.5f), 0.0f, 0.0f, 1.0f, 1.0f);
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::CURSOR_TEXTURE, vector2(1920 / 2 , 1080 / 2), vector2(0.6f, 0.6f), D3DXCOLOR(1, 1, 1, 1), vector2(0.5f, 0.5f), 0, 0, 1, 1, cursorAngle);
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::CURSOR2_TEXTURE, vector2(1920 / 2, 1080 / 2), vector2(0.4f, 0.4f) * cursorSize, D3DXCOLOR(1, 1, 1, 1), vector2(0.5f, 0.5f), 0, 0, 1, 1, cursorAngle);
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::CURSOR2_TEXTURE, vector2(1920 / 2, 1080 / 2), vector2(0.4f, 0.4f) * cursorSize, D3DXCOLOR(1, 1, 1, 1), vector2(0.5f, 0.5f), 0, 0, 1, 1, -cursorAngle);
