@@ -138,7 +138,7 @@ void Option::Pop(float frameTime){
 	isOption = true;//オプション中。
 	isPop = true;//ポップ中。
 	int max = 120;
-	timer = min(timer++, max);
+	timer = min(timer + 60 * frameTime, max);
 	allAlpha = Math::lerp3(0.0f, 1.0f, (float)(timer / 120.0f));
 	if (timer >= max){
 		isPop = false;
@@ -147,7 +147,7 @@ void Option::Pop(float frameTime){
 }
 void Option::Shut(float frameTime){ 
 	int max = 120;
-	timer = min(timer++, max);
+	timer = min(timer + 60 * frameTime, max);
 	allAlpha = Math::lerp3(1.0f, 0.0f, timer / 120.0f);
 	selectScaleTime = min((selectScaleTime + 1.0f / 120.0f)*60.0f*frameTime, 1.0f);
 	os_scale[5] = Math::lerp(os_scale[5], 1.1f, selectScaleTime);
