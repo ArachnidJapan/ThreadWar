@@ -110,7 +110,10 @@ option(option_)
 	Audio::GetInstance().LoadSE(SE_ID::ANNBIENNT_SE, _T("Res/Sound/SE/ambience_se.wav"), 1);
 
 	Audio::GetInstance().LoadBGM(BGM_ID::TITLE_BGM, _T("Res/Sound/BGM/title_bgm.wav"));
-	Audio::GetInstance().LoadBGM(BGM_ID::GAME_BGM, _T("Res/Sound/BGM/game_bgm.wav"));
+	Audio::GetInstance().LoadBGM(BGM_ID::GAME_BGM, _T("Res/Sound/BGM/game_bgm.wav")); 
+	Audio::GetInstance().LoadBGM(BGM_ID::MENU_BGM, _T("Res/Sound/BGM/menu_bgm.wav"));
+	Audio::GetInstance().LoadBGM(BGM_ID::RESULT_BGM, _T("Res/Sound/BGM/result_bgm.wav"));
+
 }
 
 //デストラクタ
@@ -251,18 +254,24 @@ void GamePlayScene::Update(float frameTime)
 		}
 		frameTime = 0;
 	}
+
 	if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_ESC, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_START, true)) &&
 		!option._Get()->IsOption()){
 		option._Get()->Pop(frameTime);
 		Audio::GetInstance().StopAllSE(false);
 	}
-
+	/*if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))){
+		mIsEnd = true;
+	}*/
 	AITargetManager::GetInstance().Update(wa);
 	
-	if (stage.get()->ReturnGameTime() <= 0){
+	int min = stage._Get()->ReturnGameTime() / 60.0f;
+	int sec = stage._Get()->ReturnGameTime() - min * 60;
+	if (sec <= 0){
 		mIsEnd = true;
 		sp._Get()->SetVictoryID(stage.get()->ReturnWinner());
+		frameTime = 0;
 	}
 	//カメラの設定
 	wa.Update(frameTime);
@@ -324,20 +333,23 @@ bool GamePlayScene::IsEnd() const
 //次のシーンを返す
 Scene GamePlayScene::Next() const
 {
-	Audio::GetInstance().StopBGM(BGM_ID::GAME_BGM);
-	Audio::GetInstance().StopAllSE();
+
+	if (!mIsEnd)return Scene::Demo;
 	if (!returnMenu)
 		return Scene::Ending;
 	else
-		return Scene::Demo;
+		return Scene::Title;
 }
 
 void GamePlayScene::End(){
+	Audio::GetInstance().StopBGM(BGM_ID::GAME_BGM);
 	TeamSelectResult tsr = *sp._Get()->ReturnTeamSelectResult();
 	wa.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		Player* p = static_cast<Player*>(const_cast<Actor*>(&other));
 		tsr.redTeamPoint.push_back(p->ReturnPoint());
 	});
+	Audio::GetInstance().StopAllSE(false);
+	Audio::GetInstance().StopBGM(BGM_ID::GAME_BGM);
 
 	wa.EachActor(ACTOR_ID::ENEMY_ACTOR, [&](const Actor& other){
 		Player* p = static_cast<Player*>(const_cast<Actor*>(&other));

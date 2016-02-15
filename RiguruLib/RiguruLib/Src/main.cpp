@@ -112,7 +112,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	// とりあえず最初に見つかったディスプレイモードを選択する
 	int gasitu = (Device::GetInstance().Getd3d11User()->displayModeSize - 1) ;// = 28;
 	if (gasitu < 0)gasitu = 0;
-	CopyMemory(&sd, &Device::GetInstance().Getd3d11User()->m_DisplayModeDesc[gasitu], sizeof(DXGI_MODE_DESC));
+	CopyMemory(&sd, &Device::GetInstance().Getd3d11User()->m_DisplayModeDesc[0], sizeof(DXGI_MODE_DESC));
 
 	// ウィンドウの作成およびDirect3D の初期化
 	hr = Device::GetInstance().Getd3d11User()->InitD3D11(AppName, hInstance, WndProc, &sd, TRUE, false, TRUE, TRUE);
@@ -129,7 +129,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	/**********************************************フォントテクスチャ*******************************************/
 	Graphic::GetInstance().LoadFont(FONT_ID::TEST_FONT, "Res/Texture/font/font.png");
 	Graphic::GetInstance().LoadShader(SHADER_ID::FONT_SHADER, "Shader/cso/FontShader.cso", false);
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(0, 1080 - 60.0f * 0.5f), vector2(0.20f, 0.25f), 0.5f, "Now Loading...", vector3(1, 1, 1));
+	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 - 300,60.0f * 0.5f), vector2(0.20f, 0.25f), 0.5f, "Now Loading...", vector3(1, 1, 1));
 
 	//Graphic::GetInstance().DrawAllFont();
 	// レンダリングされたイメージをユーザーに表示。
