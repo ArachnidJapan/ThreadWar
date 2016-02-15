@@ -28,7 +28,10 @@ option(option_)
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MENU_BLACK_TEXTURE, "Res/Texture/menu_black.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::THREAD_BACK_TEXTURE, "Res/Texture/thread_back.png");
 
-	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MANUAL_TEXTURE, "Res/Texture/gamepad.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MANUAL_TEXTURE, "Res/Texture/manual1.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MANUAL2_TEXTURE, "Res/Texture/manual2.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MANUAL3_TEXTURE, "Res/Texture/manual3.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::MANUAL4_TEXTURE, "Res/Texture/manual4.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::LINE_WHITE_TEXTURE, "Res/Texture/line_white.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, "Res/Texture/line_black.png");
 
@@ -55,6 +58,7 @@ TitleScene::~TitleScene()
 //開始
 void TitleScene::Initialize()
 {
+	Audio::GetInstance().PlayBGM(BGM_ID::MENU_BGM, true);
 	/*マップ関係*/
 	std::shared_ptr<CrystalCenter> crystalCenter = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_CENTER_ACTOR, false, true);
 	std::shared_ptr<CrystalCenter> crystalPlayerSide = std::make_shared<CrystalCenter>(wa, ACTOR_ID::CRYSTAL_PLAYERSIDE_ACTOR, false);
@@ -156,7 +160,7 @@ Scene TitleScene::Next() const
 	if (selects == TITLE_SELECT::SELECT_GAMESTART)
 		return Scene::TeamSelect;
 	else
-		return Scene::Demo;
+		return Scene::Title;
 }
 
 void TitleScene::TitleSelect(float frameTime){

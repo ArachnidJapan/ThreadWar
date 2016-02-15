@@ -201,7 +201,7 @@ Scene TeamSelectScene::Next() const
 
 void TeamSelectScene::End(){
 	if (!isBackScene)
-		Audio::GetInstance().StopBGM(BGM_ID::TITLE_BGM);
+		Audio::GetInstance().StopBGM(BGM_ID::MENU_BGM);
 	TeamSelectResult tsr;
 	tsr.redTarantula = selectSpider[0]->ReturnTarantula();
 	tsr.blueTarantula = selectSpider[1]->ReturnTarantula();

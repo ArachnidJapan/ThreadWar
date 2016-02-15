@@ -29,6 +29,7 @@ ResultScene::~ResultScene()
 void ResultScene::Initialize()
 {
 	mIsEnd = false;
+	Audio::GetInstance().PlayBGM(BGM_ID::RESULT_BGM);
 
 	timer = 0;
 	pointTimer = 0;
@@ -297,17 +298,18 @@ void ResultScene::Draw() const
 			red = false;
 	}
 	if (pointTimer == 1.0f){
+		float textSize = 0.8f;
 		if (victory == VICTORY_ID::PLAYER_WIN){
 			Graphic::GetInstance().DrawTexture(TEXTURE_ID::WHITE_TEXTURE, vector2(0, 0), vector2(1920, 1080), D3DXCOLOR(1, 0, 0, vicTimer * 0.5f), vector2(0.0f, 0.0f), 0, 0, 1.0f, 1.0f, 0);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "RED TEAM WINS !!", vector3(1, 0, 0), vicTimer, true);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(1.0f, 1.0f) * textSize, 0.5f, "RED TEAM WINS !!", vector3(1, 0, 0), vicTimer, true);
 		}
 		else if (victory == VICTORY_ID::ENEMY_WIN){
 			Graphic::GetInstance().DrawTexture(TEXTURE_ID::WHITE_TEXTURE, vector2(0, 0), vector2(1920, 1080), D3DXCOLOR(0, 0, 1, vicTimer * 0.5f), vector2(0.0f, 0.0f), 0, 0, 1.0f, 1.0f, 0);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "BLUE TEAM WINS !!", vector3(0, 0, 1), vicTimer, true);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(1.0f, 1.0f) * textSize, 0.5f, "BLUE TEAM WINS !!", vector3(0, 0, 1), vicTimer, true);
 		}
 		else if (victory == VICTORY_ID::DRAW_WIN){
 			Graphic::GetInstance().DrawTexture(TEXTURE_ID::WHITE_TEXTURE, vector2(0, 0), vector2(1920, 1080), D3DXCOLOR(1, 1, 1, vicTimer * 0.5f), vector2(0.0f, 0.0f), 0, 0, 1.0f, 1.0f, 0);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(0.6f, 0.6f), 0.5f, "DRAW", vector3(1, 1, 1), vicTimer, true);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(1.0f, 1.0f) * textSize, 0.5f, "DRAW", vector3(1, 1, 1), vicTimer, true);
 		}
 	}
 }
@@ -326,4 +328,5 @@ Scene ResultScene::Next() const
 
 
 void ResultScene::End(){
+	Audio::GetInstance().StopBGM(BGM_ID::RESULT_BGM);
 }

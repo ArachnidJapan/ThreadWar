@@ -110,7 +110,10 @@ option(option_)
 	Audio::GetInstance().LoadSE(SE_ID::ANNBIENNT_SE, _T("Res/Sound/SE/ambience_se.wav"), 1);
 
 	Audio::GetInstance().LoadBGM(BGM_ID::TITLE_BGM, _T("Res/Sound/BGM/title_bgm.wav"));
-	Audio::GetInstance().LoadBGM(BGM_ID::GAME_BGM, _T("Res/Sound/BGM/game_bgm.wav"));
+	Audio::GetInstance().LoadBGM(BGM_ID::GAME_BGM, _T("Res/Sound/BGM/game_bgm.wav")); 
+	Audio::GetInstance().LoadBGM(BGM_ID::MENU_BGM, _T("Res/Sound/BGM/menu_bgm.wav"));
+	Audio::GetInstance().LoadBGM(BGM_ID::RESULT_BGM, _T("Res/Sound/BGM/result_bgm.wav"));
+
 }
 
 //デストラクタ
@@ -258,7 +261,9 @@ void GamePlayScene::Update(float frameTime)
 		option._Get()->Pop(frameTime);
 		Audio::GetInstance().StopAllSE(false);
 	}
-
+	/*if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))){
+		mIsEnd = true;
+	}*/
 	AITargetManager::GetInstance().Update(wa);
 	
 	int min = stage._Get()->ReturnGameTime() / 60.0f;
@@ -333,10 +338,11 @@ Scene GamePlayScene::Next() const
 	if (!returnMenu)
 		return Scene::Ending;
 	else
-		return Scene::Demo;
+		return Scene::Title;
 }
 
 void GamePlayScene::End(){
+	Audio::GetInstance().StopBGM(BGM_ID::GAME_BGM);
 	TeamSelectResult tsr = *sp._Get()->ReturnTeamSelectResult();
 	wa.EachActor(ACTOR_ID::PLAYER_ACTOR, [&](const Actor& other){
 		Player* p = static_cast<Player*>(const_cast<Actor*>(&other));

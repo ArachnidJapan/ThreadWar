@@ -44,15 +44,17 @@ public:
 
 private:
 	int timer, selectAlphaTime;
-	float lerpTime, allAlpha, manualAlpha, selectScaleTime, manualBack;
+	float lerpTime, allAlpha, manualAlpha, pageAlpha, selectScaleTime, manualBack;
 	std::vector<float> gaugeLerpTime;
 	std::vector<float> gaugeLength, prevGaugeLength, nextGaugeLength;
 	//OptionUIを起動中か,マニュアル画面を起動中か,メニューに戻るか,ゲーム終了を選択したか。
 	bool isPop, isShut, isManual, isReturnMenu, isExitGame, isOption, decision;
-	bool manualEnd;
+	bool manualEnd, isNextPage;
+	int manualPage, nextManualPage;
 	OPTION_SELECT select;//現在どれが選択されているか。
 	std::map<CONFIG_DATA, int> config;
 	bool isGamePlay;
+	bool downCircle, downCross;
 
 	//選択肢のパラメータ。
 	std::vector<float> os_scale, os_nextScale, os_prevScale;
