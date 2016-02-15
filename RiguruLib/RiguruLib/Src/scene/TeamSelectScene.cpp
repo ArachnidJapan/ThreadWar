@@ -49,7 +49,7 @@ void TeamSelectScene::Initialize()
 
 	Device::GetInstance().CameraInit(CAMERA_ID::GOD_CAMERA, stage);
 
-	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-3.5f,3,2.0f),0);
+	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-7.0f,2.5f,3.0f),0);
 
 	mIsEnd = false;
 
@@ -151,7 +151,7 @@ void TeamSelectScene::Draw() const
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::DAMAGE_TEXTURE,
 		vector2(1920 / 2, 1080 / 2),
 		vector2(1.5f, 1.5f),
-		D3DXCOLOR(1, 1, 1, 0.5f),
+		D3DXCOLOR(1, 1, 1, 1.0f),
 		vector2(0.5f, 0.5f),
 		0.0f,
 		0.0f,
@@ -172,7 +172,7 @@ void TeamSelectScene::Draw() const
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::WHITE_BAR_TEXTURE,
 		vector2(1920 / 2, 1080 / 2),
 		vector2(1.5f, 1.5f),
-		D3DXCOLOR(1, 1, 1, 0.5f),
+		D3DXCOLOR(1, 1, 1, 1.0f),
 		vector2(0.5f, 0.5f),
 		0.0f,
 		0.0f,
