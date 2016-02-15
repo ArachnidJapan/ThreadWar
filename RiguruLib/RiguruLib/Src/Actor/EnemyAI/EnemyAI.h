@@ -95,7 +95,7 @@ struct TargetParameter{
 
 class EnemyAI{
 public:
-	EnemyAI(IWorld& wo, PlayerActionManager& action_, std::weak_ptr<Player> player_, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_);
+	EnemyAI(IWorld& wo, PlayerActionManager& action_, std::weak_ptr<Player> player_, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_, int& playerNum_);
 	~EnemyAI();
 	void Initialize();
 	void Update(float frameTime);
@@ -274,4 +274,6 @@ protected:
 	std::array<AILevel, 3> level;
 	//警戒レベル(0～2 数字が大きいほど強い)
 	int levelNum;
+	//プレイヤー番号
+	int& playerNum;
 };

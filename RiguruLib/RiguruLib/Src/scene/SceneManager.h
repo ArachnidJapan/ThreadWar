@@ -70,4 +70,5 @@ private:
 	// フェード用クラス
 	Fade fade;
 	bool isFade;
+	bool nextResult;
 };

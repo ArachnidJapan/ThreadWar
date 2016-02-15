@@ -33,4 +33,6 @@ private:
 	float cursorSize;
 	float cursorSizeTimeInterbal;
 	float cursorSizeTime;
+
+	float timeAlpha;
 };
