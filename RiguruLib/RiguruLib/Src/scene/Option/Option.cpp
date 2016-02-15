@@ -105,7 +105,7 @@ void Option::Update(float frameTime){
 void Option::Draw(){
 	//現在のスクリーンサイズに拡大。
 	Vector2 screenPow = vector2(1920.0f / 1280.0f, 1080.0f / 720.0f);
-	Graphic::GetInstance().DrawTexture(TEXTURE_ID::BLACK_TEXTURE, vector2(0, 0), vector2(1920, 1080), D3DXCOLOR(1, 1, 1, (allAlpha + manualAlpha)*0.5f), vector2(0, 0));
+	Graphic::GetInstance().DrawTexture(TEXTURE_ID::BLACK_TEXTURE, vector2(0, 0), vector2(1920, 1080), D3DXCOLOR(1, 1, 1, (allAlpha + manualAlpha)*0.75f), vector2(0, 0));
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::DAMAGE_TEXTURE, vector2(0, 0), screenPow, D3DXCOLOR(1, 1, 1, (allAlpha + manualAlpha)*0.5f), vector2(0, 0));
 	float selectAlpha = Math::sin((float)selectAlphaTime);
 	Vector2 scrCenter = { 1920 / 2 + 128, 1080 / 2 };

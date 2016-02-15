@@ -48,7 +48,7 @@ void ResultScene::Initialize()
 
 	Device::GetInstance().CameraInit(CAMERA_ID::GOD_CAMERA, stage);
 
-	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-3.5f, 3, 2.0f), 0);
+	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-7.0f, 2.5f, 3.0f), 0);
 
 	redPoints.clear();
 	bluePoints.clear();

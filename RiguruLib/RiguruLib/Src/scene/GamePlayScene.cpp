@@ -251,6 +251,7 @@ void GamePlayScene::Update(float frameTime)
 		}
 		frameTime = 0;
 	}
+
 	if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_ESC, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_START, true)) &&
 		!option._Get()->IsOption()){
@@ -260,9 +261,12 @@ void GamePlayScene::Update(float frameTime)
 
 	AITargetManager::GetInstance().Update(wa);
 	
-	if (stage.get()->ReturnGameTime() <= 0){
+	int min = stage._Get()->ReturnGameTime() / 60.0f;
+	int sec = stage._Get()->ReturnGameTime() - min * 60;
+	if (sec <= 0){
 		mIsEnd = true;
 		sp._Get()->SetVictoryID(stage.get()->ReturnWinner());
+		frameTime = 0;
 	}
 	//ƒJƒƒ‰‚Ìİ’è
 	wa.Update(frameTime);
@@ -324,8 +328,8 @@ bool GamePlayScene::IsEnd() const
 //Ÿ‚ÌƒV[ƒ“‚ğ•Ô‚·
 Scene GamePlayScene::Next() const
 {
-	Audio::GetInstance().StopBGM(BGM_ID::GAME_BGM);
-	Audio::GetInstance().StopAllSE();
+
+	if (!mIsEnd)return Scene::Demo;
 	if (!returnMenu)
 		return Scene::Ending;
 	else
@@ -338,6 +342,8 @@ void GamePlayScene::End(){
 		Player* p = static_cast<Player*>(const_cast<Actor*>(&other));
 		tsr.redTeamPoint.push_back(p->ReturnPoint());
 	});
+	Audio::GetInstance().StopAllSE(false);
+	Audio::GetInstance().StopBGM(BGM_ID::GAME_BGM);
 
 	wa.EachActor(ACTOR_ID::ENEMY_ACTOR, [&](const Actor& other){
 		Player* p = static_cast<Player*>(const_cast<Actor*>(&other));

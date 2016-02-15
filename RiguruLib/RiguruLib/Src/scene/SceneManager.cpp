@@ -9,6 +9,7 @@ const int SceneManager::MaxStageCount = 6;
 SceneManager::SceneManager() :
 isFade(false),
 mStageCount(1){
+	nextResult = false;
 }
 
 //更新前初期化
@@ -32,7 +33,7 @@ void SceneManager::Update(float frameTime){
 		mCurrentScene->Update(frameTime);
 	}
 	// フェードの更新
-	fade.update(frameTime);
+	fade.update(nextResult ? frameTime / 4.0f: frameTime);
 }
 
 //描画
@@ -48,6 +49,12 @@ void SceneManager::End(){
 
 void SceneManager::Change()
 {
+	if (mCurrentScene->Next() == Scene::Ending){
+		nextResult = true;
+	}
+	else{
+		nextResult = false;
+	}
 	if (mCurrentScene->IsEnd())
 	{
 		if (isFade&&!fade.getIsUpdate())
