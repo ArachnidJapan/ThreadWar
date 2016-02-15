@@ -742,6 +742,9 @@ std::weak_ptr<ThreadWeb> Player::ReturnThreadWeb(){
 }
 
 void Player::Damage(float damagePoint, int num,std::weak_ptr<Player> player){
+	if (p1 && playerParam.hp > 0){
+		Audio::GetInstance().PlaySE(SE_ID::RESTRAINT_SE);
+	}
 	playerParam.hp -= damagePoint;
 	ai[currentAI]->Damage(num);
 
