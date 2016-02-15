@@ -15,7 +15,7 @@ struct CrystalParameter{
 
 class CrystalCenter :public Actor, public std::enable_shared_from_this<CrystalCenter>{
 public:
-	CrystalCenter(IWorld& world_, ACTOR_ID crystalID,bool gamePlay_ = true,bool teamSelect_ = false);
+	CrystalCenter(IWorld& world_, ACTOR_ID crystalID,bool gamePlay_ = true,bool teamSelect_ = false,int point_ = 1000);
 	~CrystalCenter();
 	virtual void Initialize() override;
 	virtual void Update(float frameTime) override;

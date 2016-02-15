@@ -216,7 +216,7 @@ void Camera::SetCameraRespawn(Matrix4 playerMat, Vector3 enemyPos, float frameTi
 		Vector3 v = enemyPos - playerPos;
 		float l = RCVector3::length(v) * 0.7f;
 		v = RCVector3::normalize(v);
-		Vector3 eye = RCVector3::lerp(mCameraParam.Eye - v * 2.0f, playerPos + v * l, respawnTimer - 1.0f);
+		Vector3 eye = RCVector3::lerp(mCameraParam.Eye - v * 2.0f, playerPos + RCMatrix4::getUp(playerMat) * 0.75f + v * l, respawnTimer - 1.0f);
 
 		mCameraParam.Eye = eye;
 		mCameraParam.Target = enemyPos;

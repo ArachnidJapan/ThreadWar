@@ -91,14 +91,14 @@ void UI::Draw(CAMERA_ID cID) const{
 			isRespown.push_back(static_cast<Player*>(const_cast<Actor*>(&other))->IsRespawn());
 		}
 	});
-
 	for (int a = pointPos.size() - 1; a >= 0; a--){
 		Vector3 p = pointPos[a] * RConvert(&Device::GetInstance().GetCamera(cID)->returnView());
 		Vector3 vec = RCVector3::normalize(pointPos[a] - playerPos);
 		p = p * RConvert(&Device::GetInstance().GetCamera(cID)->returnProj());
 		p.x /= p.z;
 		p.y /= p.z;
-
+		float arrowAlpha = 1.0f;
+		if (isRespown[a])arrowAlpha = 0.3f;
 		//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 100), vector2(0.20f, 0.25f), 0.5f, "PlayerPos.x:" + std::to_string(p.x) + "f");
 		//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 125), vector2(0.20f, 0.25f), 0.5f, "PlayerPos.y:" + std::to_string(p.y) + "f");
 		if (p.x >= -1.0f && p.x <= 1.0f && p.y >= -1.0f && p.y <= 1.0f && p.z >= 0.0f && p.z <= 1.0f){
@@ -106,8 +106,8 @@ void UI::Draw(CAMERA_ID cID) const{
 			p.y += 1.0f;
 			p.x *= (1920.0f / 2.0f);
 			p.y *= (1080.0f / 2.0f);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(p.x, p.y + 60.0f), vector2(0.25f, 0.40f), 0.5f, "cp" + std::to_string(a + 1), vector3(0, 1, 0), 1, true);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(p.x, p.y + 30.0f), vector2(0.20f, 0.30f), 0.5f, std::to_string((int)(RCVector3::length(playerPos - pointPos[a]))) + "m", vector3(0, 1, 0), 1, true);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(p.x, p.y + 60.0f), vector2(0.25f, 0.40f), 0.5f, "cp" + std::to_string(a + 1), vector3(0, 1, 0), arrowAlpha, true);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(p.x, p.y + 30.0f), vector2(0.20f, 0.30f), 0.5f, std::to_string((int)(RCVector3::length(playerPos - pointPos[a]))) + "m", vector3(0, 1, 0), arrowAlpha, true);
 		}
 		else{
 			vec.y = 0;
@@ -122,9 +122,9 @@ void UI::Draw(CAMERA_ID cID) const{
 			Matrix4 rotate = RCMatrix4::rotateZ(angle);
 			centerMat = trans * rotate * centerMat;
 			center = RCMatrix4::getPosition(centerMat);
-			Graphic::GetInstance().DrawTexture(TEXTURE_ID::ARROW_TEXTURE, vector2(center.x, center.y), vector2(0.3f, 1.0f), D3DXCOLOR(1, 1, 1, 1), vector2(0.5f, 0.5f), 0, 0, 1, 1, angle);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x, center.y + 50.0f), vector2(0.25f, 0.40f), 0.5f, "CP" + std::to_string(a + 1), vector3(0, 1, 0), 1, true);
-			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x, center.y + 20.0f), vector2(0.20f, 0.30f), 0.5f, std::to_string((int)(RCVector3::length(playerPos - pointPos[a]))) + "m", vector3(0, 1, 0), 1, true);
+			Graphic::GetInstance().DrawTexture(TEXTURE_ID::ARROW_TEXTURE, vector2(center.x, center.y), vector2(0.3f, 1.0f), D3DXCOLOR(1, 1, 1, arrowAlpha), vector2(0.5f, 0.5f), 0, 0, 1, 1, angle);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x, center.y + 50.0f), vector2(0.25f, 0.40f), 0.5f, "CP" + std::to_string(a + 1), vector3(0, 1, 0), arrowAlpha, true);
+			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x, center.y + 20.0f), vector2(0.20f, 0.30f), 0.5f, std::to_string((int)(RCVector3::length(playerPos - pointPos[a]))) + "m", vector3(0, 1, 0), arrowAlpha, true);
 		}
 	}
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::FLOOR_TEXTURE, vector2(1920 - 640 + 175, 0), vector2(1.0f, 1.0f), D3DXCOLOR(1, 1, 1, 1), vector2(0.0f, 0.0f), 0.0f, 0.0f, 1.0f, 1.0f);
@@ -172,7 +172,7 @@ void UI::Draw(CAMERA_ID cID) const{
 	int min = stage._Get()->ReturnGameTime() / 60.0f;
 	int sec = stage._Get()->ReturnGameTime() - min * 60;
 	int sec2 = stage._Get()->ReturnGameTime();
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f, 1080.0f - 140.0f), vector2(0.5f, 0.8f) * (sec2 <= 10 ? 1.5f : 1.0f), 0.5f, "0" + std::to_string(min) + ":" + (std::to_string(sec).size() > 1 ? "" : "0") + std::to_string(sec), vector3(1, 1, 1), Math::lerp(0.5f, 1.0f, abs(sin(timeAlpha))), true);
+	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f, 1080.0f - 140.0f + (sec2 <= 10 ? -30.0f : 0.0f)), vector2(0.5f, 0.8f) * (sec2 <= 10 ? 2.0f : 1.0f), 0.5f, "0" + std::to_string(min) + ":" + (std::to_string(sec).size() > 1 ? "" : "0") + std::to_string(sec), vector3(1, 1, 1), Math::lerp(0.5f, 1.0f, abs(sin(timeAlpha))), true);
 	//ƒQ[ƒW
 	if (stage._Get()->ReturnTotalPoint() == 0)
 	{
