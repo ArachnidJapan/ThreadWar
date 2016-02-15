@@ -54,6 +54,8 @@ void ResultScene::Initialize()
 
 	redPoints.clear();
 	bluePoints.clear();
+	nextRedPoints.clear();
+	nextBluePoints.clear();
 	redNames.clear();
 	blueNames.clear();
 
@@ -67,25 +69,28 @@ void ResultScene::Initialize()
 	for (int i = 0; i <= 3; i++){
 		if (i <= sp._Get()->ReturnTeamSelectResult()->redHaveCPU +
 			sp._Get()->ReturnTeamSelectResult()->redHavePlayer - 1){
-			redPoints.push_back(sp._Get()->ReturnTeamSelectResult()->redTeamPoint[i]);
+			nextRedPoints.push_back(sp._Get()->ReturnTeamSelectResult()->redTeamPoint[i]);
 			playerTeamPoint += sp._Get()->ReturnTeamSelectResult()->redTeamPoint[i];
 			spiderNum++;
 			redNum++;
 		}
-		else
-			redPoints.push_back(0);
-
+		else{
+			nextRedPoints.push_back(0);
+		}
+		redPoints.push_back(0);
 	}
 	for (int i = 0; i <= 3; i++){
 		if (i <= sp._Get()->ReturnTeamSelectResult()->blueHaveCPU +
 			sp._Get()->ReturnTeamSelectResult()->blueHavePlayer - 1){
-			bluePoints.push_back(sp._Get()->ReturnTeamSelectResult()->blueTeamPoint[i]);
+			nextBluePoints.push_back(sp._Get()->ReturnTeamSelectResult()->blueTeamPoint[i]);
 			enemyTeamPoint += sp._Get()->ReturnTeamSelectResult()->blueTeamPoint[i];
 			spiderNum++;
 			blueNum++;
 		}
-		else
-			bluePoints.push_back(0);
+		else{
+			nextBluePoints.push_back(0);
+		}
+		bluePoints.push_back(0);
 	}
 	//P1,CP1等の名前のプッシュバック。
 	if (sp._Get()->ReturnTeamSelectResult()->redHavePlayer)
@@ -135,6 +140,12 @@ void ResultScene::Update(float frameTime)
 	
 	if (timer == 1.0f){
 		pointTimer = min(pointTimer + (1.0f / GAUGE_TIME * 60.0f * frameTime), 1.0f);
+		for (int i = 0; i <= 3; i++){
+			redPoints.at(i) = Math::lerp3(0, nextRedPoints.at(i), pointTimer);
+		}
+		for (int i = 0; i <= 3; i++){
+			bluePoints.at(i) = Math::lerp3(0, nextBluePoints.at(i), pointTimer);
+		}
 	}
 	else{
 		if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
