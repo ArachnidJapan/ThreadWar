@@ -164,8 +164,10 @@ void UI::Draw(CAMERA_ID cID) const{
 	});
 	int resCount = 0;
 	for (auto ia : pointPos){
+		float arrowAlpha = 1.0f;
+		if (damageDelay[resCount])arrowAlpha = Math::lerp(0.0f, 1.0f, abs(sin(arrowAlphaEndless)));
 		Vector3 i = ia * 4.55f;
-		D3DXCOLOR resColor = D3DXCOLOR(0, 1, 0, 1);
+		D3DXCOLOR resColor = D3DXCOLOR(0, 1, 0, arrowAlpha);
 		if (isRespown[resCount])resColor = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1);
 		resCount++;
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::POINT_TEXTURE, vector2(1920.0f - 320.0f + i.x + 175, 320.0f + i.z * 2.0f / 3.0f), vector2(1.0f, 1.0f), resColor, vector2(0.5f, 0.5f), 0.0f, 0.0f, 1.0f, 1.0f);
