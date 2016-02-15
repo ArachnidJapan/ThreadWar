@@ -76,6 +76,8 @@ public:
 	void PlusPoint(int point_){ point += point_; }
 	int ReturnPoint(){ return point; }
 
+	bool ReturnDamageDelay(){ return damageDelay; }
+
 	//食らったダメージ量, 食らった糸を生成してきた敵の番号
 	void Damage(float damagePoint, int num,std::weak_ptr<Player> player);
 	//リスポーン中か？
@@ -94,6 +96,8 @@ private:
 	int point;
 	Player* thisCopy;
 	bool p1;
+	bool damageDelay;
+	float damageDelayCount;
 	bool tarentula;
 	//PlayerAction playerAction;
 	/********基本パラメータ********/

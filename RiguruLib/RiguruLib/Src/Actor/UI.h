@@ -35,4 +35,6 @@ private:
 	float cursorSizeTime;
 
 	float timeAlpha;
+
+	float arrowAlphaEndless;
 };
