@@ -3,7 +3,7 @@
 
 class FirstAI : public EnemyAI{
 public:
-	FirstAI(IWorld& wo, PlayerActionManager& action, std::weak_ptr<Player> player, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_);
+	FirstAI(IWorld& wo, PlayerActionManager& action, std::weak_ptr<Player> player, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_, int& playerNum_);
 	virtual void OnInitialize() override;
 	virtual void OnUpdate(float frameTime) override;
 	virtual void OnDamage(int num) override;
@@ -21,4 +21,6 @@ private:
 	float lostTimer;
 	//警戒レベル切り替えタイマー
 	float levelTimer;
+	//警戒レベル切り替え番号
+	int levelChangeNum;
 };

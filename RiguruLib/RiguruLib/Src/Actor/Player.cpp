@@ -129,7 +129,7 @@ void Player::Initialize(){
 	//	playerAction.Initialize(shared_from_this());
 	if (firstFlag){
 		pAM.Initialize(world, shared_from_this(), padNum, cID);
-		ai[AI_STATE::FIRST_AI] = std::make_shared<FirstAI>(world, pAM, shared_from_this(), cID, parameter, stage);
+		ai[AI_STATE::FIRST_AI] = std::make_shared<FirstAI>(world, pAM, shared_from_this(), cID, parameter, stage, playerNum);
 		firstFlag = false;
 	}
 	pAM.ChangeAction(ACTION_ID::HOVER_ACTION);
@@ -402,7 +402,7 @@ void Player::Update(float frameTime){
 	//HPŽ©“®‰ñ•œ
 	/*if (hpHealTime == 0)
 	hp = min(hp+0.5f, 2.0f);*/
-	playerParam.hp += 0.2f * frameTime;
+	playerParam.hp += 0.1f * frameTime;//0.2f
 	playerParam.hp = min(playerParam.hp, 2.0f);
 	frameTime_ = frameTime;
 

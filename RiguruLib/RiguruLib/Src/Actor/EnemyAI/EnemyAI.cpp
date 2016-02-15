@@ -5,8 +5,8 @@
 #include "../Collision.h"
 #include "AITargetManager.h"
 
-EnemyAI::EnemyAI(IWorld& wo, PlayerActionManager& action_, std::weak_ptr<Player> player_, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_)
-:world(wo), action(&action_), player(player_), cID(cID_), parameter(parameter_), stage(stage_)
+EnemyAI::EnemyAI(IWorld& wo, PlayerActionManager& action_, std::weak_ptr<Player> player_, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_ , int& playerNum_)
+:world(wo), action(&action_), player(player_), cID(cID_), parameter(parameter_), stage(stage_), playerNum(playerNum_)
 {
 	Initialize();
 }
@@ -86,14 +86,17 @@ void EnemyAI::Initialize()
 		level[i].attackAngle = level[i].dangerLength = 5.0f * (i + 1);
 		level[i].attackLength = 20.0f * (i + 1);
 		level[i].rewindLength = 20.0f;
-		level[i].bestLength = 15.0f;
+		level[i].bestLength = 10.0f;//15.0f
 		level[i].penetrationTime = 1.0f * (i + 1);
 		level[i].inputXChangeTimeMax = 10.0f / (i + 1);
 		level[i].inputXChangeTimeMin = 2.0f / (i + 1);
-		level[i].stepTimeMax = 6.0f / (i + 1);
-		level[i].stepTimeMin = 2.0f / (i + 1);
-		level[i].battleStepTimeMax = 4.0f / (i + 1);
-		level[i].battleStepTimeMin = 2.0f / (i + 1);
+		level[i].stepTimeMax = 2.0f;//6.0f / (i + 1)
+		level[i].stepTimeMin = 1.5f;//2.0f / (i + 1)
+
+		//level[i].battleStepTimeMax = 4.0f / (i + 1);
+		//level[i].battleStepTimeMin = 2.0f / (i + 1);
+		level[i].battleStepTimeMax = 9.0f / (i + 1);
+		level[i].battleStepTimeMin = 6.0f / (i + 1);
 		level[i].rapidfire = 1.05f - (0.35f * i);
 	}
 	levelNum = 1;
@@ -214,7 +217,7 @@ void EnemyAI::InputReset()
 void EnemyAI::AILevelSetting()
 {
 	float per = stage._Get()->GetTeamPercentage(player._Get()->GetParameter().id);
-	if (per <= 25.0f)
+	if (per < 40.0f)
 		levelNum = 2;
 	else if (per <= 75.0f)
 		levelNum = 1;
@@ -530,7 +533,7 @@ void EnemyAI::TargetPointMoveAttack(float frameTime)
 	stepTime += frameTime;
 
 	//ãóó£Ç…ÇÊÇ¡ÇƒëOå„ÇÃà⁄ìÆï˚å¸ÇïœÇ¶ÇÈ
-	if (target.distance > level[levelNum].bestLength - 5)
+	if (target.distance > level[levelNum].bestLength - level[levelNum].bestLength / 2)
 		//ëOêi
 		inputVec.z = -1;
 	else

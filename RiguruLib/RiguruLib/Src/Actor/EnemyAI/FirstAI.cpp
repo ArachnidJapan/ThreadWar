@@ -1,8 +1,8 @@
 #include "FirstAI.h"
 #include "AITargetManager.h"
 
-FirstAI::FirstAI(IWorld& wo, PlayerActionManager& action, std::weak_ptr<Player> player, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_) :
-EnemyAI(wo, action, player, cID_, parameter_, stage_)
+FirstAI::FirstAI(IWorld& wo, PlayerActionManager& action, std::weak_ptr<Player> player, CAMERA_ID& cID_, ActorParameter& parameter_, std::weak_ptr<Stage> stage_, int& playerNum_) :
+EnemyAI(wo, action, player, cID_, parameter_, stage_, playerNum_)
 {
 	OnInitialize();
 }
@@ -11,14 +11,19 @@ void FirstAI::OnInitialize(){
 	aiTimer = Math::random(1.0f, 5.0f);
 	lostTimer = 0.0f;
 	levelTimer = 0.0f;
+	levelChangeNum = 0;
 }
 
 void FirstAI::OnUpdate(float frameTime){
 	//AIのレベル
 	levelTimer += frameTime;
-	if (levelTimer >= 20.0f){
+	if (levelTimer >= 5.0f){
+		if (levelChangeNum == playerNum % 4)
+			AILevelSetting();
+		levelChangeNum++;
 		levelTimer = 0.0f;
-		AILevelSetting();
+		if (levelChangeNum > 3)
+			levelChangeNum = 0;
 	}
 
 	//入力状態リセット
@@ -78,7 +83,7 @@ void FirstAI::AIRun(float frameTime)
 			ChangeAction(AI_ACTION::CrystalPointMoveAttack);
 		}
 		//すべてのクリスタルが制圧されていたら
-		else
+		else if (!target.isLooking)
 		{
 			//とりあえず相手の陣地のクリスタルを目指す
 			if (parameter.id == ACTOR_ID::PLAYER_ACTOR){
@@ -126,7 +131,7 @@ void FirstAI::AIRun(float frameTime)
 		if (target.isLooking)
 		{
 			//最後に捉えた地点を更新
-			target.lastLookingPos = target.pos;
+			target.lastLookingPos = target.pos - RCVector3::normalize(RCMatrix4::getUp(target.mat)) * 0.2f;
 			//方向も取得
 			target.lastLookingVec = RCVector3::normalize(target.lastLookingPos - myPos);
 			lostTimer = 0;
@@ -145,11 +150,11 @@ void FirstAI::AIRun(float frameTime)
 
 		if (lostTimer <= 4.0f)
 		{
-			//距離が近く、接地しているなら
-			if (myParam->onGroundFlag && target.distance <= level[levelNum].rewindLength)
+			//距離が近い場合
+			if (target.distance <= level[levelNum].rewindLength)
 				//糸発射しながら移動
 				ChangeAction(AI_ACTION::TargetPointMoveAttack);
-			//距離が遠いなら
+			//距離が遠い場合
 			else
 				//巻き取って接近
 				ChangeAction(AI_ACTION::TargetJumpShotRewind);
