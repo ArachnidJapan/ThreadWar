@@ -132,8 +132,8 @@ void Option::Draw(){
 		//BGMÇ∆SEÇÃÉQÅ[ÉWÇÃï`âÊÅB
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_WHITE_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 2), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0));
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 2), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0), 0, 0, gaugeLength.at(0));
-		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_WHITE_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 1), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0));
-		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 1), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0), 0, 0, gaugeLength.at(1));
+		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_WHITE_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 1), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[1]), vector2(0, 0));
+		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 1), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[1]), vector2(0, 0), 0, 0, gaugeLength.at(1));
 	}
 	else{
 		TEXTURE_ID manualID = TEXTURE_ID::MANUAL_TEXTURE;
