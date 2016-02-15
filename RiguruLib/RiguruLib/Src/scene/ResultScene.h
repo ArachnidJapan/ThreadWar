@@ -43,7 +43,7 @@ private:
 	float playerTeamPoint, enemyTeamPoint;
 	bool mIsEnd;
 	bool redTarantula, blueTarantula;
-	int spiderNum, redNum, blueNum;
+	int spiderNum, redNum, blueNum, maxPoint;
 	//各演出のタイマ。
 	float timer, pointTimer, vicTimer, pressTimer, pressLerp;
 	VICTORY_ID victory;

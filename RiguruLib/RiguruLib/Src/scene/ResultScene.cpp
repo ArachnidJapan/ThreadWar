@@ -35,6 +35,7 @@ void ResultScene::Initialize()
 	pointTimer = 0;
 	vicTimer = 0;
 	pressTimer = 0;
+	maxPoint = 0;
 
 	wa.Initialize();
 
@@ -73,6 +74,8 @@ void ResultScene::Initialize()
 			playerTeamPoint += sp._Get()->ReturnTeamSelectResult()->redTeamPoint[i];
 			spiderNum++;
 			redNum++;
+			maxPoint = maxPoint < sp._Get()->ReturnTeamSelectResult()->redTeamPoint.at(i) ?
+				sp._Get()->ReturnTeamSelectResult()->redTeamPoint.at(i) : maxPoint;
 		}
 		else{
 			nextRedPoints.push_back(0);
@@ -86,6 +89,8 @@ void ResultScene::Initialize()
 			enemyTeamPoint += sp._Get()->ReturnTeamSelectResult()->blueTeamPoint[i];
 			spiderNum++;
 			blueNum++;
+			maxPoint = maxPoint < sp._Get()->ReturnTeamSelectResult()->blueTeamPoint.at(i) ?
+				sp._Get()->ReturnTeamSelectResult()->blueTeamPoint.at(i) : maxPoint;
 		}
 		else{
 			nextBluePoints.push_back(0);
@@ -141,10 +146,10 @@ void ResultScene::Update(float frameTime)
 	if (timer == 1.0f){
 		pointTimer = min(pointTimer + (1.0f / GAUGE_TIME * 60.0f * frameTime), 1.0f);
 		for (int i = 0; i <= 3; i++){
-			redPoints.at(i) = Math::lerp3(0, nextRedPoints.at(i), pointTimer);
+			redPoints.at(i) = min(Math::lerp3(0, maxPoint, pointTimer), nextRedPoints.at(i));
 		}
 		for (int i = 0; i <= 3; i++){
-			bluePoints.at(i) = Math::lerp3(0, nextBluePoints.at(i), pointTimer);
+			bluePoints.at(i) = min(Math::lerp3(0, maxPoint, pointTimer), nextBluePoints.at(i));
 		}
 	}
 	else{
