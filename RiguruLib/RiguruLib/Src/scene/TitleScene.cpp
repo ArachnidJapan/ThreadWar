@@ -76,6 +76,7 @@ void TitleScene::Initialize()
 	isSelect = false;
 	timer = 0;
 	lerpTime = 1;
+	alphaTime = 90;
 	allAlpha = 1.0f;
 	selects = SELECT_GAMESTART;
 	teamID = TEAM_ID::FIRST_TEAM;
@@ -196,10 +197,13 @@ void TitleScene::TitleSelect(float frameTime){
 
 	for (int i = 0; i <= TITLE_SELECT_NUM - 1; i++){
 		ts_scale.at(i) = Math::lerp3(ts_prevScale.at(i), ts_nextScale.at(i), lerpTime);
-		ts_alpha.at(i) = Math::lerp3(ts_alpha.at(i), ts_nextAlpha.at(i), lerpTime);
+		//ts_alpha.at(i) = Math::lerp3(ts_alpha.at(i), ts_nextAlpha.at(i), lerpTime);
 	}
 
 	lerpTime = min(lerpTime + 1.0f / 15.0f, 1.0f);
+	alphaTime += 2;
+	alphaTime = fmodf(alphaTime, 360.0f);
+	ts_alpha[selects] = abs(Math::sin(alphaTime));
 	allAlpha = min(allAlpha + 1.0f / 30.0f*60.0f*frameTime, 1.0f);
 }
 
@@ -238,10 +242,13 @@ void TitleScene::Move(){
 			ts_nextScale.at(i) = 1.0f;
 			ts_nextAlpha.at(i) = 1.0f;
 		}
+		ts_alpha.at(i) = 0.5f;
 	}
 	threadBackPos = vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2.0f + (selects * -MOVE_AMOUNT));
 }
 
 void TitleScene::End(){
+	if (selects != TITLE_SELECT::SELECT_GAMESTART)
+		Audio::GetInstance().StopBGM(BGM_ID::MENU_BGM);
 	wa.Clear();
 }

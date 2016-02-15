@@ -57,7 +57,7 @@ private:
 	//演出の点滅やブランクタイムなどに使用。
 	float timer;
 	//演出のlerp用。
-	float lerpTime, allAlpha;
+	float lerpTime, alphaTime, allAlpha;
 	//2つの選択肢で選択されたものを格納。
 	TITLE_SELECT selects;
 	//2つのチームで選択されたものを格納。

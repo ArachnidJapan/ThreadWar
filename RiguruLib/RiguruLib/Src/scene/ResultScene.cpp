@@ -62,6 +62,8 @@ void ResultScene::Initialize()
 	redNum = 0;
 	blueNum = 0;
 	spiderNum = 0;
+	pressLerp = 0;
+	pressTimer = 0;
 	for (int i = 0; i <= 3; i++){
 		if (i <= sp._Get()->ReturnTeamSelectResult()->redHaveCPU +
 			sp._Get()->ReturnTeamSelectResult()->redHavePlayer - 1){
@@ -128,6 +130,7 @@ void ResultScene::Initialize()
 
 void ResultScene::Update(float frameTime)
 {
+	wa.Update(frameTime);
 	timer = min(timer + (1.0f / BLANK_TIME * 60.0f * frameTime), 1.0f);
 	
 	if (timer == 1.0f){
@@ -140,6 +143,7 @@ void ResultScene::Update(float frameTime)
 			timer = 1.0f;
 			pointTimer = 1.0f;
 			vicTimer = 1.0f;
+			return;
 		}
 	}
 	if (pointTimer == 1.0f){
@@ -159,16 +163,16 @@ void ResultScene::Update(float frameTime)
 			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true))){
 			pointTimer = 1.0f;
 			vicTimer = 1.0f;
+			return;
 		}
 	}
 	if (vicTimer == 1.0f){
-		pressTimer = min(pressTimer + 1.0f / 60.0f * 3.0f * 60.0f * frameTime, 1.0f);
+		pressTimer = min(pressTimer + ((1.0f / (60.0f * 3.0f)) * 60.0f * frameTime), 1.0f);
 	}
 	if (pressTimer == 1.0f){
 		pressLerp+=2;
 		pressLerp = fmodf(pressLerp, 360.0f);
 	}
-	wa.Update(frameTime);
 
 	//ゲージの中央である0.5から目標割合へ向かう。
 	teamPoint = Math::lerp(0.5f, nextTeamPoint, pointTimer);
@@ -378,7 +382,7 @@ void ResultScene::Draw() const
 	}
 	if (pressTimer == 1.0f){
 		float alpha = abs(Math::sin(pressLerp));
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 4.0f), vector2(0.6f, 0.6f), 0.5f, "press any button", vector3(1, 1, 1), alpha, true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 4.0f), vector2(0.5f, 0.5f), 0.5f, "press any button", vector3(1, 1, 1), alpha, true);
 	}
 }
 

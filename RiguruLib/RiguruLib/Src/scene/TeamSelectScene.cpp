@@ -87,7 +87,7 @@ void TeamSelectScene::Update(float frameTime)
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
 		mIsEnd = true;
 		isBackScene = true;
-		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
+		Audio::GetInstance().PlaySE(SE_ID::BACK_SE);
 		return;
 	}
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true) ||

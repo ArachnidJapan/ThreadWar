@@ -315,16 +315,6 @@ void Option::OptionSelect(float frameTime){
 
 //マニュアル。
 void Option::Manual(float frameTime){
-	/*if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
-		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
-		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
-		manualEnd = true;
-		isNextPage = true;
-		os_scale.at(select) = 1.0f;
-		os_alpha.at(select) = 1.0f;
-		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
-	}*/
 	//ページ送り
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) || 
 		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT, true) || 
@@ -332,11 +322,11 @@ void Option::Manual(float frameTime){
 		Device::GetInstance().GetInput()->LeftStick(0, true).x <= -0.5f){
 		nextManualPage--;
 		isNextPage = true;
+		Audio::GetInstance().PlaySE(SE_ID::BACK_SE);
 		if (nextManualPage < 0){
 			manualEnd = true;
 			os_scale.at(select) = 1.0f;
 			os_alpha.at(select) = 1.0f;
-			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		}
 		//nextManualPage = nextManualPage < 0 ? nextManualPage = MANUAL_PAGE-1 : nextManualPage;
 	}
@@ -352,7 +342,6 @@ void Option::Manual(float frameTime){
 			manualEnd = true;
 			os_scale.at(select) = 1.0f;
 			os_alpha.at(select) = 1.0f;
-			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		}
 		//nextManualPage %= MANUAL_PAGE;
 	}
