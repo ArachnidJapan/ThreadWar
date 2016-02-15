@@ -75,9 +75,11 @@ void TeamSelectScene::Update(float frameTime)
 {
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
-		mIsEnd = true;
-		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
-		return;
+		if (selectSpider[0].get()->PlayerHave() || selectSpider[1].get()->PlayerHave()){
+			 mIsEnd = true;
+			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
+			return;
+		}
 	}
 	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true)){
