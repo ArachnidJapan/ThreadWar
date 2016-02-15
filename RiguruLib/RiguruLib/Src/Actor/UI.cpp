@@ -28,7 +28,7 @@ void UI::Initialize(){
 	cursorSizeTime = 0;
 	cursorSizeTimeInterbal = 0;
 	timeAlpha =90;
-
+	arrowAlphaEndless = 0;
 }
 void UI::Update(float frameTime){
 	world.EachActor(playerTeam, [&](const Actor& other){
@@ -73,12 +73,16 @@ void UI::Update(float frameTime){
 	int sec = stage._Get()->ReturnGameTime();
 	if (sec <= 10)
 	timeAlpha += 5.0f * frameTime;
+
+	arrowAlphaEndless += 15.0f * frameTime;
+	if (arrowAlphaEndless > 360)arrowAlphaEndless = 0;
 }
 
 void UI::Draw(CAMERA_ID cID) const{
 	//if (drawFlag){
 	std::vector<Vector3> pointPos;
-	std::vector<bool> isRespown;
+	std::vector<bool>	isRespown;
+	std::vector<bool>	damageDelay;
 	Vector3 playerPos, playerFront, playerUp;
 	world.EachActor(playerTeam, [&](const Actor& other){
 		if (static_cast<Player*>(const_cast<Actor*>(&other))->ReturnP1()){
@@ -89,6 +93,7 @@ void UI::Draw(CAMERA_ID cID) const{
 		else{
 			pointPos.push_back(RCMatrix4::getPosition(const_cast<Actor*>(&other)->GetParameter().matrix));
 			isRespown.push_back(static_cast<Player*>(const_cast<Actor*>(&other))->IsRespawn());
+			damageDelay.push_back(static_cast<Player*>(const_cast<Actor*>(&other))->ReturnDamageDelay());
 		}
 	});
 	for (int a = pointPos.size() - 1; a >= 0; a--){
@@ -98,6 +103,7 @@ void UI::Draw(CAMERA_ID cID) const{
 		p.x /= p.z;
 		p.y /= p.z;
 		float arrowAlpha = 1.0f;
+		if(damageDelay[a])arrowAlpha = Math::lerp(0.0f, 1.0f, abs(sin(arrowAlphaEndless)));
 		if (isRespown[a])arrowAlpha = 0.3f;
 		//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 100), vector2(0.20f, 0.25f), 0.5f, "PlayerPos.x:" + std::to_string(p.x) + "f");
 		//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(0, 125), vector2(0.20f, 0.25f), 0.5f, "PlayerPos.y:" + std::to_string(p.y) + "f");
@@ -224,6 +230,10 @@ void UI::Draw(CAMERA_ID cID) const{
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f, 1080.0f / 2.0f), vector2(0.5f, 0.8f) * 3, 0.5f,"TIME UP", vector3(1, 1, 1), 1.0f, true);
 	}
 	//	}
+
+	pointPos.clear();
+	isRespown.clear();
+	damageDelay.clear();
 }
 
 void UI::OnCollide(Actor& other, CollisionParameter colpara){

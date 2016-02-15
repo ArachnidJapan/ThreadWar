@@ -50,6 +50,8 @@ Player::~Player(){
 	SAFE_DELETE(blendSpeed);
 }
 void Player::Initialize(){
+	damageDelay = false;
+	damageDelayCount = 0;
 	curlAngle = 0;
 	//パラメータセット
 	parameter.isDead = false;
@@ -305,6 +307,12 @@ void Player::Update(float frameTime){
 	parameter.matrix = sizeMat *playerParam.angleMat * tranMat;
 	//描画用マトリックス完成
 	//描画用に編集
+
+	if (damageDelay){
+		damageDelayCount += 1.0f * frameTime;
+		if (damageDelayCount > 2.0f)
+		damageDelay = false;
+	}
 
 	Matrix4 drawAngleMat = playerParam.angleMat;
 	{
@@ -742,8 +750,11 @@ std::weak_ptr<ThreadWeb> Player::ReturnThreadWeb(){
 }
 
 void Player::Damage(float damagePoint, int num,std::weak_ptr<Player> player){
-	if (p1 && playerParam.hp > 0){
+	if (playerParam.hp > 0){
+		if (p1)
 		Audio::GetInstance().PlaySE(SE_ID::RESTRAINT_SE);
+		damageDelayCount = 0;
+		damageDelay = true;
 	}
 	playerParam.hp -= damagePoint;
 	ai[currentAI]->Damage(num);
