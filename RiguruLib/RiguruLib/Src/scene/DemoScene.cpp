@@ -236,5 +236,6 @@ Scene DemoScene::Next() const
 
 
 void DemoScene::End(){
+	Audio::GetInstance().StopBGM(BGM_ID::TITLE_BGM);
 	wa.Clear();
 }

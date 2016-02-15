@@ -347,6 +347,7 @@ void SelectSpider::PlayerSelect(){
 		1,
 		1.0f);
 	TEXTURE_ID tID;
+	TEXTURE_ID whitetID;
 	if (spiderSelect->ReturnTarantula()){
 		if (red){
 			tID = TEXTURE_ID::TARENTULA_RED_TEXTURE;

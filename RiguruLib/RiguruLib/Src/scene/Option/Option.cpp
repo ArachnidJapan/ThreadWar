@@ -8,6 +8,7 @@
 #define OPTION_SHUT_TIME 120
 #define OPTION_SCALE 0.8f
 #define OPTION_ALPHA 0.7f
+#define MANUAL_PAGE 4
 
 Option::Option(){
 	isExitGame = false;
@@ -39,15 +40,21 @@ void Option::Initialize(bool isGamePlay_){
 	isReturnMenu = false;
 	manualEnd = false;
 	decision = false;
+	downCircle = false;
+	downCross = false;
+	isNextPage = false;
 	isGamePlay = isGamePlay_;
 	select = OPTION_SELECT::BGM_SELECT;
 	allAlpha = 0.0f;
 	manualAlpha = 0.0f;
+	pageAlpha = 1.0f;
 	manualBack = 1.0f;
 	selectAlphaTime = 0;
 	selectScaleTime = 0;
 	timer = 0;
 	lerpTime = 0;
+	manualPage = 0;
+	nextManualPage = 0;
 	for (int i = 0; i <= OPTION_SELECT_NUM - 1; i++){
 		os_scale.at(i) = OPTION_SCALE;
 		os_nextScale.at(i) = os_scale.at(i);
@@ -129,8 +136,23 @@ void Option::Draw(){
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::LINE_BLACK_TEXTURE, vector2(scrCenter.x - 256, scrCenter.y + space * 1), vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha*os_alpha[0]), vector2(0, 0), 0, 0, gaugeLength.at(1));
 	}
 	else{
-		Graphic::GetInstance().DrawTexture(TEXTURE_ID::MANUAL_TEXTURE, vector2(1920 / 2, 1080), vector2(1.7f, 1.7f), D3DXCOLOR(1, 1, 1, manualAlpha), vector2(0.5, 1.0f));
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(scrCenter.x - 512 - 128, scrCenter.y + space *-3), vector2(0.4f, 0.4f)*manualBack, 0.5f, "BACK", vector3(1, 1, 1), manualAlpha, false);
+		TEXTURE_ID manualID = TEXTURE_ID::MANUAL_TEXTURE;
+		if (manualPage == 1){
+			manualID = TEXTURE_ID::MANUAL2_TEXTURE;
+		}
+		if (manualPage == 2){
+			manualID = TEXTURE_ID::MANUAL3_TEXTURE;
+		}
+		if (manualPage == 3){
+			manualID = TEXTURE_ID::MANUAL4_TEXTURE;
+		}
+
+		Vector2 center = vector2(1920 / 2, 1080 / 2);
+		Graphic::GetInstance().DrawTexture(manualID, vector2(1920 / 2, 1080), vector2(1.5f, 1.5f), D3DXCOLOR(1, 1, 1, manualAlpha * pageAlpha), vector2(0.5, 1.0f));
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x - 512, 128), vector2(0.4f, 0.4f) + vector2(downCross * 0.1f, downCross * 0.1f), 0.5f, "BACK:~", vector3(1, 1, 1), manualAlpha*0.5f + (downCross * 0.5f), true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x, 128), vector2(0.4f, 0.4f), 0.5f, "PAGE:  /4", vector3(1, 1, 1), manualAlpha, true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x + 64, 128), vector2(0.4f, 0.4f), 0.5f, std::to_string(manualPage < 0 ? 1 : manualPage + 1), vector3(1, 1, 1), manualAlpha * pageAlpha, true);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(center.x + 512, 128), vector2(0.4f, 0.4f)+vector2(downCircle * 0.1f, downCircle * 0.1f), 0.5f, "NEXT:^", vector3(1, 1, 1), manualAlpha*0.5f + (downCircle * 0.5f), true);
 	}
 }
 
@@ -291,17 +313,63 @@ void Option::OptionSelect(float frameTime){
 	selectAlphaTime %= 360;
 }
 
+//マニュアル。
 void Option::Manual(float frameTime){
-	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
+	/*if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) ||
 		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
 		manualEnd = true;
+		isNextPage = true;
 		os_scale.at(select) = 1.0f;
 		os_alpha.at(select) = 1.0f;
 		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
+	}*/
+	//ページ送り
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X, true) || 
+		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT, true) || 
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).x <= -0.5f){
+		nextManualPage--;
+		isNextPage = true;
+		if (nextManualPage < 0){
+			manualEnd = true;
+			os_scale.at(select) = 1.0f;
+			os_alpha.at(select) = 1.0f;
+			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
+		}
+		//nextManualPage = nextManualPage < 0 ? nextManualPage = MANUAL_PAGE-1 : nextManualPage;
 	}
-
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT, true) ||
+		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true) ||
+		Device::GetInstance().GetInput()->LeftStick(0, true).x >= 0.5f){
+		nextManualPage++;
+		//nextManualPage = min(nextManualPage++, MANUAL_PAGE - 1);
+		isNextPage = true;
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE); 
+		if (nextManualPage >= MANUAL_PAGE){
+			manualEnd = true;
+			os_scale.at(select) = 1.0f;
+			os_alpha.at(select) = 1.0f;
+			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
+		}
+		//nextManualPage %= MANUAL_PAGE;
+	}
+	downCircle = false;
+	downCross = false;
+	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_X) ||
+		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_LEFT) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CROSS) ||
+		Device::GetInstance().GetInput()->LeftStick(0).x <= -0.5f){
+		downCross = true;
+	}
+	else if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_RIGHT) ||
+		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z) ||
+		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE) ||
+		Device::GetInstance().GetInput()->LeftStick(0).x >= 0.5f){
+		downCircle = true;
+	}
 	if (!manualEnd)
 		manualAlpha = min(manualAlpha + 1.0f / 30.0f * 60.0f*frameTime, 1.0f);
 	else{
@@ -309,11 +377,26 @@ void Option::Manual(float frameTime){
 		manualBack = min(manualBack + 0.1f / 30.0f * 60.0f*frameTime, 1.1f);
 	}
 
+	if (isNextPage){
+		pageAlpha = max(pageAlpha - 1.0f / 20.0f * 60.0f * frameTime, 0.0f);
+		if (pageAlpha == 0.0f){
+			isNextPage = false;
+			manualPage = nextManualPage;
+		}
+	}
+	else if (pageAlpha <= 1.0f){
+		pageAlpha = min(pageAlpha + 1.0f / 20.0f * 60.0f * frameTime, 1.0f);
+	}
+
 	if (manualEnd&&manualAlpha == 0.0f){
 		selectScaleTime = 0;
 		isManual = false;
 		manualEnd = false;
+		isNextPage = false;
 		manualBack = 1.0f;
+		manualPage = 0;
+		nextManualPage = 0;
+		pageAlpha = 1.0f;
 		Pop(frameTime);
 	}
 }
@@ -326,23 +409,26 @@ void Option::Decision(){
 	case MANUAL_SELECT:
 		decision = true;
 		isManual = true;
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		break;
 	case RETURN_MENU_SELECT:
 		decision = true;
 		isReturnMenu = true;
 		ConfigSave();
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		break;
 	case EXIT_GAME_SELECT:
 		decision = true;
 		isExitGame = true;
 		ConfigSave();
+		Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		break;
 	case BACK_SELECT:
 		isShut = true;
 		ConfigSave();
+		Audio::GetInstance().PlaySE(SE_ID::BACK_SE);
 		break;
 	default:
 		break;
 	}
-	Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 }
