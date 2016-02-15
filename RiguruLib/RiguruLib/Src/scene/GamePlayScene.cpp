@@ -266,8 +266,7 @@ void GamePlayScene::Update(float frameTime)
 	}*/
 	AITargetManager::GetInstance().Update(wa);
 	
-	int min = stage._Get()->ReturnGameTime() / 60.0f;
-	int sec = stage._Get()->ReturnGameTime() - min * 60;
+	int sec = stage._Get()->ReturnGameTime();
 	if (sec <= 0){
 		mIsEnd = true;
 		sp._Get()->SetVictoryID(stage.get()->ReturnWinner());

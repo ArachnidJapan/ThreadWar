@@ -70,8 +70,7 @@ void UI::Update(float frameTime){
 			cursorSizeTimeInterbal = 0.0f;
 		}
 	}
-	int min = stage._Get()->ReturnGameTime() / 60.0f;
-	int sec = stage._Get()->ReturnGameTime() - min * 60;
+	int sec = stage._Get()->ReturnGameTime();
 	if (sec <= 10)
 	timeAlpha += 5.0f * frameTime;
 }
@@ -172,8 +171,8 @@ void UI::Draw(CAMERA_ID cID) const{
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::CURSOR2_TEXTURE, vector2(1920 / 2, 1080 / 2), vector2(0.4f, 0.4f) * cursorSize, D3DXCOLOR(1, 1, 1, 1), vector2(0.5f, 0.5f), 0, 0, 1, 1, -cursorAngle);
 	int min = stage._Get()->ReturnGameTime() / 60.0f;
 	int sec = stage._Get()->ReturnGameTime() - min * 60;
-	
-	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f,1080.0f - 140.0f), vector2(0.5f, 0.8f) * (sec <= 10 ?1.5f : 1.0f) , 0.5f, "0" + std::to_string(min) + ":" + (std::to_string(sec).size() > 1 ? "" : "0") + std::to_string(sec), vector3(1, 1, 1),Math::lerp(0.5f,1.0f,abs(sin(timeAlpha))),true);
+	int sec2 = stage._Get()->ReturnGameTime();
+	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f, 1080.0f - 140.0f), vector2(0.5f, 0.8f) * (sec2 <= 10 ? 1.5f : 1.0f), 0.5f, "0" + std::to_string(min) + ":" + (std::to_string(sec).size() > 1 ? "" : "0") + std::to_string(sec), vector3(1, 1, 1), Math::lerp(0.5f, 1.0f, abs(sin(timeAlpha))), true);
 	//ƒQ[ƒW
 	if (stage._Get()->ReturnTotalPoint() == 0)
 	{
@@ -221,7 +220,7 @@ void UI::Draw(CAMERA_ID cID) const{
 			0.5f, "START", vector3(1, 1, 1), 1.0f - abs(startTime), true);
 	}
 	
-	if (sec <= 0){
+	if (sec2 <= 0){
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f, 1080.0f / 2.0f), vector2(0.5f, 0.8f) * 3, 0.5f,"TIME UP", vector3(1, 1, 1), 1.0f, true);
 	}
 	//	}
