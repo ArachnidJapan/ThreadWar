@@ -15,10 +15,12 @@
 TeamSelectScene::TeamSelectScene(std::weak_ptr<SceneParameter> sp_) :sp(sp_)
 {
 	mIsEnd = false;
-	Graphic::GetInstance().LoadTexture(TEXTURE_ID::NEPHILA_WHITE_TEXTURE, "Res/Texture/nephila white.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::NEPHILA_WHITE_R_TEXTURE, "Res/Texture/nephila_white_R.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::NEPHILA_WHITE_L_TEXTURE, "Res/Texture/nephila_white_L.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::NEPHILA_RED_TEXTURE,"Res/Texture/nephila_red.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::NEPHILA_BLUE_TEXTURE, "Res/Texture/nephila_blue.png");
-	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TARENTULA_WHITE_TEXTURE, "Res/Texture/tarentula white.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TARENTULA_WHITE_R_TEXTURE, "Res/Texture/tarentula_white_R.png");
+	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TARENTULA_WHITE_L_TEXTURE, "Res/Texture/tarentula_white_L.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TARENTULA_RED_TEXTURE,"Res/Texture/tarentula_red.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TARENTULA_BLUE_TEXTURE, "Res/Texture/tarentula_blue.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::TEAM_TEXTURE,"Res/Texture/team.png");

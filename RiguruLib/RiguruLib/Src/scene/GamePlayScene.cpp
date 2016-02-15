@@ -260,9 +260,9 @@ void GamePlayScene::Update(float frameTime)
 		option._Get()->Pop(frameTime);
 		Audio::GetInstance().StopAllSE(false);
 	}
-	/*if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))){
+	if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))){
 		mIsEnd = true;
-	}*/
+	}
 	AITargetManager::GetInstance().Update(wa);
 	
 	if (stage.get()->ReturnGameTime() <= 0){
@@ -334,7 +334,7 @@ Scene GamePlayScene::Next() const
 	if (!returnMenu)
 		return Scene::Ending;
 	else
-		return Scene::Title;
+		return Scene::Demo;
 }
 
 void GamePlayScene::End(){

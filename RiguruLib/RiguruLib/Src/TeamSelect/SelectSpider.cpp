@@ -351,19 +351,37 @@ void SelectSpider::PlayerSelect(){
 	if (spiderSelect->ReturnTarantula()){
 		if (red){
 			tID = TEXTURE_ID::TARENTULA_RED_TEXTURE;
+			whitetID = TEXTURE_ID::TARENTULA_WHITE_R_TEXTURE;
 		}
 		else{
 			tID = TEXTURE_ID::TARENTULA_BLUE_TEXTURE;
+			whitetID = TEXTURE_ID::TARENTULA_WHITE_L_TEXTURE;
 		}
 	}
 	else{
 		if (red){
 			tID = TEXTURE_ID::NEPHILA_RED_TEXTURE;
+			whitetID = TEXTURE_ID::NEPHILA_WHITE_R_TEXTURE;
 		}
 		else{
 			tID = TEXTURE_ID::NEPHILA_BLUE_TEXTURE;
+			whitetID = TEXTURE_ID::NEPHILA_WHITE_L_TEXTURE;
 		}
 	}
+	Graphic::GetInstance().DrawTexture(whitetID,
+		vector2(pos.x, pos.y),
+		vector2(1.0f, 1.0f) * (select == true ? 1.5f : 1.0f),
+		spiderSelect->ReturnMyPlayerParam(playerNum) == SelectPlayerParam::P1 ?
+		red ?
+		D3DXCOLOR(1, 0, 0, 1) : D3DXCOLOR(0, 0, 1, 1) :
+		spiderSelect->ReturnMyPlayerParam(playerNum) == SelectPlayerParam::NONE ?
+		D3DXCOLOR(1, 1, 1, 1) : D3DXCOLOR(0, 1, 0, 1),
+		vector2(0.5f, 0.5f),
+		0.0f,
+		0.0f,
+		1,
+		1.0f);
+
 	Graphic::GetInstance().DrawTexture(tID,
 		vector2(pos.x, pos.y),
 		vector2(1.0f, 1.0f)* (select == true ? 1.5f : 1.0f),

@@ -160,7 +160,7 @@ Scene TitleScene::Next() const
 	if (selects == TITLE_SELECT::SELECT_GAMESTART)
 		return Scene::TeamSelect;
 	else
-		return Scene::Title;
+		return Scene::Demo;
 }
 
 void TitleScene::TitleSelect(float frameTime){

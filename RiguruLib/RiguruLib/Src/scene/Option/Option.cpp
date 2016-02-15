@@ -121,7 +121,7 @@ void Option::Draw(){
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(scrCenter.x - 512, scrCenter.y + space * 2), vector2(0.6f, 0.6f)*os_scale[0], 0.5f, "BGM", vector3(1, 1, 1), allAlpha*(os_alpha[0] + (selectAlpha * (select == 0))), false);
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(scrCenter.x - 512, scrCenter.y + space * 1), vector2(0.6f, 0.6f)*os_scale[1], 0.5f, "SE", vector3(1, 1, 1), allAlpha*(os_alpha[1] + (selectAlpha * (select == 1))), false);
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(scrCenter.x - 512, scrCenter.y + space * 0), vector2(0.6f, 0.6f)*os_scale[2], 0.5f, "MANUAL", vector3(1, 1, 1), allAlpha*(os_alpha[2] + (selectAlpha * (select == 2))), false);
-		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(scrCenter.x - 512, scrCenter.y + space *-1), vector2(0.6f, 0.6f)*os_scale[3], 0.5f, "RETURN TO MENU", vector3(1, 1, 1), allAlpha*(os_alpha[3] + (selectAlpha * (select == 3))), false);
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(scrCenter.x - 512, scrCenter.y + space *-1), vector2(0.6f, 0.6f)*os_scale[3], 0.5f, "RETURN TO TITLE", vector3(1, 1, 1), allAlpha*(os_alpha[3] + (selectAlpha * (select == 3))), false);
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(scrCenter.x - 512, scrCenter.y + space *-2), vector2(0.6f, 0.6f)*os_scale[4], 0.5f, "QUIT GAME", vector3(1, 1, 1), allAlpha*(os_alpha[4] + (selectAlpha * (select == 4))), false);
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(scrCenter.x - 512 - 128, scrCenter.y + space *-3), vector2(0.4f, 0.4f)*os_scale[5], 0.5f, "BACK", vector3(1, 1, 1), (allAlpha*(os_alpha[5] + (selectAlpha * (select == 5)))), false);
 

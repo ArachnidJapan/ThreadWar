@@ -34,7 +34,8 @@ void ResultScene::Initialize()
 	timer = 0;
 	pointTimer = 0;
 	vicTimer = 0;
-	
+	pressTimer = 0;
+
 	wa.Initialize();
 
 	/*ƒ}ƒbƒvŠÖŒW*/
@@ -132,16 +133,40 @@ void ResultScene::Update(float frameTime)
 	if (timer == 1.0f){
 		pointTimer = min(pointTimer + (1.0f / GAUGE_TIME * 60.0f * frameTime), 1.0f);
 	}
+	else{
+		if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
+			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
+			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true))){
+			timer = 1.0f;
+			pointTimer = 1.0f;
+			vicTimer = 1.0f;
+		}
+	}
 	if (pointTimer == 1.0f){
 		if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
 			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)) &&
+			Device::GetInstance().GetInput()->GamePadAnyButton(0, true)) &&
 			vicTimer == 1.0f){
 			mIsEnd = true;
 			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 		}
 
 		vicTimer = min(vicTimer + (1.0f / VICTRY_TIME * 60.0f * frameTime), 1.0f);
+	}
+	else{
+		if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
+			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
+			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true))){
+			pointTimer = 1.0f;
+			vicTimer = 1.0f;
+		}
+	}
+	if (vicTimer == 1.0f){
+		pressTimer = min(pressTimer + 1.0f / 60.0f * 3.0f * 60.0f * frameTime, 1.0f);
+	}
+	if (pressTimer == 1.0f){
+		pressLerp+=2;
+		pressLerp = fmodf(pressLerp, 360.0f);
 	}
 	wa.Update(frameTime);
 
@@ -198,21 +223,37 @@ void ResultScene::Draw() const
 	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f - 600.0f, 1080.0f - 60.0f), vector2(0.3f, 0.5f) * 1.5f, 0.5f, std::to_string(psp) + "pts", vector3(1, 0, 0), 1.0f, true);
 	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920.0f / 2.0f + 600.0f, 1080.0f - 60.0f), vector2(0.3f, 0.5f) * 1.5f, 0.5f, std::to_string(esp) + "pts", vector3(0, 0, 1), 1.0f, true);
 	
-
 	bool red = true;
 	int redCount=0, blueCount=0;
 	for (int i = 0; i <= 7; i++){
 		TEXTURE_ID tID;
+		TEXTURE_ID whitetID;
 		Vector2 pos;
 		if (red){
 			if (redTarantula){
 				tID = TEXTURE_ID::TARENTULA_RED_TEXTURE;
+				whitetID = TEXTURE_ID::TARENTULA_WHITE_R_TEXTURE;
 			}
 			else{
 				tID = TEXTURE_ID::NEPHILA_RED_TEXTURE;
+				whitetID = TEXTURE_ID::NEPHILA_WHITE_R_TEXTURE;
 			}
 			pos = vector2(1920 / 4 * (1 + 2 * !red) + (150*(1 * (-redCount % 2))), 1080 - 300 - (200 * redCount));
 			redCount++;
+
+			Graphic::GetInstance().DrawTexture(whitetID,
+				vector2(pos.x, pos.y),
+				vector2(1.0f, 1.0f),
+				redNames.at(i) == "P1" ?
+				red ?
+				D3DXCOLOR(1, 0, 0, 1) : D3DXCOLOR(0, 0, 1, 1) :
+				redNames.at(i) == "NONE" ?
+				D3DXCOLOR(1, 1, 1, 1) : D3DXCOLOR(0, 1, 0, 1),
+				vector2(0.5f, 0.5f),
+				0.0f,
+				0.0f,
+				1,
+				1.0f);
 
 			Graphic::GetInstance().DrawTexture(tID,
 				vector2(pos.x, pos.y),
@@ -223,6 +264,7 @@ void ResultScene::Draw() const
 				0.0f,
 				1,
 				1.0f);
+
 			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT,
 				pos,
 				vector2(0.3f, 0.6f),
@@ -243,8 +285,11 @@ void ResultScene::Draw() const
 				vector2(0.40f, 0.4f),
 				0.6f,
 				std::to_string(redPoints.at(i)) + " pts",
+				redNames.at(i) == "P1" ?
 				red ?
-				vector3(1, 0, 0) : vector3(0, 0, 1),
+				vector3(1, 0, 0) : vector3(0, 0, 1) :
+				redNames.at(i) == "NONE" ?
+				vector3(1, 1, 1) : vector3(0, 1, 0),
 				1,
 				true);
 
@@ -252,12 +297,28 @@ void ResultScene::Draw() const
 		else{
 			if (blueTarantula){
 				tID = TEXTURE_ID::TARENTULA_BLUE_TEXTURE;
+				whitetID = TEXTURE_ID::TARENTULA_WHITE_L_TEXTURE;
 			}
 			else{
 				tID = TEXTURE_ID::NEPHILA_BLUE_TEXTURE;
+				whitetID = TEXTURE_ID::NEPHILA_WHITE_L_TEXTURE;
 			}
 			pos = vector2(1920 / 4 * (1 + 2 * !red) - (150 * (1 * (-blueCount % 2))), 1080 - 300 - (200 * blueCount));
 			blueCount++;
+
+			Graphic::GetInstance().DrawTexture(whitetID,
+				vector2(pos.x, pos.y),
+				vector2(1.0f, 1.0f),
+				blueNames.at(i-4) == "P1" ?
+				red ?
+				D3DXCOLOR(1, 0, 0, 1) : D3DXCOLOR(0, 0, 1, 1) :
+				blueNames.at(i-4) == "NONE" ?
+				D3DXCOLOR(1, 1, 1, 1) : D3DXCOLOR(0, 1, 0, 1),
+				vector2(0.5f, 0.5f),
+				0.0f,
+				0.0f,
+				1,
+				1.0f);
 
 			Graphic::GetInstance().DrawTexture(tID,
 				vector2(pos.x, pos.y),
@@ -287,8 +348,11 @@ void ResultScene::Draw() const
 				vector2(0.40f, 0.4f),
 				0.6f,
 				std::to_string(bluePoints.at(i-4)) + " pts",
+				blueNames.at(i - 4) == "P1" ?
 				red ?
-				vector3(1, 0, 0) : vector3(0, 0, 1),
+				vector3(1, 0, 0) : vector3(0, 0, 1) :
+				blueNames.at(i - 4) == "NONE" ?
+				vector3(1, 1, 1) : vector3(0, 1, 0),
 				1,
 				true);
 
@@ -311,6 +375,10 @@ void ResultScene::Draw() const
 			Graphic::GetInstance().DrawTexture(TEXTURE_ID::WHITE_TEXTURE, vector2(0, 0), vector2(1920, 1080), D3DXCOLOR(1, 1, 1, vicTimer * 0.5f), vector2(0.0f, 0.0f), 0, 0, 1.0f, 1.0f, 0);
 			Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 2.0f), vector2(1.0f, 1.0f) * textSize, 0.5f, "DRAW", vector3(1, 1, 1), vicTimer, true);
 		}
+	}
+	if (pressTimer == 1.0f){
+		float alpha = abs(Math::sin(pressLerp));
+		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(1920 / 2.0f, 1080 / 4.0f), vector2(0.6f, 0.6f), 0.5f, "press any button", vector3(1, 1, 1), alpha, true);
 	}
 }
 
