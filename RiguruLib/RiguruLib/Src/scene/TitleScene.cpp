@@ -70,7 +70,7 @@ void TitleScene::Initialize()
 	wa.Add(ACTOR_ID::STAGE_ACTOR, stage);
 	Device::GetInstance().CameraInit(CAMERA_ID::GOD_CAMERA, stage);
 
-	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-3.5f, 3, 2.0f), 0);/***********/
+	Device::GetInstance().GetCamera(CAMERA_ID::GOD_CAMERA)->GotCamera(vector3(-7.0f, 2.5f, 3.0f), 0);/***********/
 
 	mIsEnd = false;
 	isSelect = false;
@@ -141,7 +141,7 @@ void TitleScene::Draw() const
 		//現在のスクリーンサイズに拡大。
 		Vector2 screenPow = vector2(1920.0f / 1280.0f, 1080.0f / 720.0f);
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::MENU_BLACK_TEXTURE, vector2(0, 0), screenPow, D3DXCOLOR(1, 1, 1, allAlpha), vector2(0, 0));
-		Graphic::GetInstance().DrawTexture(TEXTURE_ID::THREAD_BACK_TEXTURE, threadBackPos, vector2(1, 1), D3DXCOLOR(1, 1, 1, allAlpha));
+		Graphic::GetInstance().DrawTexture(TEXTURE_ID::THREAD_BACK_TEXTURE, threadBackPos, vector2(1.5f, 1.5f), D3DXCOLOR(1, 1, 1, allAlpha));
 		//文字
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y + MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale.at(0), 0.5f, "START GAME", vector3(1, 1, 1), ts_alpha.at(0) * allAlpha, true);
 		Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT, vector2(SCREEN_CENTER_X, SCREEN_CENTER_Y - MOVE_AMOUNT / 2), vector2(1.0f, 1.0f)*ts_scale.at(1), 0.5f, "OPTIONS", vector3(1, 1, 1), ts_alpha.at(1) * allAlpha, true);
