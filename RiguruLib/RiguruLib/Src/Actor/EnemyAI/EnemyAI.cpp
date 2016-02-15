@@ -217,7 +217,7 @@ void EnemyAI::InputReset()
 void EnemyAI::AILevelSetting()
 {
 	float per = stage._Get()->GetTeamPercentage(player._Get()->GetParameter().id);
-	if (per < 40.0f)
+	if (per < 35.0f)
 		levelNum = 2;
 	else if (per <= 75.0f)
 		levelNum = 1;

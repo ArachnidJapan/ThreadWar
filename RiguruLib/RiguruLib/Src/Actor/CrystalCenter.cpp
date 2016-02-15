@@ -10,7 +10,7 @@
 #include "Player.h"
 #include "../world/IWorld.h"
 
-CrystalCenter::CrystalCenter(IWorld& world_, ACTOR_ID crystalID , bool gamePlay_, bool teamSelect_) :Actor(world_), teamSelect(teamSelect_),gamePlay(gamePlay_){
+CrystalCenter::CrystalCenter(IWorld& world_, ACTOR_ID crystalID, bool gamePlay_, bool teamSelect_, int point_) :Actor(world_), teamSelect(teamSelect_), gamePlay(gamePlay_){
 	parameter.isDead = false;
 	parameter.id = crystalID;
 	parameter.cubeScale = vector3(10.0f, 3.0f, 10.0f);
@@ -23,7 +23,7 @@ CrystalCenter::CrystalCenter(IWorld& world_, ACTOR_ID crystalID , bool gamePlay_
 	crystalParameter.crystalISEnemy = false;
 	crystalParameter.crystalISPlayer = false;
 	if (teamSelect){
-		point = 1000;
+		point = point_;
 	}
 	keep = false;
 	angle = 0;

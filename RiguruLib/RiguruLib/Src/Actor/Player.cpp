@@ -407,7 +407,7 @@ void Player::Update(float frameTime){
 	frameTime_ = frameTime;
 
 	//キルされた時のカメラ用 ポジション登録
-	AITargetManager::GetInstance().SetAllPosList(playerNum, RCMatrix4::getPosition(GetParameter().matrix));
+	AITargetManager::GetInstance().SetAllPosList(playerNum, RCMatrix4::getPosition(GetParameter().matrix) + RCMatrix4::getUp(parameter.matrix) * 0.75f);
 }
 
 //描画
