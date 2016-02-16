@@ -48,11 +48,11 @@ option(option_)
 //デストラクタ
 TitleScene::~TitleScene()
 {
-	ts_scale.clear();
-	ts_nextScale.clear();
-	ts_prevScale.clear();
-	ts_alpha.clear();
-	ts_nextAlpha.clear();
+	//ts_scale.clear();
+	//ts_nextScale.clear();
+	//ts_prevScale.clear();
+	//ts_alpha.clear();
+	//ts_nextAlpha.clear();
 }
 
 //開始

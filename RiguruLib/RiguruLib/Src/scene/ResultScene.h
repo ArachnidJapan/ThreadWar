@@ -45,6 +45,6 @@ private:
 	bool redTarantula, blueTarantula;
 	int spiderNum, redNum, blueNum, maxPoint;
 	//各演出のタイマ。
-	float timer, pointTimer, vicTimer, pressTimer, pressLerp;
+	float timer, pointTimer, blankTimer, vicTimer, pressTimer, pressLerp;
 	VICTORY_ID victory;
 };
