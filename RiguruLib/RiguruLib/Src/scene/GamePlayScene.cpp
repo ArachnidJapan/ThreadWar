@@ -261,9 +261,6 @@ void GamePlayScene::Update(float frameTime)
 		option._Get()->Pop(frameTime);
 		Audio::GetInstance().StopAllSE(false);
 	}
-	if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_1, true))){
-		mIsEnd = true;
-	}
 	AITargetManager::GetInstance().Update(wa);
 	
 	int sec = stage._Get()->ReturnGameTime();
