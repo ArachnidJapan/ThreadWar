@@ -18,7 +18,7 @@ public:
 	~Stage();
 	virtual void Initialize() override;
 	virtual void Update(float frameTime) override;
-	virtual void Draw(CAMERA_ID cID) const override;
+	virtual void Draw(CAMERA_ID cID, bool first) const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 	Matrix4* ReturnMat();
 	void CrystalDamage(ACTOR_ID threadID, ACTOR_ID crystalID);

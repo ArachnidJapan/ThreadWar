@@ -62,7 +62,7 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 			siyaChange = max(0.0f, siyaChange);
 		}
 		siya += siyaChange;
-		if ((padNum == 0 || dokusai) && !playerAI)
+		if ((padNum != 1000 || dokusai) && !playerAI)
 		{
 			mCameraParam.InputAngle = Device::GetInstance().GetInput()->RightStick(padNum) / 500.0f;
 			if (mCameraParam.InputAngle == vector3(0, 0, 0)){
@@ -128,7 +128,7 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 	//left = left * yawMat;
 
 	float cameraLength = CAMERA_AI_PLAYER_LENGTH;
-	if (padNum == 0)cameraLength = CAMERA_PLAYER_LENGTH;
+	if (padNum != 1000)cameraLength = CAMERA_PLAYER_LENGTH;
 	//Œã‚ë‚É‰º‚°‚é
 	Matrix4 trans = RCMatrix4::translate(front * cameraLength);
 	//Target‚ÌˆÊ’u‚©‚çŒã‚ë‚É‰º‚°‚é
@@ -171,7 +171,7 @@ void Camera::SetCamera(Vector3 cameraPos, Vector3 cameraView, float frameTime){
 	x = t* trans;
 	mCameraParam.Eye = RCMatrix4::getPosition(x);//* Time::DeltaTime;
 
-	if (padNum == 0){
+	if (padNum != 1000){
 		//ƒJƒƒ‰‚Æ‚Ì‚ ‚½‚è”»’è(‚Q•ª’Tõ–@‚ð—p‚¢‚Ä‹——£‚ð’Z‚­‚µ‚Ä‚¢‚­)
 		bool hitNum = ModelCapsule(*stage._Get()->ReturnMat(), OCT_ID::STAGE_OCT, CreateCapsule(mCameraParam.Eye, mCameraParam.Target, CAMERA_COLLISION_SIZE)).colFlag;
 		std::string s = (hitNum == true ? "TRUE" : "FALSE");

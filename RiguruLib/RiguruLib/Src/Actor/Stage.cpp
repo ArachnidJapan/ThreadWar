@@ -97,7 +97,7 @@ void Stage::Update(float frameTime){
 	}
 }
 
-void Stage::Draw(CAMERA_ID cID) const{
+void Stage::Draw(CAMERA_ID cID, bool first) const{
 	Graphic::GetInstance().SetShader(SHADER_ID::STAGE_SHADER);
 	Graphic::GetInstance().DrawMesh(MODEL_ID::STAGE_MODEL, &parameter.matrix, cID, NULL, true);
 

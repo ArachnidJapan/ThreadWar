@@ -65,7 +65,7 @@ void ThreadWeb::Update(float frameTime) {
 		selectThreadWeb = false;
 	}
 }
-void ThreadWeb::Draw(CAMERA_ID cID)const{
+void ThreadWeb::Draw(CAMERA_ID cID, bool first)const{
 	for (int i = 0; i < mDivide * 2; i += 2)
 	{
 		Graphic::GetInstance().DrawLine(mWebThreads[i], mWebThreads[i + 1], cID, color);

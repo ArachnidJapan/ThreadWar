@@ -15,9 +15,9 @@ void ActorManager::Update(float frameTime){
 		[&](ActorPtr actor){ actor->Update(frameTime); });
 }
 
-void ActorManager::Draw(CAMERA_ID cID) const{
+void ActorManager::Draw(CAMERA_ID cID, bool first) const{
 	std::for_each(actorPtr.begin(), actorPtr.end(),
-		[&](ActorPtr actor){ actor->Draw(cID); });
+		[&](ActorPtr actor){ actor->Draw(cID, first); });
 }
 
 void ActorManager::Add(ActorPtr actor){

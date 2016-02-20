@@ -60,14 +60,14 @@ void TeamSelectScene::Initialize()
 	selectSpider.push_back(playerSpiderSelect);
 	selectSpider.push_back(enemySpiderSelect);
 
-	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 - 100, 1080 - 300),0, playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 300),0, enemySpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 + 100, 1080 - 500),1, playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 500),1, enemySpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 - 100, 1080 - 700),2, playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 700),2, enemySpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 + 100, 1080 - 900),3, playerSpiderSelect));
-	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 900),3, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 - 100, 1080 - 300), 0, playerSpiderSelect, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 300), 0, enemySpiderSelect, playerSpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 + 100, 1080 - 500), 1, playerSpiderSelect, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 500), 1, enemySpiderSelect, playerSpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 - 100, 1080 - 700), 2, playerSpiderSelect, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 + 100, 1080 - 700), 2, enemySpiderSelect, playerSpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(true, true, vector2(1920 / 4 + 100, 1080 - 900), 3, playerSpiderSelect, enemySpiderSelect));
+	selectSpider.push_back(std::make_shared<SelectSpider>(false, true, vector2(1920 / 4 * 3 - 100, 1080 - 900), 3, enemySpiderSelect, playerSpiderSelect));
 
 	count = 0;
 	isBackScene = false;
@@ -77,7 +77,14 @@ void TeamSelectScene::Update(float frameTime)
 {
 	if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
 		Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true)){
-		if (selectSpider[0].get()->PlayerHave() || selectSpider[1].get()->PlayerHave()){
+		if (selectSpider[0].get()->PlayerHave().redHavePlayer ||
+			selectSpider[1].get()->PlayerHave().blueHavePlayer ||
+			selectSpider[0].get()->PlayerHave().redHavePlayer2 ||
+			selectSpider[1].get()->PlayerHave().blueHavePlayer2 || 
+			selectSpider[0].get()->PlayerHave().redHavePlayer3 ||
+			selectSpider[1].get()->PlayerHave().blueHavePlayer3 || 
+			selectSpider[0].get()->PlayerHave().redHavePlayer4 ||
+			selectSpider[1].get()->PlayerHave().blueHavePlayer4){
 			 mIsEnd = true;
 			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
 			return;
@@ -140,8 +147,6 @@ void TeamSelectScene::Update(float frameTime)
 	}
 	selectSpider[count]->SetSelect(true);
 
-	selectSpider[0]->SetEnemyPlayerHave(selectSpider[1]->PlayerHave());
-	selectSpider[1]->SetEnemyPlayerHave(selectSpider[0]->PlayerHave());
 
 	selectSpider[count]->Update();
 	wa.Update(frameTime);
@@ -209,8 +214,16 @@ void TeamSelectScene::End(){
 	TeamSelectResult tsr;
 	tsr.redTarantula = selectSpider[0]->ReturnTarantula();
 	tsr.blueTarantula = selectSpider[1]->ReturnTarantula();
-	tsr.redHavePlayer = selectSpider[0]->PlayerHave();
-	tsr.blueHavePlayer = selectSpider[1]->PlayerHave();
+
+	tsr.redHavePlayer = selectSpider[0]->PlayerHave().redHavePlayer;
+	tsr.blueHavePlayer = selectSpider[1]->PlayerHave().blueHavePlayer;
+	tsr.redHavePlayer2 = selectSpider[0]->PlayerHave().redHavePlayer2;
+	tsr.blueHavePlayer2 = selectSpider[1]->PlayerHave().blueHavePlayer2;
+	tsr.redHavePlayer3 = selectSpider[0]->PlayerHave().redHavePlayer3;
+	tsr.blueHavePlayer3 = selectSpider[1]->PlayerHave().blueHavePlayer3;
+	tsr.redHavePlayer4 = selectSpider[0]->PlayerHave().redHavePlayer4;
+	tsr.blueHavePlayer4 = selectSpider[1]->PlayerHave().blueHavePlayer4;
+
 	tsr.redHaveCPU = selectSpider[0]->CPUCount();
 	tsr.blueHaveCPU = selectSpider[1]->CPUCount();
 	sp._Get()->SetTeamSelectResult(tsr);

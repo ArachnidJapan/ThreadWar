@@ -419,7 +419,7 @@ void Player::Update(float frameTime){
 }
 
 //•`‰æ
-void Player::Draw(CAMERA_ID cID_) const{
+void Player::Draw(CAMERA_ID cID_, bool first) const{
 	//–³“GŽžŠÔ’†‚Í0.1•bŠÔŠu‚Å“_–Å
 	//if (isNodamage && abs(Math::sin(Math::angle(nodamageTimer))) < 0.5f) return;
 	//else{
@@ -442,7 +442,7 @@ void Player::Draw(CAMERA_ID cID_) const{
 	//	}
 	//}
 	//else
-	Graphic::GetInstance().BindAnimation(thisCopy->shared_from_this(), SHADER_ID::PLAYER_SHADER, frameTime_);
+	Graphic::GetInstance().BindAnimation(thisCopy->shared_from_this(), SHADER_ID::PLAYER_SHADER,first ? frameTime_ : 0);
 	
 	MODEL_ID playerModel;
 	if (tarentula){

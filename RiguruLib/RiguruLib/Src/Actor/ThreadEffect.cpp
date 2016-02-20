@@ -32,7 +32,7 @@ void ThreadEffect::Update(float frameTime){
 	}
 }
 
-void ThreadEffect::Draw(CAMERA_ID cID) const{
+void ThreadEffect::Draw(CAMERA_ID cID, bool first) const{
 	//プレイヤー用のシェーダーセット
 	Graphic::GetInstance().SetShader(SHADER_ID::THREAD_EFFECT_SHADER);
 	//テクニックとパスをセット

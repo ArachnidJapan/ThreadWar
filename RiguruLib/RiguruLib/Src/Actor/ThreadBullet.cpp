@@ -57,7 +57,7 @@ void ThreadBullet::Update(float frameTime){
 	parameter.lastNor = pos;
 }
 
-void ThreadBullet::Draw(CAMERA_ID cID) const{
+void ThreadBullet::Draw(CAMERA_ID cID, bool first) const{
 	Graphic::GetInstance().DrawSphere(threadParam.currentEndPosition, 0.25f, cID, parameter.id == ACTOR_ID::PLAYER_THREADBULLET_ACTOR ? vector3(1, 0.5f, 0.5f) : vector3(0.5f, 0.5f, 1));
 }
 

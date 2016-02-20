@@ -78,7 +78,7 @@ void UI::Update(float frameTime){
 	if (arrowAlphaEndless > 360)arrowAlphaEndless = 0;
 }
 
-void UI::Draw(CAMERA_ID cID) const{
+void UI::Draw(CAMERA_ID cID, bool first) const{
 	//if (drawFlag){
 	std::vector<Vector3> pointPos;
 	std::vector<bool>	isRespown;

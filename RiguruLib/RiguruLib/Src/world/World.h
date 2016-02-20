@@ -9,7 +9,7 @@ public:
 
 	void Initialize();
 	void Update(float frameTime);
-	void Draw(CAMERA_ID cID) const;
+	void Draw(CAMERA_ID cID, bool first = true) const;
 	void Clear();
 	virtual void Add(ACTOR_ID id, ActorPtr actor);
 	virtual void Add(ActorPtr actor);

@@ -113,7 +113,7 @@ void Thread::Update(float frameTime){
 	}
 }
 
-void Thread::Draw(CAMERA_ID cID) const{
+void Thread::Draw(CAMERA_ID cID, bool first) const{
 	Graphic::GetInstance().DrawLine(threadParam.startPosition, threadParam.currentEndPosition, cID,color);
 }
 

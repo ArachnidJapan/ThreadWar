@@ -195,6 +195,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 				// 深度バッファをクリア
 				Device::GetInstance().Getd3d11User()->ClearDepthStencilView();
 				sm.Update(frameTime_);
+				Device::GetInstance().Getd3d11User()->ChangeViewport(0,1,0,1);
 				sm.Draw();
 				frameTimeString = std::to_string((int)fps);
 				//Graphic::GetInstance().DrawAllFont();

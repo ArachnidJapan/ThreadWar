@@ -34,7 +34,7 @@ public:
 	~Actor();
 	virtual void Initialize() = 0;
 	virtual void Update(float frameTime) = 0;
-	virtual void Draw(CAMERA_ID cID) const = 0;
+	virtual void Draw(CAMERA_ID cID, bool first) const = 0;
 	void Collide(COL_ID id, Actor& other);
 	virtual bool IsDead() const{ return parameter.isDead; }
 	void SetIsDead(bool flag){ parameter.isDead = flag; }

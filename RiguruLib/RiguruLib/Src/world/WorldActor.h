@@ -16,7 +16,7 @@ public:
 	WorldActor();
 	~WorldActor();
 	void Update(float frameTime);
-	void Draw(CAMERA_ID cID) const;
+	void Draw(CAMERA_ID cID, bool first) const;
 	void Add(ACTOR_ID id, ActorPtr actor);
 	void Clear();
 	void SetCollideSelect(ActorPtr thisActor, ACTOR_ID otherID, COL_ID colID);

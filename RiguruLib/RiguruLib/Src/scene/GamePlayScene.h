@@ -41,7 +41,8 @@ private:
 
 	//ÇPÉ`Å[ÉÄÇÃêlêî
 	const float teamMemberCount = 4;
-	CAMERA_ID drawCamera = CAMERA_ID::PLAYER_CAMERA_1P;
+	std::vector<CAMERA_ID> drawCamera;
 	float blackAlpha;
 	float drawNum = 0;
+	std::vector<D3DXCOLOR> viewPort;
 };

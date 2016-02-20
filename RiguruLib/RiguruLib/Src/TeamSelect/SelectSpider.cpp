@@ -1,14 +1,14 @@
 #include "SelectSpider.h"
 #include "../Graphic/Graphic.h"
 
-SelectSpider::SelectSpider(bool red_, bool spider_, Vector2 pos_, int playerNum_, std::shared_ptr<SelectSpider> spiderSelect_){
+SelectSpider::SelectSpider(bool red_, bool spider_, Vector2 pos_, int playerNum_, std::shared_ptr<SelectSpider> spiderSelect_, std::shared_ptr<SelectSpider> enemySpiderSelect_){
 	tarantula = !red_;
 	select = false;
 	red = red_;
-	enemyPlayerHave = !red;
 	spider = spider_;
 	pos = pos_;
 	spiderSelect = spiderSelect_;
+	enemySpiderSelect = enemySpiderSelect_;
 	playerNum = playerNum_;
 
 	int notPlayer = -1;
@@ -17,12 +17,15 @@ SelectSpider::SelectSpider(bool red_, bool spider_, Vector2 pos_, int playerNum_
 		notPlayer = 0;
 	}
 	else
-	spp[3] = SelectPlayerParam::CP4;
+		spp[3] = SelectPlayerParam::CP4;
 	spp[1 + notPlayer] = SelectPlayerParam::CP1;
 	spp[2 + notPlayer] = SelectPlayerParam::CP2;
 	spp[3 + notPlayer] = SelectPlayerParam::CP3;
 
 	sppString[SelectPlayerParam::P1] = "P1";
+	sppString[SelectPlayerParam::P2] = "P2";
+	sppString[SelectPlayerParam::P3] = "P3";
+	sppString[SelectPlayerParam::P4] = "P4";
 	sppString[SelectPlayerParam::CP1] = "CP1";
 	sppString[SelectPlayerParam::CP2] = "CP2";
 	sppString[SelectPlayerParam::CP3] = "CP3";
@@ -40,7 +43,7 @@ void SelectSpider::Update(){
 			if (!spider)
 				tarantula = !tarantula;
 			else{
-				spiderSelect->SetPlayerParam(playerNum, false);
+				spiderSelect->SetPlayerParam(playerNum, false, enemySpiderSelect);
 			}
 		}
 		if (Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_S, true) ||
@@ -48,184 +51,132 @@ void SelectSpider::Update(){
 			if (!spider)
 				tarantula = !tarantula;
 			else{
-				spiderSelect->SetPlayerParam(playerNum, true);
+				spiderSelect->SetPlayerParam(playerNum, true, enemySpiderSelect);
 			}
 		}
 	}
 }
 
-void SelectSpider::SetPlayerParam(int playerNum, bool plus){
+void SelectSpider::SetPlayerParam(int playerNum, bool plus, std::shared_ptr<SelectSpider> enemySpiderSelect_){
 	if (plus){
 		SelectPlayerParam nextParam = (SelectPlayerParam)(spp[playerNum] + 1);
-		if (enemyPlayerHave){
+		if (nextParam == SelectPlayerParam::NONE){
+			spp[playerNum] = nextParam;
+			return;
+		}
+
+		if (spp[playerNum] == SelectPlayerParam::NONE)nextParam = SelectPlayerParam::P1;
+
+		bool finish = false;
+		do{
+			bool same = false;
+			for (auto i : spp){
+				if (i.second == nextParam){
+					same = true;
+					break;
+				}
+			}
+			if (nextParam == SelectPlayerParam::P1 ||
+				nextParam == SelectPlayerParam::P2 ||
+				nextParam == SelectPlayerParam::P3 ||
+				nextParam == SelectPlayerParam::P4){
+				for (auto i : enemySpiderSelect_->ReturnSelectPlayer()){
+					if (nextParam == i.second){
+						same = true;
+						break;
+					}
+				}
+			}
+			if (!same){
+				spp[playerNum] = nextParam;
+				finish = true;
+				break;
+			}
+			nextParam = (SelectPlayerParam)(nextParam + 1);
 			if (nextParam == SelectPlayerParam::NONE){
 				spp[playerNum] = nextParam;
-				return;
+				finish = true;
 			}
-
-			if (spp[playerNum] == SelectPlayerParam::NONE){
-				nextParam = SelectPlayerParam::CP1;
-				bool finish = false;
-				do{
-					bool same = false;
-					for (auto i : spp){
-						if (i.second == nextParam){
-							same = true;
-							break;
-						}
-					}
-					if (!same){
-						spp[playerNum] = nextParam;
-						finish = true;
-						break;
-					}
-					nextParam = (SelectPlayerParam)(nextParam + 1);
-					if (nextParam == SelectPlayerParam::NONE){
-						spp[playerNum] = nextParam;
-						finish = true;
-					}
-				} while (!finish);
-			}
-			else{
-				bool finish = false;
-				do{
-					bool same = false;
-					for (auto i : spp){
-						if (i.second == nextParam){
-							same = true;
-							break;
-						}
-					}
-					if (!same){
-						spp[playerNum] = nextParam;
-						finish = true;
-						break;
-					}
-					nextParam = (SelectPlayerParam)(nextParam + 1);
-					if (nextParam == SelectPlayerParam::NONE){
-						spp[playerNum] = nextParam;
-						finish = true;
-					}
-				} while (!finish);
-			}
-		}
-		else{
-			if (nextParam == SelectPlayerParam::NONE){
-				spp[playerNum] = SelectPlayerParam::NONE;
-				return;
-			}
-			if (spp[playerNum] == SelectPlayerParam::NONE){
-				nextParam = SelectPlayerParam::P1;
-
-				bool finish = false;
-				do{
-					bool same = false;
-					for (auto i : spp){
-						if (i.second == nextParam){
-							same = true;
-							break;
-						}
-					}
-					if (!same){
-						spp[playerNum] = nextParam;
-						finish = true;
-						break;
-					}
-					nextParam = (SelectPlayerParam)(nextParam + 1);
-					if (nextParam == SelectPlayerParam::NONE){
-						spp[playerNum] = SelectPlayerParam::NONE;
-						finish = true;
-					}
-				} while (!finish);
-			}
-			else{
-				bool finish = false;
-				do{
-					bool same = false;
-					for (auto i : spp){
-						if (i.second == nextParam){
-							same = true;
-							break;
-						}
-					}
-					if (!same){
-						spp[playerNum] = nextParam;
-						finish = true;
-						break;
-					}
-					nextParam = (SelectPlayerParam)(nextParam + 1);
-					if (nextParam == SelectPlayerParam::NONE){
-						spp[playerNum] = SelectPlayerParam::NONE;
-						finish = true;
-					}
-				} while (!finish);
-			}
-		}
+		} while (!finish);
 	}
 	else{
 		SelectPlayerParam nextParam = (SelectPlayerParam)(spp[playerNum] - 1);
-		if (enemyPlayerHave){
-			if (nextParam == SelectPlayerParam::P1){
-				spp[playerNum] = SelectPlayerParam::NONE;
-				return;
+		
+		if (nextParam == SelectPlayerParam::P0){
+			spp[playerNum] = SelectPlayerParam::NONE;
+			return;
+		}
+		
+		bool finish = false;
+		do{
+			bool same = false;
+			for (auto i : spp){
+				if (i.second == nextParam){
+					same = true;
+					break;
+				}
 			}
-			bool finish = false;
-			do{
-				bool same = false;
-				for (auto i : spp){
-					if (i.second == nextParam){
+			if (nextParam == SelectPlayerParam::P1 ||
+				nextParam == SelectPlayerParam::P2 ||
+				nextParam == SelectPlayerParam::P3 ||
+				nextParam == SelectPlayerParam::P4){
+				for (auto i : enemySpiderSelect_->ReturnSelectPlayer()){
+					if (nextParam == i.second){
 						same = true;
 						break;
 					}
 				}
-				if (!same){
-					spp[playerNum] = nextParam;
-					finish = true;
-					break;
-				}
-				nextParam = (SelectPlayerParam)(nextParam - 1);
-				if (nextParam == SelectPlayerParam::P1){
-					spp[playerNum] = SelectPlayerParam::NONE;
-					finish = true;
-				}
-			} while (!finish);
-		}
-		else{
-			//if (nextParam == SelectPlayerParam::CP4)nextParam = SelectPlayerParam::CP3;
+			}
+			if (!same){
+				spp[playerNum] = nextParam;
+				finish = true;
+				break;
+			}
+			nextParam = (SelectPlayerParam)(nextParam - 1);
+			
 			if (nextParam == SelectPlayerParam::P0){
 				spp[playerNum] = SelectPlayerParam::NONE;
-				return;
+				finish = true;
 			}
-			bool finish = false;
-			do{
-				bool same = false;
-				for (auto i : spp){
-					if (i.second == nextParam){
-						same = true;
-						break;
-					}
-				}
-				if (!same){
-					spp[playerNum] = nextParam;
-					finish = true;
-					break;
-				}
-				nextParam = (SelectPlayerParam)(nextParam - 1);
-				if (nextParam == SelectPlayerParam::P0){
-					spp[playerNum] = SelectPlayerParam::NONE;
-					finish = true;
-				}
-			} while (!finish);
-		}
+		} while (!finish);
 	}
 }
 
-bool SelectSpider::PlayerHave(){
+TeamSelectResult SelectSpider::PlayerHave(){
+	TeamSelectResult tsr;
+	tsr.blueHavePlayer = false;
+	tsr.blueHavePlayer2 = false;
+	tsr.blueHavePlayer3 = false;
+	tsr.blueHavePlayer4 = false;
+	tsr.redHavePlayer = false;
+	tsr.redHavePlayer2 = false;
+	tsr.redHavePlayer3 = false;
+	tsr.redHavePlayer4 = false;
+
 	for (auto i : spp){
-		if (i.second == SelectPlayerParam::P1)return true;
+		if (i.second == SelectPlayerParam::P1){
+			if (red)tsr.redHavePlayer = true;
+
+			else tsr.blueHavePlayer = true;
+		}
+		else if (i.second == SelectPlayerParam::P2){
+			if (red)tsr.redHavePlayer2 = true;
+
+			else tsr.blueHavePlayer2 = true;
+		}
+		else if (i.second == SelectPlayerParam::P3){
+			if (red)tsr.redHavePlayer3 = true;
+
+			else tsr.blueHavePlayer3 = true;
+		}
+		else if (i.second == SelectPlayerParam::P4){
+			if (red)tsr.redHavePlayer4 = true;
+
+			else tsr.blueHavePlayer4 = true;
+		}
 	}
 
-	return false;
+	return tsr;
 }
 
 void SelectSpider::Draw(){
@@ -298,6 +249,7 @@ void SelectSpider::SpiderSelect(){
 }
 
 void SelectSpider::PlayerSelect(){
+	SelectPlayerParam playerFlag = spiderSelect->ReturnMyPlayerParam(playerNum);
 	if (select){
 		Graphic::GetInstance().DrawTexture(TEXTURE_ID::THREAD_BACK_TEXTURE,
 			vector2(pos.x, pos.y - 40.0f),
@@ -368,14 +320,16 @@ void SelectSpider::PlayerSelect(){
 			whitetID = TEXTURE_ID::NEPHILA_WHITE_L_TEXTURE;
 		}
 	}
+	Vector3 playerColor = vector3(1, 0, 0);
+	if (!red)playerColor = vector3(0, 0, 1);
+	if (playerFlag != SelectPlayerParam::P1 && playerFlag != SelectPlayerParam::P2 && playerFlag != SelectPlayerParam::P3 && playerFlag != SelectPlayerParam::P4){
+		playerColor = vector3(0, 1, 0);
+		if (playerFlag == SelectPlayerParam::NONE)playerColor = vector3(1, 1, 1);
+	}
 	Graphic::GetInstance().DrawTexture(whitetID,
 		vector2(pos.x, pos.y),
 		vector2(1.0f, 1.0f) * (select == true ? 1.5f : 1.0f),
-		spiderSelect->ReturnMyPlayerParam(playerNum) == SelectPlayerParam::P1 ?
-		red ?
-		D3DXCOLOR(1, 0, 0, 1) : D3DXCOLOR(0, 0, 1, 1) :
-		spiderSelect->ReturnMyPlayerParam(playerNum) == SelectPlayerParam::NONE ?
-		D3DXCOLOR(1, 1, 1, 1) : D3DXCOLOR(0, 1, 0, 1),
+		D3DXCOLOR(playerColor.x, playerColor.y, playerColor.z, 1),
 		vector2(0.5f, 0.5f),
 		0.0f,
 		0.0f,
@@ -392,16 +346,13 @@ void SelectSpider::PlayerSelect(){
 		1,
 		1.0f);
 
+
 	Graphic::GetInstance().DrawFontDirect(FONT_ID::TEST_FONT,
 		pos,
 		vector2(0.40f, 0.7f),
 		0.6f,
-		sppString[spiderSelect->ReturnMyPlayerParam(playerNum)],
-		spiderSelect->ReturnMyPlayerParam(playerNum) == SelectPlayerParam::P1 ?
-		red ?
-		vector3(1, 0, 0) : vector3(0, 0, 1) :
-		spiderSelect->ReturnMyPlayerParam(playerNum) == SelectPlayerParam::NONE ?
-		vector3(1, 1, 1) : vector3(0, 1, 0),
+		sppString[playerFlag],
+		playerColor,
 		1,
 		true);
 }
@@ -413,7 +364,12 @@ void SelectSpider::SetSelect(bool flag){
 int SelectSpider::CPUCount(){
 	int count = 0;
 	for (auto i : spp){
-		if (i.second != SelectPlayerParam::P0 && i.second != SelectPlayerParam::P1 && i.second != SelectPlayerParam::NONE){
+		if (i.second != SelectPlayerParam::P0 &&
+			i.second != SelectPlayerParam::P1 &&
+			i.second != SelectPlayerParam::P2 &&
+			i.second != SelectPlayerParam::P3 &&
+			i.second != SelectPlayerParam::P4 &&
+			i.second != SelectPlayerParam::NONE){
 			count++;
 		}
 	}
