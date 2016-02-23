@@ -22,7 +22,7 @@ public:
 	~Thread();
 	virtual void Initialize() override;
 	virtual void Update(float frameTime) override;
-	virtual void Draw(CAMERA_ID cID) const override;
+	virtual void Draw(CAMERA_ID cID, bool first) const override;
 	virtual void OnCollide(Actor& other,CollisionParameter colpara) override;
 	//…‚Ìƒpƒ‰ƒ[ƒ^‚ğæ“¾
 	ThreadParameter GetThreadParameter();

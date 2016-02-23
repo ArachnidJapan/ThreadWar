@@ -11,6 +11,7 @@
 enum RESULT{
 	BLANK_TIME = 60 * 2,
 	GAUGE_TIME = 60 * 4,
+	VICTRY_BLANK_TIME = 60 * 3,
 	VICTRY_TIME = 60 * 2,
 };
 
@@ -67,6 +68,7 @@ void ResultScene::Initialize()
 	spiderNum = 0;
 	pressLerp = 0;
 	pressTimer = 0;
+	blankTimer = 0;
 	for (int i = 0; i <= 3; i++){
 		if (i <= sp._Get()->ReturnTeamSelectResult()->redHaveCPU +
 			sp._Get()->ReturnTeamSelectResult()->redHavePlayer - 1){
@@ -141,8 +143,34 @@ void ResultScene::Initialize()
 void ResultScene::Update(float frameTime)
 {
 	wa.Update(frameTime);
+
+	//決定が押されたら。
+	if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
+		Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
+		Device::GetInstance().GetInput()->GamePadAnyButton(0, true))){
+		//勝敗演出が終了していたら、シーン遷移。
+		if (vicTimer == 1.0f){
+			mIsEnd = true;
+			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
+		}
+		//ポイントゲージ移動の演出が終了していなかったら、スキップさせる。
+		else if (pointTimer != 1.0f){
+			timer = 1.0f;
+			pointTimer = 1.0f;
+		}
+		//ゲージ演出が終了していて、勝敗演出が終了していなかったら、勝敗をスキップさせる。
+		else if (vicTimer != 1.0f){
+			vicTimer = 1.0f;
+			blankTimer = 1.0f;
+		}
+	}
+
+	//リザルト画面に遷移した後のブランクタイム。
 	timer = min(timer + (1.0f / BLANK_TIME * 60.0f * frameTime), 1.0f);
-	
+
+	//ゲージの中央である0.5から目標割合へ向かう。
+	teamPoint = Math::lerp(0.5f, nextTeamPoint, pointTimer);
+	//ブランクタイムが終わったら、ポイント加算、ゲージ移動演出。
 	if (timer == 1.0f){
 		pointTimer = min(pointTimer + (1.0f / GAUGE_TIME * 60.0f * frameTime), 1.0f);
 		for (int i = 0; i <= 3; i++){
@@ -152,46 +180,23 @@ void ResultScene::Update(float frameTime)
 			bluePoints.at(i) = min(Math::lerp3(0, maxPoint, pointTimer), nextBluePoints.at(i));
 		}
 	}
-	else{
-		if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
-			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true))){
-			timer = 1.0f;
-			pointTimer = 1.0f;
-			vicTimer = 1.0f;
-			return;
-		}
-	}
+	//ゲージ移動演出が終了したら、ブランクタイムを設ける。
 	if (pointTimer == 1.0f){
-		if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
-			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-			Device::GetInstance().GetInput()->GamePadAnyButton(0, true)) &&
-			vicTimer == 1.0f){
-			mIsEnd = true;
-			Audio::GetInstance().PlaySE(SE_ID::ENTER_SE);
-		}
-
+		blankTimer = min(blankTimer + (1.0f / VICTRY_BLANK_TIME * 60.0f * frameTime), 1.0f);
+	}
+	//ブランクタイムが終了したら、チームの勝敗結果をポップアップする。
+	if (blankTimer == 1.0f){
 		vicTimer = min(vicTimer + (1.0f / VICTRY_TIME * 60.0f * frameTime), 1.0f);
 	}
-	else{
-		if ((Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_Z, true) ||
-			Device::GetInstance().GetInput()->KeyDown(INPUTKEY::KEY_SPACE, true) ||
-			Device::GetInstance().GetInput()->GamePadButtonDown(0, GAMEPADKEY::BUTTON_CURCLE, true))){
-			pointTimer = 1.0f;
-			vicTimer = 1.0f;
-			return;
-		}
-	}
+	//チーム勝敗演出が終了したら、press any buttonの演出。
 	if (vicTimer == 1.0f){
 		pressTimer = min(pressTimer + ((1.0f / (60.0f * 3.0f)) * 60.0f * frameTime), 1.0f);
 	}
+	//チーム勝敗演出後、数秒でpress any buttonをsin描画。
 	if (pressTimer == 1.0f){
 		pressLerp+=2;
 		pressLerp = fmodf(pressLerp, 360.0f);
 	}
-
-	//ゲージの中央である0.5から目標割合へ向かう。
-	teamPoint = Math::lerp(0.5f, nextTeamPoint, pointTimer);
 }
 
 //描画
@@ -205,7 +210,7 @@ void ResultScene::Draw() const
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::DAMAGE_TEXTURE,
 		vector2(1920 / 2, 1080 / 2),
 		vector2(1.5f, 1.5f),
-		D3DXCOLOR(1, 1, 1, 0.5f),
+		D3DXCOLOR(1, 1, 1, 1),
 		vector2(0.5f, 0.5f),
 		0.0f,
 		0.0f,
@@ -225,7 +230,7 @@ void ResultScene::Draw() const
 	Graphic::GetInstance().DrawTexture(TEXTURE_ID::WHITE_BAR_TEXTURE,
 		vector2(1920 / 2, 1080 / 2),
 		vector2(1.5f, 1.5f),
-		D3DXCOLOR(1, 1, 1, 0.5f),
+		D3DXCOLOR(1, 1, 1, 1),
 		vector2(0.5f, 0.5f),
 		0.0f,
 		0.0f,

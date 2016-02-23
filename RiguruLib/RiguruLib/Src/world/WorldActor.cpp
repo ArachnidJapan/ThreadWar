@@ -35,10 +35,10 @@ void WorldActor::Update(float frameTime){
 	std::for_each(managers.begin(), managers.end(),
 		[](ActorManagerPair pair){pair.second->Remove(); });
 }
-void WorldActor::Draw(CAMERA_ID cID) const{
+void WorldActor::Draw(CAMERA_ID cID, bool first) const{
 	//‘SƒLƒƒƒ‰•`‰æ
 	std::for_each(managers.begin(), managers.end(),
-		[&](ActorManagerPair pair){pair.second->Draw(cID); });
+		[&](ActorManagerPair pair){pair.second->Draw(cID,first); });
 }
 void WorldActor::Add(ACTOR_ID id, ActorPtr actor){
 	managers[id]->Add(actor);

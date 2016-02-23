@@ -48,11 +48,11 @@ option(option_)
 //デストラクタ
 TitleScene::~TitleScene()
 {
-	ts_scale.clear();
-	ts_nextScale.clear();
-	ts_prevScale.clear();
-	ts_alpha.clear();
-	ts_nextAlpha.clear();
+	//ts_scale.clear();
+	//ts_nextScale.clear();
+	//ts_prevScale.clear();
+	//ts_alpha.clear();
+	//ts_nextAlpha.clear();
 }
 
 //開始
@@ -197,13 +197,13 @@ void TitleScene::TitleSelect(float frameTime){
 
 	for (int i = 0; i <= TITLE_SELECT_NUM - 1; i++){
 		ts_scale.at(i) = Math::lerp3(ts_prevScale.at(i), ts_nextScale.at(i), lerpTime);
-		//ts_alpha.at(i) = Math::lerp3(ts_alpha.at(i), ts_nextAlpha.at(i), lerpTime);
+		ts_alpha.at(i) = Math::lerp3(ts_alpha.at(i), ts_nextAlpha.at(i), lerpTime);
 	}
 
 	lerpTime = min(lerpTime + 1.0f / 15.0f, 1.0f);
 	alphaTime += 2;
 	alphaTime = fmodf(alphaTime, 360.0f);
-	ts_alpha[selects] = abs(Math::sin(alphaTime));
+	//ts_alpha[selects] = abs(Math::sin(alphaTime));
 	allAlpha = min(allAlpha + 1.0f / 30.0f*60.0f*frameTime, 1.0f);
 }
 

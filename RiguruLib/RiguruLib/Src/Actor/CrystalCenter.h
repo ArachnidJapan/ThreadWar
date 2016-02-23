@@ -19,7 +19,7 @@ public:
 	~CrystalCenter();
 	virtual void Initialize() override;
 	virtual void Update(float frameTime) override;
-	virtual void Draw(CAMERA_ID cID) const override;
+	virtual void Draw(CAMERA_ID cID, bool first) const override;
 	virtual void OnCollide(Actor& other, CollisionParameter colpara) override;
 	void DrawEffect(Vector3 pos, Vector3 scale_, CAMERA_ID cID, Vector3 color) const;
 	void Damage(bool player);

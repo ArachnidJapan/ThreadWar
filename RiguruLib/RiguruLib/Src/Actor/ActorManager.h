@@ -11,7 +11,7 @@ public:
 	ActorManager();
 	~ActorManager();
 	void Update(float frameTime);
-	void Draw(CAMERA_ID cID) const;
+	void Draw(CAMERA_ID cID, bool first) const;
 	void Add(ActorPtr actor);
 	void Clear();
 	void Remove();

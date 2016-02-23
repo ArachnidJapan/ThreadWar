@@ -15,8 +15,8 @@ void World::Initialize(){
 void World::Update(float frameTime){
 	actors.Update(frameTime);
 }
-void World::Draw(CAMERA_ID cID) const{
-	actors.Draw(cID);
+void World::Draw(CAMERA_ID cID,bool first) const{
+	actors.Draw(cID, first);
 }
 void World::Clear(){
 	actors.Clear();

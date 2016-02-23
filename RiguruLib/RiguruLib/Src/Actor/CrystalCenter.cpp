@@ -122,7 +122,7 @@ void CrystalCenter::Update(float frameTime){
 	}
 }
 
-void CrystalCenter::Draw(CAMERA_ID cID) const{
+void CrystalCenter::Draw(CAMERA_ID cID, bool first) const{
 	Graphic::GetInstance().SetShader(SHADER_ID::CRYSTAL_SHADER);
 
 	Vector3 color = vector3(1, 1, 1);
