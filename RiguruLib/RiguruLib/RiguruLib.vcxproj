@@ -274,6 +274,7 @@
     <FxCompile Include="Shader\hlsl\fbxModelShader.hlsl" />
     <FxCompile Include="Shader\hlsl\FontShader.hlsl" />
     <FxCompile Include="Shader\hlsl\LineShader.hlsl" />
+    <FxCompile Include="Shader\hlsl\PhongShadingShader.hlsl" />
     <FxCompile Include="Shader\hlsl\SphereShader.hlsl" />
     <FxCompile Include="Shader\hlsl\StageShader.hlsl" />
     <FxCompile Include="Shader\hlsl\TextureShader.hlsl" />

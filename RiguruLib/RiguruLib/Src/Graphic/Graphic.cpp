@@ -277,3 +277,7 @@ void Graphic::LoadOctree(OCT_ID id, const char* octName){
 OctreeUser* Graphic::ReturnOctree(OCT_ID id){
 	return &octree[id];
 }
+
+Shader* Graphic::ReturnShader(SHADER_ID s_id){
+	return &shader[s_id];
+}

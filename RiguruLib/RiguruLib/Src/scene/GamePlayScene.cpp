@@ -79,9 +79,6 @@ option(option_)
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::GAUGE_CENTER_TEXTURE, "Res/Texture/gauge2.png");
 	Graphic::GetInstance().LoadTexture(TEXTURE_ID::DAMAGE_TEXTURE, "Res/Texture/damage.png");
 
-
-
-
 	/************************************************シェーダー*************************************************/
 	Graphic::GetInstance().LoadShader(SHADER_ID::PLAYER_SHADER, "Shader/cso/fbxModelShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::THREAD_EFFECT_SHADER, "Shader/cso/ThreadEffectShader.cso");
@@ -91,6 +88,7 @@ option(option_)
 	Graphic::GetInstance().LoadShader(SHADER_ID::CUBE_SHADER, "Shader/cso/CubeShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::LINE_SHADER, "Shader/cso/LineShader.cso");
 	Graphic::GetInstance().LoadShader(SHADER_ID::CRYSTAL_SHADER, "Shader/cso/CrystalShader.cso");
+	Graphic::GetInstance().LoadShader(SHADER_ID::PHONG_SHADING_SHADER, "Shader/cso/PhongShadingShader.cso");
 
 	/**************************************************音楽*****************************************************/
 	Audio::GetInstance().LoadSE(SE_ID::ENTER_SE, _T("Res/Sound/SE/enter_se.wav"), 1);

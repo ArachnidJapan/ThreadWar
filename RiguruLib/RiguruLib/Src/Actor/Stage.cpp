@@ -98,7 +98,33 @@ void Stage::Update(float frameTime){
 }
 
 void Stage::Draw(CAMERA_ID cID) const{
+	////シェーダーに値をセット
+	//D3DXVECTOR4 g_LightPos = D3DXVECTOR4(0.0f, 0.0f, 0.0f, 1.0f);	//ライトの座標
+	//Vector3 cameye = Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->CameraParam()->Eye;
+	//D3DXVECTOR4 g_EyePos = D3DXVECTOR4(cameye.x, cameye.y, cameye.z, 0);//カメラの座標
+	//D3DXVECTOR4 g_SpecularPower = D3DXVECTOR4(100.0f, 0, 0, 0);				//鏡面反射強度
+	//D3DXCOLOR g_AmbientLightColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		//光の基礎色
+	//D3DXCOLOR g_DiffuseLightColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		//光の拡散反射色
+	//D3DXCOLOR g_SpecularLightColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		//光の鏡面反射色
+	//D3DXCOLOR g_MaterialAmbient = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);		//物体の持つ基礎色
+	//D3DXCOLOR g_MaterialDiffuse = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.0f);		//物体の持つ拡散反射色
+	//D3DXCOLOR g_MaterialSpecular = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);		//物体の持つ鏡面反射色
+	////ライトの位置とカメラの位置
+	//Graphic::GetInstance().ReturnShader(SHADER_ID::PHONG_SHADING_SHADER)->SetVector4("g_LightPos", &g_LightPos);
+	//Graphic::GetInstance().ReturnShader(SHADER_ID::PHONG_SHADING_SHADER)->SetVector4("g_EyePos", &g_EyePos);
+	//Graphic::GetInstance().ReturnShader(SHADER_ID::PHONG_SHADING_SHADER)->SetVector4("g_SpecularPower", &g_SpecularPower);
+	////色
+	//Graphic::GetInstance().ReturnShader(SHADER_ID::PHONG_SHADING_SHADER)->SetColor("g_AmbientLightColor", &g_AmbientLightColor);
+	//Graphic::GetInstance().ReturnShader(SHADER_ID::PHONG_SHADING_SHADER)->SetColor("g_DiffuseLightColor", &g_DiffuseLightColor);
+	//Graphic::GetInstance().ReturnShader(SHADER_ID::PHONG_SHADING_SHADER)->SetColor("g_SpecularLightColor", &g_SpecularLightColor);
+	//Graphic::GetInstance().ReturnShader(SHADER_ID::PHONG_SHADING_SHADER)->SetColor("g_MaterialAmbient", &g_MaterialAmbient);
+	//Graphic::GetInstance().ReturnShader(SHADER_ID::PHONG_SHADING_SHADER)->SetColor("g_MaterialDiffuse", &g_MaterialDiffuse);
+	//Graphic::GetInstance().ReturnShader(SHADER_ID::PHONG_SHADING_SHADER)->SetColor("g_MaterialSpecular", &g_MaterialSpecular);
+
+
 	Graphic::GetInstance().SetShader(SHADER_ID::STAGE_SHADER);
+	//テクニックとパスをセット
+	//Graphic::GetInstance().SetTechniquePass(SHADER_ID::STAGE_SHADER, "TShader", "P0");
 	Graphic::GetInstance().DrawMesh(MODEL_ID::STAGE_MODEL, &parameter.matrix, cID, NULL, true);
 
 	//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(800, 400), vector2(0.20f, 0.25f), 0.5f, "point:" + std::to_string(teamPoint));

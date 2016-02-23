@@ -312,6 +312,9 @@
     <ClInclude Include="Src\scene\Option\Option.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Actor\EnemyAI\AITargetManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Actor\Player.cpp">
@@ -530,6 +533,9 @@
     <ClCompile Include="Src\scene\Option\Option.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Actor\EnemyAI\AITargetManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shader\hlsl\fbxModelShader.hlsl">
@@ -553,5 +559,6 @@
     <FxCompile Include="Shader\hlsl\StageShader.hlsl" />
     <FxCompile Include="Shader\hlsl\ThreadEffectShader.hlsl" />
     <FxCompile Include="Shader\hlsl\CrystalShader.hlsl" />
+    <FxCompile Include="Shader\hlsl\PhongShadingShader.hlsl" />
   </ItemGroup>
 </Project>

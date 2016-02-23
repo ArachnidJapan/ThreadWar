@@ -82,6 +82,7 @@ public:
 
 	void LoadOctree(OCT_ID id, const char* octName);
 	OctreeUser* ReturnOctree(OCT_ID id);
+	Shader* ReturnShader(SHADER_ID s_id);
 private:
 	std::map<TEXTURE_ID, Texture> texture;
 	std::map<MODEL_ID, Mesh> mesh;
