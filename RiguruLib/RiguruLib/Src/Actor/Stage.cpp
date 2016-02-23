@@ -97,7 +97,7 @@ void Stage::Update(float frameTime){
 	}
 }
 
-void Stage::Draw(CAMERA_ID cID) const{
+void Stage::Draw(CAMERA_ID cID, bool first) const{
 	////シェーダーに値をセット
 	//D3DXVECTOR4 g_LightPos = D3DXVECTOR4(0.0f, 0.0f, 0.0f, 1.0f);	//ライトの座標
 	//Vector3 cameye = Device::GetInstance().GetCamera(CAMERA_ID::PLAYER_CAMERA_1P)->CameraParam()->Eye;
@@ -123,8 +123,9 @@ void Stage::Draw(CAMERA_ID cID) const{
 
 
 	Graphic::GetInstance().SetShader(SHADER_ID::STAGE_SHADER);
-	//テクニックとパスをセット
-	//Graphic::GetInstance().SetTechniquePass(SHADER_ID::STAGE_SHADER, "TShader", "P0");
+	//Graphic::GetInstance().SetShader(SHADER_ID::PHONG_SHADING_SHADER);
+	////テクニックとパスをセット
+	//Graphic::GetInstance().SetTechniquePass(SHADER_ID::PHONG_SHADING_SHADER, "TShader", "P1");
 	Graphic::GetInstance().DrawMesh(MODEL_ID::STAGE_MODEL, &parameter.matrix, cID, NULL, true);
 
 	//Graphic::GetInstance().DrawFont(FONT_ID::TEST_FONT, vector2(800, 400), vector2(0.20f, 0.25f), 0.5f, "point:" + std::to_string(teamPoint));
